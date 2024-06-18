@@ -75,7 +75,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     @property
     def _is_fitted_(self) -> bool:
-        self.logger.info(f"++++++++++++++++++++++++++++++++ _is_fitted_ ++++++++++++++++++++++++++++++++")
+        self.logger.info(f"++++++++++++++++++++++++++++++++ _is_fitted_ function ++++++++++++++++++++++++++++++++")
 
         self.logger.info(f"Checking main file {self.rf_name} for results for padding {self.padding_name}")
         check_and_delete_corrupt_h5_file(self.results_file, self.logger)
@@ -291,9 +291,8 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                 for metric_name, results in metric_results.items():
                     self.logger.info(f"Storing results {metric_name} results {np.array(results)}")
                     if metric_name in model_group:
-                        model_group.update({metric_name: np.array(results)})
-                    else:
-                        model_group.create_dataset(metric_name, data=np.array(results))
+                        del model_group[metric_name]
+                    model_group.create_dataset(metric_name, data=np.array(results))
         except Exception as error:
             log_exception_error(self.logger, error)
             self.logger.error("Problem creating the dataset ")
