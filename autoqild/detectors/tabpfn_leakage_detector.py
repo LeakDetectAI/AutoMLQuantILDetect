@@ -2,7 +2,7 @@ import os
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..automl import AutoTabPFNClassifier
-from ..constants import *
+from autoqild.utils.constants import *
 
 
 class TabPFNLeakageDetector(SklearnLeakageDetector):

@@ -400,7 +400,7 @@ def create_results(result):
     results = {}
     results['job_id'] = str(result['job_id'])
     results['cluster_id'] = str(result['cluster_id'])
-    results['delay'] = str(result['delay'])
+    results['delay'] = str(result.get('delay', 0))
     results['base_detector'] = str(result['base_detector'])
     results['detection_method'] = str(result['detection_method'])
     results['fold_id'] = str(result['fold_id'])

@@ -7,7 +7,7 @@ from sklearn.utils import check_random_state
 from skopt import BayesSearchCV as BayesSearchCVSK
 from skopt.utils import eval_callbacks, point_asdict
 
-
+__all__ = ["BayesSearchCV"]
 class BayesSearchCV(BayesSearchCVSK):
     def __init__(
             self,

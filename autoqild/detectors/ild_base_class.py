@@ -7,11 +7,6 @@ from abc import ABCMeta
 
 import h5py
 import numpy as np
-from pycilt.bayes_search_utils import get_scores
-from pycilt.classifiers import MajorityVoting
-from pycilt.detectors.utils import *
-from pycilt.metrics import probability_calibration
-from pycilt.statistical_tests import paired_ttest
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from sklearn.utils import check_random_state
@@ -26,7 +21,7 @@ from pycilt.utils import log_exception_error, create_directory_safely, check_and
     print_dictionary
 from .utils import leakage_detection_names
 from .. import RandomClassifier
-from ..constants import *
+from autoqild.utils.constants import *
 
 
 class InformationLeakageDetector(metaclass=ABCMeta):

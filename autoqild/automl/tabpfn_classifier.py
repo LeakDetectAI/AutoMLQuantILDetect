@@ -7,7 +7,7 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.utils import check_random_state
 from tabpfn import TabPFNClassifier
 
-from ..dimensionality_reduction_techniques import create_dimensionality_reduction_model
+from autoqild.bayes_search_hpo.dimensionality_reduction_techniques import create_dimensionality_reduction_model
 
 
 class AutoTabPFNClassifier(AutomlClassifier):

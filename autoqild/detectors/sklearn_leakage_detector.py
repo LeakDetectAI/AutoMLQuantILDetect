@@ -9,10 +9,10 @@ from sklearn.model_selection import train_test_split
 
 from .ild_base_class import InformationLeakageDetector
 from ..automl.tabpfn_classifier import AutoTabPFNClassifier
-from ..bayes_search import BayesSearchCV
-from ..bayes_search_utils import get_scores, log_callback, update_params_at_k
-from ..constants import *
-from ..utils import log_exception_error, create_directory_safely, print_dictionary
+from autoqild.bayes_search_hpo.bayes_search import BayesSearchCV
+from autoqild.bayes_search_hpo.bayes_search_utils import get_scores, log_callback, update_params_at_k
+from autoqild.utils.constants import *
+from autoqild.utils.utils import log_exception_error, create_directory_safely, print_dictionary
 
 
 class SklearnLeakageDetector(InformationLeakageDetector):

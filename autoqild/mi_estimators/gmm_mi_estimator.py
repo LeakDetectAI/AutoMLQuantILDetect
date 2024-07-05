@@ -6,8 +6,8 @@ from infoselect import get_gmm, SelectVars
 from sklearn.linear_model import LogisticRegression
 
 from .mi_base_class import MIEstimatorBase
-from ..dimensionality_reduction_techniques import create_dimensionality_reduction_model
-from ..utils import log_exception_error
+from autoqild.bayes_search_hpo.dimensionality_reduction_techniques import create_dimensionality_reduction_model
+from autoqild.utils.utils import log_exception_error
 
 
 class GMMMIEstimator(MIEstimatorBase):

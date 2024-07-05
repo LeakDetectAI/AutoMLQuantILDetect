@@ -26,8 +26,7 @@ from datetime import datetime
 
 import numpy as np
 from docopt import docopt
-from pycilt.constants import *
-from pycilt.utils import *
+from pycilt import *
 
 from experiments.dbconnection import DBConnector
 from experiments.utils import *

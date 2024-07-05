@@ -2,8 +2,8 @@ import logging
 
 import numpy as np
 
-GEN_TYPES = ['single', 'multiple']
-
+GEN_TYPES = ['single', 'multiple', 'FACTOR']
+FACTOR = 1.5
 
 def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type='single', logger=None, verbose=1):
     if logger is None:

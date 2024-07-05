@@ -25,10 +25,8 @@ import dill
 import h5py
 import numpy as np
 from docopt import docopt
-from pycilt import *
-from pycilt.constants import *
-from pycilt.metrics import probability_calibration
-from pycilt.utils import *
+from autoqild import *
+
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import StratifiedShuffleSplit
 

@@ -6,7 +6,7 @@ from netcal.scaling import LogisticCalibration, BetaCalibration, TemperatureScal
 from pycilt.metrics import mid_point_mi, log_loss_estimation, pc_softmax_estimation
 from sklearn.metrics import confusion_matrix, accuracy_score
 
-from ..constants import *
+from autoqild.utils.constants import *
 
 __all__ = ['mi_estimation_metrics', 'classification_leakage_detection_methods', 'mi_leakage_detection_methods',
            'leakage_detection_methods', 'calibrators', 'calibrator_params']

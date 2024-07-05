@@ -1,7 +1,7 @@
 from .sklearn_leakage_detector import SklearnLeakageDetector
-from ..constants import *
+from autoqild.utils.constants import *
 from ..mi_estimators import GMMMIEstimator, MineMIEstimatorHPO
-from ..utils import print_dictionary
+from autoqild.utils.utils import print_dictionary
 
 
 class MIEstimationLeakageDetector(SklearnLeakageDetector):
