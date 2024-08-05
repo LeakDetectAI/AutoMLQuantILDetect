@@ -2,17 +2,33 @@ import logging
 from abc import ABCMeta
 
 import numpy as np
-from pycilt.utils import softmax
 from scipy.stats import multivariate_normal
 from scipy.stats import ortho_group
 from sklearn.utils import check_random_state, shuffle
 
-from ..constants import *
-
+MCMC_MI_ESTIMATION = 'MCMCBayesMI'
+MCMC_LOG_LOSS = 'MCMCLogLossBayesMI'
+MCMC_PC_SOFTMAX = 'MCMCPCSoftmaxBayesMI'
+MCMC_SOFTMAX = 'MCMCSoftmaxBayesMI'
 
 def pdf(dist, x):
     return np.exp(dist.logpdf(x))
 
+
+def logsumexp(x, axis=1):
+    max_x = x.max(axis=axis, keepdims=True)
+    return max_x + np.log(np.sum(np.exp(x - max_x), axis=axis, keepdims=True))
+
+
+def softmax(x, axis=1):
+    """
+    Take softmax for the given numpy array.
+    :param axis: The axis around which the softmax is applied
+    :param x: array-like, shape (n_samples, ...)
+    :return: softmax taken around the given axis
+    """
+    lse = logsumexp(x, axis=axis)
+    return np.exp(x - lse)
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,

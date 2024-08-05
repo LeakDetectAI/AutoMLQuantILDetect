@@ -2,7 +2,7 @@ from os.path import realpath, dirname, join
 
 from setuptools import setup, find_packages
 
-DISTNAME = 'automl-qild'
+DISTNAME = 'autoqild'
 DESCRIPTION = 'Information Leakage Detection Techniques'
 MAINTAINER = 'Pritha Gupta'
 MAINTAINER_EMAIL = 'prithag@mail.uni-paderborn.de'
