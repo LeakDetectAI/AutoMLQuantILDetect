@@ -16,6 +16,7 @@ from .utils import *
 from ..classifiers import MajorityVoting, RandomClassifier
 from ..utilities import *
 
+__all__ = ['InformationLeakageDetector']
 
 class InformationLeakageDetector(metaclass=ABCMeta):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

@@ -9,6 +9,7 @@ from sklearn.utils import check_random_state, shuffle
 from .utils import FACTOR
 from ..utilities import *
 
+__all__ = ['SyntheticDatasetGenerator']
 
 def pdf(dist, x):
     return np.exp(dist.logpdf(x))

@@ -5,6 +5,8 @@ from .ild_base_class import InformationLeakageDetector
 from ..automl import AutoGluonClassifier
 from ..utilities import *
 
+__all__ = ['AutoGluonLeakageDetector']
+
 
 class AutoGluonLeakageDetector(InformationLeakageDetector):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

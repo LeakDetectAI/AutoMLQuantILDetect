@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
 
+__all__ = ['RandomForestLeakageDetector']
 
 class RandomForestLeakageDetector(SklearnLeakageDetector):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

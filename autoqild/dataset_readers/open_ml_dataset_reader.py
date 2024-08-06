@@ -7,9 +7,10 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils import check_random_state
 
-from ..utils import clean_class_label
+from .utils import *
 
-LABEL_COL = 'label'
+__all__ = ['OpenMLTimingDatasetReader', 'OpenMLPaddingDatasetReader']
+
 
 
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):

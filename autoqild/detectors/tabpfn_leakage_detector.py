@@ -4,6 +4,7 @@ from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..automl import AutoTabPFNClassifier
 from ..utilities import *
 
+__all__ = ['TabPFNLeakageDetector']
 
 class TabPFNLeakageDetector(SklearnLeakageDetector):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

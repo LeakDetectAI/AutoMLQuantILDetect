@@ -2,6 +2,7 @@ from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..mi_estimators import GMMMIEstimator, MineMIEstimatorHPO
 from ..utilities import *
 
+__all__ = ['MIEstimationLeakageDetector']
 
 class MIEstimationLeakageDetector(SklearnLeakageDetector):
     def __init__(self, mi_technique, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

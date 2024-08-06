@@ -1,9 +1,8 @@
 import logging
-
 import numpy as np
 
-GEN_TYPES = ['single', 'multiple', 'FACTOR']
-FACTOR = 1.5
+__all__ = ['GEN_TYPES', 'FACTOR', 'generate_samples_per_class', 'clean_class_label', 'LABEL_COL']
+
 
 def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type='single', logger=None, verbose=1):
     if logger is None:
@@ -48,3 +47,7 @@ def clean_class_label(string):
     string = ' '.join(string.split('_')).title()
     string = string.replace("  ", " ")
     return string
+
+GEN_TYPES = ['single', 'multiple', 'FACTOR']
+FACTOR = 1.5
+LABEL_COL = 'label'
