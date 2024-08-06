@@ -5,7 +5,9 @@ import matplotlib.path as mpath
 import numpy as np
 import pandas as pd
 import psycopg2
-from pycilt.constants import *
+from autoqild import *
+import logging
+import inspect
 
 __all__ = ['MAE', 'MSE', 'NMAE', 'NMSE', 'columns_dict', 'learner_dict', 'dataset_dict', 'color_palette',
            'color_palette_dict', 'markers', 'markers_dict', 'get_synthetic_dataset_results',
@@ -244,7 +246,6 @@ def get_values_std(y_true, y_pred, n_classes):
     return mae, mse, nmae, nmse
 
 
-from pycilt.dataset_readers import generate_samples_per_class
 
 
 def get_max_mi_value(n_classes, gen_type, imbalance):
@@ -360,7 +361,7 @@ def create_combined_real_dataset(table_name, filter_results=True):
                        detection_methods['estimated_mutual_information']]
     techniques_order = [f"{learner} {col}" for learner in custom_order if '\\textsc{Baseline}' not in learner for col in
                         detectors_order]
-    techniques_order += [earner_dict[GMM_MI_ESTIMATOR], learner_dict[MINE_MI_ESTIMATOR],
+    techniques_order += [learner_dict[GMM_MI_ESTIMATOR], learner_dict[MINE_MI_ESTIMATOR],
                          learner_dict[PC_SOFTMAX_MI_ESTIMATION]]
     final_df['Detection Technique'] = pd.Categorical(final_df['Detection Technique'], categories=techniques_order,
                                                      ordered=True)
@@ -599,11 +600,6 @@ def create_directory_safely(path, is_file_path=False):
             os.makedirs(path, exist_ok=True)
     except Exception as e:
         print(str(e))
-
-
-import logging
-import inspect
-
 
 def setup_logging(log_path=None, level=logging.INFO):
     if log_path is None:
