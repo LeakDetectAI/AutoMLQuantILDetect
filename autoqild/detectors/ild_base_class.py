@@ -12,16 +12,9 @@ from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from sklearn.utils import check_random_state
 from statsmodels.stats.multitest import multipletests
 
-from pycilt.bayes_search_utils import get_scores
-from pycilt.classifiers import MajorityVoting
-from pycilt.detectors.utils import *
-from pycilt.metrics import probability_calibration
-from pycilt.statistical_tests import paired_ttest
-from pycilt.utils import log_exception_error, create_directory_safely, check_and_delete_corrupt_h5_file, \
-    print_dictionary
-from .utils import leakage_detection_names
-from .. import RandomClassifier
-from autoqild.utils.constants import *
+from .utils import *
+from ..classifiers import MajorityVoting, RandomClassifier
+from ..utilities import *
 
 
 class InformationLeakageDetector(metaclass=ABCMeta):

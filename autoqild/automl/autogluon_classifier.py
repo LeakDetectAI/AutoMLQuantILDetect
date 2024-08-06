@@ -5,10 +5,11 @@ import shutil
 import numpy as np
 import pandas as pd
 from autogluon.tabular import TabularPredictor
-from pycilt.automl.automl_core import AutomlClassifier
-from pycilt.automl.model_configurations import hyperparameters, reduced_hyperparameters
-from pycilt.utils import log_exception_error
 from sklearn.utils import check_random_state
+
+from automl_core import AutomlClassifier
+from model_configurations import hyperparameters, reduced_hyperparameters
+from ..utilities import log_exception_error
 
 
 class AutoGluonClassifier(AutomlClassifier):

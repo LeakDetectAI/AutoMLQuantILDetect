@@ -2,12 +2,12 @@ import logging
 
 import numpy as np
 import torch
-from pycilt.automl.automl_core import AutomlClassifier
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.utils import check_random_state
 from tabpfn import TabPFNClassifier
 
-from autoqild.bayes_search_hpo.dimensionality_reduction_techniques import create_dimensionality_reduction_model
+from .automl_core import AutomlClassifier
+from ..utilities import create_dimensionality_reduction_model
 
 
 class AutoTabPFNClassifier(AutomlClassifier):

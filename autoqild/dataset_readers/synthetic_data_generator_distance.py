@@ -6,9 +6,8 @@ from scipy.stats import multivariate_normal
 from scipy.stats import ortho_group
 from sklearn.utils import check_random_state
 
-from pycilt.utils import softmax
 from .utils import FACTOR
-from autoqild.utils.constants import *
+from ..utilities import *
 
 
 def pdf(dist, x):

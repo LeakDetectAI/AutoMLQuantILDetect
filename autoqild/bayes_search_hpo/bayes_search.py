@@ -2,10 +2,11 @@ import logging
 
 import dill
 import numpy as np
-from pycilt.utils import log_exception_error
 from sklearn.utils import check_random_state
 from skopt import BayesSearchCV as BayesSearchCVSK
 from skopt.utils import eval_callbacks, point_asdict
+
+from autoqild import log_exception_error
 
 __all__ = ["BayesSearchCV"]
 class BayesSearchCV(BayesSearchCVSK):

@@ -2,7 +2,6 @@ import logging
 
 import numpy as np
 import torch
-from pycilt.utils import softmax
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import LabelBinarizer
 from tqdm import tqdm
@@ -10,6 +9,7 @@ from tqdm import tqdm
 from .class_nn import StatNet
 from .mi_base_class import MIEstimatorBase
 from .pytorch_utils import get_optimizer_and_parameters, init, get_mine_loss
+from ..utilities import softmax
 
 
 class MineMIEstimatorHPO(MIEstimatorBase):

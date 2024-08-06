@@ -2,14 +2,15 @@ import logging
 
 import numpy as np
 from autogluon.core.models import AbstractModel
-from pycilt import AutoGluonClassifier
-from pycilt.bayes_search_utils import get_scores
-from pycilt.utils import normalize
 from sklearn.metrics import accuracy_score, roc_auc_score
+
+from .utils import normalize, get_scores
+from ..automl import AutoGluonClassifier
 
 __all__ = ['bin_ce', 'helmann_raviv_function', 'helmann_raviv_upper_bound', 'santhi_vardi_upper_bound',
            'fanos_lower_bound', 'fanos_adjusted_lower_bound', 'auc_score', 'pc_softmax_estimation',
-           'log_loss_estimation', 'mid_point_mi', 'false_positive_rate', 'false_negative_rate']
+           'log_loss_estimation', 'mid_point_mi', 'false_positive_rate', 'false_negative_rate',
+           'probability_calibration']
 
 logger = logging.getLogger("Metrics")
 

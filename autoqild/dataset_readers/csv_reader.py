@@ -5,9 +5,10 @@ from abc import ABCMeta
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from pycilt.dataset_readers.utils import clean_class_label
-from pycilt.utils import print_dictionary
 from sklearn.preprocessing import LabelEncoder
+
+from .utils import clean_class_label
+from ..utilities import print_dictionary
 
 sns.set(color_codes=True)
 plt.style.use('default')

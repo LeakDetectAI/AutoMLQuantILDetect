@@ -4,9 +4,10 @@ from abc import ABCMeta
 import numpy as np
 import openml
 import pandas as pd
-from pycilt.dataset_readers.utils import clean_class_label
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils import check_random_state
+
+from ..utils import clean_class_label
 
 LABEL_COL = 'label'
 

@@ -1,10 +1,11 @@
 import logging
 
 import numpy as np
-from pycilt.bayes_search_utils import get_scores
-from pycilt.utils import normalize
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_random_state
+
+from ..bayes_search_hpo import get_scores
+from ..utilities import normalize
 
 
 class BayesPredictor(BaseEstimator, ClassifierMixin):

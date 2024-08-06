@@ -2,15 +2,11 @@ import logging
 
 import numpy as np
 import sklearn
-from autogluon.core.models import AbstractModel
 from packaging import version
-from sklearn.linear_model import RidgeClassifier, SGDClassifier
-from sklearn.svm import LinearSVC
 
-from pycilt import AutoTabPFNClassifier
-from pycilt.utils import print_dictionary, sigmoid
+from autoqild import *
 
-__all__ = ["get_scores", "convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback", "get_scores"]
+__all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback"]
 
 logger = logging.getLogger("BayesSearchUtils")
 def convert_value(value):
@@ -70,31 +66,3 @@ def log_callback(parameters):
     return on_step
 
 
-def get_scores(X, estimator):
-    try:
-        pred_prob = estimator.predict_proba(X)
-    except:
-        pred_prob = estimator.decision_function(X)
-    # logger.info("Predict Probability shape {}, {}".format(pred_prob.shape, y_test.shape))
-
-    if len(pred_prob.shape) == 2 and pred_prob.shape[-1] > 1:
-        p_pred = pred_prob
-    else:
-        p_pred = pred_prob.flatten()
-    if isinstance(estimator, AbstractModel):
-        if len(p_pred.shape) == 1:
-            p_pred = np.hstack(((1 - p_pred)[:, None], p_pred[:, None]))
-    if isinstance(estimator, SGDClassifier) or isinstance(estimator, LinearSVC) or isinstance(estimator,
-                                                                                              RidgeClassifier):
-        p_pred = sigmoid(p_pred)
-        if len(p_pred.shape) == 1:
-            p_pred = np.hstack(((1 - p_pred)[:, None], p_pred[:, None]))
-    if isinstance(estimator, AutoTabPFNClassifier):
-        y_pred = np.argmax(p_pred, axis=-1)
-    else:
-        y_pred = estimator.predict(X)
-    y_pred = np.array(y_pred)
-    p_pred = np.array(p_pred)
-    # logger = logging.getLogger("Score")
-    # logger.info(f"Scores Shape {p_pred.shape}, Classes {np.unique(y_pred)}")
-    return p_pred, y_pred

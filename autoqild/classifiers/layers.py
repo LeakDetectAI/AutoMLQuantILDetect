@@ -1,6 +1,5 @@
 from keras.layers import Layer, Dense, Activation, BatchNormalization
 
-
 class NormalizedDense(Layer):
     """Stop training when a monitored quantity has stopped improving.
     # Arguments
