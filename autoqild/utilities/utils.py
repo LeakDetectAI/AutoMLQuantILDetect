@@ -5,18 +5,12 @@ import warnings
 
 import h5py
 import numpy as np
-from autogluon.core.models import AbstractModel
-from sklearn.linear_model import SGDClassifier, RidgeClassifier
 from sklearn.preprocessing import RobustScaler
-from sklearn.svm import LinearSVC
-
-from ..automl import AutoTabPFNClassifier
 
 warnings.filterwarnings('ignore')
 
 __all__ = ['logsumexp', 'softmax', 'sigmoid', 'normalize', 'progress_bar', 'print_dictionary', 'standardize_features',
-           'standardize_features', 'create_directory_safely', 'log_exception_error', 'check_and_delete_corrupt_h5_file',
-           'get_scores']
+           'standardize_features', 'create_directory_safely', 'log_exception_error', 'check_and_delete_corrupt_h5_file']
 
 
 def logsumexp(x, axis=1):
@@ -159,31 +153,3 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
         logger.info(f"File does not exist {basename}")
 
 
-def get_scores(X, estimator):
-    try:
-        pred_prob = estimator.predict_proba(X)
-    except:
-        pred_prob = estimator.decision_function(X)
-    # logger.info("Predict Probability shape {}, {}".format(pred_prob.shape, y_test.shape))
-
-    if len(pred_prob.shape) == 2 and pred_prob.shape[-1] > 1:
-        p_pred = pred_prob
-    else:
-        p_pred = pred_prob.flatten()
-    if isinstance(estimator, AbstractModel):
-        if len(p_pred.shape) == 1:
-            p_pred = np.hstack(((1 - p_pred)[:, None], p_pred[:, None]))
-    if isinstance(estimator, SGDClassifier) or isinstance(estimator, LinearSVC) or isinstance(estimator,
-                                                                                              RidgeClassifier):
-        p_pred = sigmoid(p_pred)
-        if len(p_pred.shape) == 1:
-            p_pred = np.hstack(((1 - p_pred)[:, None], p_pred[:, None]))
-    if isinstance(estimator, AutoTabPFNClassifier):
-        y_pred = np.argmax(p_pred, axis=-1)
-    else:
-        y_pred = estimator.predict(X)
-    y_pred = np.array(y_pred)
-    p_pred = np.array(p_pred)
-    # logger = logging.getLogger("Score")
-    # logger.info(f"Scores Shape {p_pred.shape}, Classes {np.unique(y_pred)}")
-    return p_pred, y_pred

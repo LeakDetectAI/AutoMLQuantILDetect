@@ -1,16 +1,13 @@
 import logging
 
 import numpy as np
-from autogluon.core.models import AbstractModel
 from sklearn.metrics import accuracy_score, roc_auc_score
 
-from .utils import normalize, get_scores
-from ..automl import AutoGluonClassifier
+from .utils import normalize
 
 __all__ = ['bin_ce', 'helmann_raviv_function', 'helmann_raviv_upper_bound', 'santhi_vardi_upper_bound',
            'fanos_lower_bound', 'fanos_adjusted_lower_bound', 'auc_score', 'pc_softmax_estimation',
-           'log_loss_estimation', 'mid_point_mi', 'false_positive_rate', 'false_negative_rate',
-           'probability_calibration']
+           'log_loss_estimation', 'mid_point_mi', 'false_positive_rate', 'false_negative_rate']
 
 logger = logging.getLogger("Metrics")
 
@@ -149,33 +146,6 @@ def remove_nan_values(y_pred, y_true=None):
         y_true = y_true[~nan_rows]
     # logger.info(f"Nan rows {np.sum(nan_rows)} y_pred shape {y_pred.shape}")
     return y_pred, y_true
-
-
-def probability_calibration(X_train, y_train, X_test, classifier, calibrator):
-    if isinstance(classifier, AbstractModel):
-        n_features = X_train.shape[-1]
-        n_classes = len(np.unique(y_train))
-        X_train = AutoGluonClassifier(n_features=n_features, n_classes=n_classes).convert_to_dataframe(X_train, None)
-        X_test = AutoGluonClassifier(n_features=n_features, n_classes=n_classes).convert_to_dataframe(X_test, None)
-    y_pred_train, _ = get_scores(X_train, classifier)
-    y_pred_test, _ = get_scores(X_test, classifier)
-    if len(y_pred_train.shape) == 1:
-        y_pred_train = np.hstack(((1 - y_pred_train)[:, None], y_pred_train[:, None]))
-    if len(y_pred_test.shape) == 1:
-        y_pred_test = np.hstack(((1 - y_pred_test)[:, None], y_pred_test[:, None]))
-
-    y_pred_train, y_train = remove_nan_values(y_pred_train, y_true=y_train)
-    y_pred_test, _ = remove_nan_values(y_pred_test, y_true=None)
-    if y_train.size != 0:
-        calibrator.fit(y_pred_train, y_train)
-        y_pred_cal = calibrator.transform(y_pred_test)
-        if len(y_pred_cal.shape) == 1:
-            # logger.info(f"Calibration Type {type(calibrator).__name__}")
-            # logger.info(f"Calibrated Class 1 Probs {y_pred_cal[0:3]} \n Original Probs {y_pred_test[0:3]}")
-            y_pred_cal = np.hstack(((1 - y_pred_cal)[:, None], y_pred_cal[:, None]))
-    else:
-        raise ValueError("All rows were nan, so cannot calibrate the probabilities")
-    return y_pred_cal
 
 
 def get_entropy_y(y_true):

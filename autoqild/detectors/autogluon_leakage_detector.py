@@ -3,6 +3,7 @@ import os.path
 
 from .ild_base_class import InformationLeakageDetector
 from ..automl import AutoGluonClassifier
+from ..bayes_search_hpo.bayes_search_utils import get_scores
 from ..utilities import *
 
 __all__ = ['AutoGluonLeakageDetector']

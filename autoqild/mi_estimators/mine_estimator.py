@@ -3,14 +3,13 @@ from itertools import product
 
 import numpy as np
 import torch
-from pycilt.utils import softmax
 from sklearn.preprocessing import LabelBinarizer
 from tqdm import tqdm
 
 from .class_nn import StatNet
 from .mi_base_class import MIEstimatorBase
 from .pytorch_utils import get_optimizer_and_parameters, init, get_mine_loss
-
+from ..utilities import softmax
 
 class MineMIEstimator(MIEstimatorBase):
     def __init__(self, n_classes, n_features, loss_function='donsker_varadhan_softplus', optimizer_str='adam',

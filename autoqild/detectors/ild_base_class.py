@@ -13,6 +13,7 @@ from sklearn.utils import check_random_state
 from statsmodels.stats.multitest import multipletests
 
 from .utils import *
+from ..bayes_search_hpo.bayes_search_utils import get_scores, probability_calibration
 from ..classifiers import MajorityVoting, RandomClassifier
 from ..utilities import *
 
