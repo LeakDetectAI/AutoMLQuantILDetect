@@ -12,7 +12,6 @@ from .utils import *
 __all__ = ['OpenMLTimingDatasetReader', 'OpenMLPaddingDatasetReader']
 
 
-
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
         self.logger = logging.getLogger(OpenMLTimingDatasetReader.__name__)

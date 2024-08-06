@@ -18,7 +18,6 @@ import torch
 from netcal.binning import IsotonicRegression, HistogramBinning
 from netcal.scaling import LogisticCalibration, BetaCalibration, TemperatureScaling
 from packaging import version
-from autoqild import *
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, \
     ExtraTreesClassifier
 from sklearn.linear_model import RidgeClassifier, SGDClassifier
@@ -28,6 +27,8 @@ from sklearn.svm import LinearSVC
 from sklearn.tree import DecisionTreeClassifier, ExtraTreeClassifier
 from sklearn.utils import check_random_state
 from skopt.space import Real, Categorical, Integer
+
+from autoqild import *
 
 __all__ = ["datasets", "classifiers", "calibrators", "calibrator_params", "mi_estimators", "get_dataset_reader",
            "learners", "classification_metrics", "mi_estimation_metrics", "mi_metrics", "lp_metric_dict",
