@@ -1,7 +1,0 @@
-{
-  "dbname": "autosca",
-  "user": "autoscaadmin",
-  "password": "THcRuCHjBcLjDYMps3jGVckN",
-  "host": "vm-prithag04.cs.uni-paderborn.de",
-  "port": 5432
-}
