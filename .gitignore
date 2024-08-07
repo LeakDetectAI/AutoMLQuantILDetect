@@ -15,3 +15,4 @@ sql*
 *.sh
 2023-04-28-journal/
 autoqild.egg-info/
+docs/reference/

@@ -12,10 +12,12 @@ from autoqild.utilities import *
 
 class ClassficationMIEstimator(MIEstimatorBase):
 
-    def __init__(self, base_estimator=RandomForestClassifier, learner_params={}, random_state=None, **kwargs):
-        self.base_learner = base_estimator(**learner_params)
+    def __init__(self, random_state=None, **kwargs):
         self.random_state = check_random_state(random_state)
         self.logger = logging.getLogger(ClassficationMIEstimator.__name__)
+        self.base_estimator = RandomForestClassifier
+        self.learner_params = {}
+        self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):
         self.base_learner.fit(X, y)
