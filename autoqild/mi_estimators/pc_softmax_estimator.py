@@ -125,7 +125,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             test_ = self.class_net.score(a_data, dataset_prop)
         return test_.detach().numpy()
 
-    def estimate_mi(self, X, y, verbose=1):
+    def estimate_mi(self, X, y, verbose=1, **kwargs):
         dataset_prop, test_dataset = self.pytorch_tensor_dataset(X, y, batch_size=1)
         if verbose != 0:
             self.logger.info('MI estimation. ')

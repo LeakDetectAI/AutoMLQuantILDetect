@@ -40,3 +40,6 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         for parameter, value in parameters.items():
             setattr(self, parameter, value)
         return self
+
+    def estimate_mi(self, X, y, **kwargs):
+        pass

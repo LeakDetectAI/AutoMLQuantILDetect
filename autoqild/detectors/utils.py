@@ -21,7 +21,6 @@ mi_estimation_metrics = {
     LOG_LOSS_MI_ESTIMATION_HISTOGRAM_BINNING: log_loss_estimation,
     PC_SOFTMAX_MI_ESTIMATION: pc_softmax_estimation
 }
-
 classification_leakage_detection_methods = {
     PAIRED_TTEST_RANDOM: ACCURACY,
     PAIRED_TTEST: ACCURACY,

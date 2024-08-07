@@ -140,7 +140,7 @@ class MineMIEstimatorHPO(MIEstimatorBase):
                 scores = np.hstack((scores, score))
         return scores
 
-    def estimate_mi(self, X, y, verbose=0, MON_ITER=100):
+    def estimate_mi(self, X, y, verbose=0, MON_ITER=100, **kwargs):
         mi_hats = []
         for iter_ in range(MON_ITER):
             xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=iter_)

@@ -11,6 +11,7 @@ from .mi_base_class import MIEstimatorBase
 from .pytorch_utils import get_optimizer_and_parameters, init, get_mine_loss
 from ..utilities import softmax
 
+
 class MineMIEstimator(MIEstimatorBase):
     def __init__(self, n_classes, n_features, loss_function='donsker_varadhan_softplus', optimizer_str='adam',
                  learning_rate=1e-4, reg_strength=0, encode_classes=True, random_state=42):
@@ -148,7 +149,7 @@ class MineMIEstimator(MIEstimatorBase):
         final_scores = final_scores / self.n_models
         return final_scores
 
-    def estimate_mi(self, X, y, verbose=0, MON_ITER=1000):
+    def estimate_mi(self, X, y, verbose=0, MON_ITER=1000, **kwargs):
         final_mis = []
         for model in self.models:
             mi_hats = []
