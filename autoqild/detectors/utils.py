@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from ..utilities import *
 
 __all__ = ['mi_estimation_metrics', 'classification_leakage_detection_methods', 'mi_leakage_detection_methods',
-           'leakage_detection_methods', 'calibrators', 'calibrator_params']
+           'leakage_detection_methods', 'calibrators', 'calibrator_params', 'leakage_detection_names']
 mi_estimation_metrics = {
     ACCURACY: accuracy_score,
     CONFUSION_MATRIX: confusion_matrix,
@@ -42,6 +42,7 @@ for key in leakage_detection_methods.keys():
     hash_object = hashlib.sha1()
     hash_object.update(key.encode())
     leakage_detection_names[key] = str(hash_object.hexdigest())[:8]
+
 calibrators = {ISOTONIC_REGRESSION: IsotonicRegression,
                PLATT_SCALING: LogisticCalibration,
                HISTOGRAM_BINNING: HistogramBinning,
