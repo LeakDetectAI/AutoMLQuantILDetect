@@ -7,6 +7,7 @@ from abc import ABCMeta
 
 import h5py
 import numpy as np
+from scipy.stats import fisher_exact
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from sklearn.utils import check_random_state
