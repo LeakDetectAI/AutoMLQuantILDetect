@@ -6,8 +6,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import LabelBinarizer
 from tqdm import tqdm
 
-from .class_nn import StatNet
 from .mi_base_class import MIEstimatorBase
+from .neural_networks_torch import StatNet
 from .pytorch_utils import get_optimizer_and_parameters, init, get_mine_loss
 from ..utilities import softmax
 
@@ -16,6 +16,51 @@ class MineMIEstimatorHPO(MIEstimatorBase):
     def __init__(self, n_classes, n_features, n_hidden=2, n_units=100, loss_function='donsker_varadhan_softplus',
                  optimizer_str='adam', learning_rate=1e-4, reg_strength=1e-10, encode_classes=True, random_state=42):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
+        """
+            MineMIEstimator class implementing Mutual Information Neural Estimator (MINE) approach to estimate the 
+            mutual infomation.
+
+            Parameters
+            ----------
+            n_classes : int
+                Number of classes in the classification data samples.
+
+            n_features : int
+                Number of features or dimensionality of the inputs of the classification data samples.
+
+
+            loss_function : {'donsker_varadhan', 'donsker_varadhan_softplus', 'fdivergence'}, default='donsker_varadhan_softplus'
+                The divergence metric to use for the MINE loss. 
+                Options include:
+
+                - 'donsker_varadhan': Donsker-Varadhan representation of KL divergence.
+                - 'donsker_varadhan_softplus': Softplus version of the Donsker-Varadhan representation.
+                - 'fdivergence': f-divergence representation of mutual information.
+
+            optimizer_str : {'RMSprop', 'sgd', 'adam', 'AdamW', 'Adagrad', 'Adamax', 'Adadelta'}, default='adam'
+                Optimizer type to use for training the neural network. 
+                Must be one of:
+
+                - 'RMSprop': RMSprop optimizer.
+                - 'sgd': Stochastic Gradient Descent optimizer.
+                - 'adam': Adam optimizer.
+                - 'AdamW': AdamW optimizer.
+                - 'Adagrad': Adagrad optimizer.
+                - 'Adamax': Adamax optimizer.
+                - 'Adadelta': Adadelta optimizer.
+
+            learning_rate : float, optional, default=1e-4
+                Learning rate for the optimizer.
+
+            reg_strength : float, optional, default=0
+                Regularization strength.
+
+            encode_classes : bool, optional, default=True
+                Indicates if the target variable should be one-hot encoded.
+
+            random_state : int, optional, default=42
+                Random state for reproducibility.
+        """
         self.logger = logging.getLogger(MineMIEstimatorHPO.__name__)
         self.optimizer_str = optimizer_str
         self.learning_rate = learning_rate
@@ -37,6 +82,28 @@ class MineMIEstimatorHPO(MIEstimatorBase):
         self.mi_val = 0
 
     def pytorch_tensor_dataset(self, X, y, batch_size=64, i=2):
+        """
+            Create PyTorch tensor datasets for the input features and target labels.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            i : int, optional, default=2
+                Seed increment for reproducibility.
+
+            Returns
+            -------
+            tensor_xy : torch.Tensor
+                Tensor containing the original data and labels.
+
+            tensor_xy_tilde : torch.Tensor
+                Tensor containing the permuted data and labels.
+        """
         seed = self.random_state.randint(2 ** 31, dtype="uint32") + i
         rs = np.random.RandomState(seed)
         if self.encode_classes:
@@ -57,6 +124,31 @@ class MineMIEstimatorHPO(MIEstimatorBase):
         return tensor_xy, tensor_xy_tilde
 
     def fit(self, X, y, epochs=10000, batch_size=128, verbose=0, **kwd):
+        """
+            Fit the MINE model and estimate mutual information.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            epochs : int, optional, default=100000
+                Number of training epochs.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+
+            Returns
+            -------
+            self : MineMIEstimator
+                Fitted estimator.
+        """
         MON_FREQ = epochs // 10
         # Monitoring
         MON_ITER = 10
@@ -108,11 +200,49 @@ class MineMIEstimatorHPO(MIEstimatorBase):
         return self
 
     def predict(self, X, verbose=0):
+        """
+            Predict class labels for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            y_pred : array-like of shape (n_samples,)
+                Predicted class labels.
+        """
         scores = self.predict_proba(X=X, verbose=verbose)
         y_pred = np.argmax(scores, axis=1)
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
+        """
+            Compute the score of the MINE model using the mean squared error between the orignal and permuted samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            sample_weight : array-like of shape (n_samples,), optional
+                Sample weights.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            score : float
+                The score of the model using the mean squared error between the orignal and permuted samples loss.
+        """
         torch.no_grad()
         xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=0)
         preds_xy = self.stat_net(xy).cpu().detach().numpy().flatten()
@@ -123,6 +253,22 @@ class MineMIEstimatorHPO(MIEstimatorBase):
         return mse
 
     def predict_proba(self, X, verbose=0):
+        """
+            Predict class probabilities for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            p_pred : array-like of shape (n_samples, n_classes)
+                Predicted class probabilities.
+        """
         scores = self.decision_function(X=X, verbose=verbose)
         scores = softmax(scores)
         return scores
@@ -141,6 +287,31 @@ class MineMIEstimatorHPO(MIEstimatorBase):
         return scores
 
     def estimate_mi(self, X, y, verbose=0, MON_ITER=100, **kwargs):
+        """
+               Estimate mutual information using the MINE model.
+
+               Parameters
+               ----------
+               X : array-like of shape (n_samples, n_features)
+                   Feature matrix.
+
+               y : array-like of shape (n_samples,)
+                   Target vector.
+
+               verbose : int, optional, default=0
+                   Verbosity level.
+
+               MON_ITER : int, optional, default=100
+                   Number of iterations for estimating MI.
+
+               **kwargs : dict, optional
+                   Additional keyword arguments.
+
+               Returns
+               -------
+               mi_estimated : float
+                   Estimated mutual information.
+        """
         mi_hats = []
         for iter_ in range(MON_ITER):
             xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=iter_)

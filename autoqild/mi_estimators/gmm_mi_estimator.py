@@ -13,6 +13,60 @@ class GMMMIEstimator(MIEstimatorBase):
     def __init__(self, n_classes, n_features, y_cat=False, covariance_type='full', reg_covar=1e-06, val_size=0.30,
                  n_reduced=20, reduction_technique='select_from_model_rf', random_state=42, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
+        """
+            GMMMIEstimator class for estimating Mutual Information (MI) using Gaussian Mixture Models (GMMs)
+            and performing classification using Logistic Regression.
+
+            Parameters
+            ----------
+            n_classes : int
+                Number of classes in the classification data samples.
+
+            n_features : int
+                Number of features or dimensionality of the inputs of the classification data samples.
+
+            y_cat : bool, optional, default=False
+                Indicates if the target variable should be considered categorical or real valued.
+            
+            covariance_type : {'full', 'tied', 'diag', 'spherical'}, default='full'
+                String describing the type of covariance parameters to use.
+                Must be one of:
+                
+                - 'full': each component has its own general covariance matrix.
+                - 'tied': all components share the same general covariance matrix.
+                - 'diag': each component has its own diagonal covariance matrix.
+                - 'spherical': each component has its own single variance.
+
+            reg_covar : float, default=1e-6
+                Non-negative regularization added to the diagonal of covariance.
+                Allows to assure that the covariance matrices are all positive.
+
+            val_size : float, optional, default=0.30
+                Validation set size as a proportion of the dataset to estimate GMMs
+                
+            n_reduced : int, optional, default=20
+                Number of features to reduce to in case the n_features>100
+
+            reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf', 
+            'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
+                Technique to use for feature reduction, implementation provided by (scikit-learn);
+                Must be one of:
+                
+                - 'recursive_feature_elimination_et' : Recursively removes features and builds a model using ExtraTreesClassifier on those features that remain.
+                - 'recursive_feature_elimination_rf' : Recursively removes features and builds a model using RandomForest on those features that remain
+                - 'select_from_model_et' : Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier
+                - 'select_from_model_rf' : Meta-transformer for selecting features based on importance weights using RandomForestClassifier
+                - 'pca' : Reduces the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated.
+                - 'lda' : Finds a linear combination of features that characterizes or separates two or more classes.
+                - 'tsne' : t-Distributed Stochastic Neighbor Embedding,  Reduces the dimensionality of the data for the purpose of visualization.
+                - 'nmf' : Non-Negative Matrix Factorization, Factorizes the data matrix into two matrices with non-negative elements, useful for dimensionality reduction.
+
+            random_state : int or object, optional, default=42
+                Random state for reproducibility.
+
+            **kwargs : dict, optional
+                Additional keyword arguments.
+        """
         self.y_cat = y_cat
         self.num_comps = list(np.arange(2, 20, 2))
         self.reg_covar = reg_covar
@@ -38,6 +92,36 @@ class GMMMIEstimator(MIEstimatorBase):
         self.logger = logging.getLogger(GMMMIEstimator.__name__)
 
     def get_goodnessof_fit(self, gmm, X, y):
+        """
+            Calculate goodness of fit for the GMM model(s) used for estimating the Mutual Information (MI)
+            using Gaussian Mixture Models (GMMs).
+
+            Parameters
+            ----------
+            gmm : GMM or dict
+                Gaussian Mixture Model or dictionary of GMMs.
+
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            Returns
+            -------
+            aic_fit : float
+                Akaike information criterion for the current model on the input X.
+
+            bic_fit : float
+                Bayesian information criterion for the current model on the input X.
+
+            likelihood : float
+                Compute the per-sample average log-likelihood of the given data X.
+
+            n_components : int
+                Number of components in the GMM.
+        """
+
         if isinstance(gmm, dict):
             classes = list(set(y))
             bic_fit = []
@@ -62,6 +146,22 @@ class GMMMIEstimator(MIEstimatorBase):
         return aic_fit, bic_fit, likelihood, n_components
 
     def transform(self, X, y=None):
+        """
+            Transform and reduce the feature set with dimensionality n_reduced using the feature reduction technique.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,), optional
+                Target vector.
+
+            Returns
+            -------
+            X : array-like of shape (n_samples, n_reduced)
+                Transformed feature matrix.
+        """
         self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
@@ -87,6 +187,28 @@ class GMMMIEstimator(MIEstimatorBase):
         return X
 
     def fit(self, X, y, verbose=0, **kwd):
+        """
+            Fit the GMM model and estimate mutual information.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            verbose : int, optional, default=0
+                print or not to print!?.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+
+            Returns
+            -------
+            self : GMMMIEstimator
+                Fitted estimator.
+        """
         X = self.transform(X, y)
         self.best_likelihood = -np.inf
         seed = self.random_state.randint(2 ** 31, dtype="uint32")
@@ -127,7 +249,22 @@ class GMMMIEstimator(MIEstimatorBase):
         return self
 
     def create_classification_model(self, X, y, **kwd):
+        """
+            Create the logistic regression classification model on reduced feature space with n_reduced features.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+        """
         self.logger.debug(f"Best Model is not None out of {self.n_models} seed {self.best_seed}")
+        X = self.transform(X, y)
         if self.best_model is not None:
             idx = np.where(self.best_model.get_info()['delta'].values < 0)
             try:
@@ -145,12 +282,51 @@ class GMMMIEstimator(MIEstimatorBase):
             self.cls_model.fit(X, y)
 
     def predict(self, X, verbose=0):
+        """
+            Predict class labels for the input samples with reduced features of n_reduced using the fitted logistic
+            regression classification model.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            y_pred : array-like of shape (n_samples,)
+                Predicted class labels.
+        """
         X = self.transform(X)
         if self.best_model is not None:
             X = self.best_model.transform(X, rd=self.round)
         return self.cls_model.predict(X=X)
 
     def score(self, X, y, sample_weight=None, verbose=0):
+        """
+            Compute the likelihood score of the GMM model.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            sample_weight : array-like of shape (n_samples,), optional
+                Sample weights.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            score : float
+                The score of the model based on likelihood.
+        """
         X = self.transform(X, y)
         try:
             aic, bic, likelihood, n_components = self.get_goodnessof_fit(self.best_model.gmm, X, y)
@@ -167,18 +343,75 @@ class GMMMIEstimator(MIEstimatorBase):
         return score
 
     def predict_proba(self, X, verbose=0):
+        """
+            Predict class labels for the input samples with reduced features of n_reduced using the fitted logistic
+            regression classification model.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            y_pred : array-like of shape (n_samples,)
+                Predicted class labels.
+        """
         X = self.transform(X)
         if self.best_model is not None:
             X = self.best_model.transform(X, rd=self.round)
-        return self.cls_model.predict_proba(X=X)
+        y_pred = self.cls_model.predict_proba(X=X)
+        return y_pred
 
     def decision_function(self, X, verbose=0):
+        """
+             Predict confidence scores for samples, which is proportional to the signed distance of that sample to the
+             hyperplane.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            decision : array-like of shape (n_samples,)
+                Decision function values.
+        """
         X = self.transform(X)
         if self.best_model is not None:
             X = self.best_model.transform(X, rd=self.round)
         return self.cls_model.decision_function(X=X)
 
     def estimate_mi(self, X, y, verbose=0, **kwd):
+        """
+            Estimate mutual information using the best fitted GMM model.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+
+            Returns
+            -------
+            mi_estimated : float
+                Estimated mutual information.
+        """
         X = self.transform(X, y)
         iter_ = 0
         while True:

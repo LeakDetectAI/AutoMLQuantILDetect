@@ -18,6 +18,33 @@ optimizer_parameters = {'RMSprop': {'lr': 0.01, 'alpha': 0.99, 'eps': 1e-08, 'we
 
 
 def get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength):
+    """
+        Get the optimizer and its configuration parameters based on the specified optimizer string.
+
+        Parameters
+        ----------
+        optimizer_str : {'RMSprop', 'sgd', 'adam', 'AdamW', 'Adagrad', 'Adamax', 'Adadelta'}
+            The string identifier of the optimizer.
+
+        learning_rate : float
+            The learning rate for the optimizer.
+
+        reg_strength : float
+            The regularization strength (weight decay) for the optimizer.
+
+        Returns
+        -------
+        optimizer : torch.optim.Optimizer
+            The optimizer class.
+
+        optimizer_config : dict
+            The configuration parameters for the optimizer.
+
+        Raises
+        ------
+        ValueError
+            If the specified optimizer string is not recognized.
+    """
     optimizer = optimizers.get(optimizer_str, 'adam')
     optimizer_config = optimizer_parameters.get(optimizer_str, 'adam')
     optimizer_config['lr'] = learning_rate
@@ -27,6 +54,18 @@ def get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength):
 
 
 def init(m):
+    """
+        Initialize the weights and biases of a neural network layer.
+
+        Parameters
+        ----------
+        m : torch.nn.Module
+            The neural network layer to initialize.
+
+        Notes
+        -----
+        This function initializes the weights of a linear layer using orthogonal initialization and sets the biases to zero.
+    """
     if type(m) == nn.Linear:
         nn.init.orthogonal_(m.weight)
     if hasattr(m, 'bias'):
@@ -34,6 +73,25 @@ def init(m):
 
 
 def log_mean_exp(inputs, dim=None, keepdim=False):
+    """
+        Compute the log of the mean of the exponentials of input elements.
+
+        Parameters
+        ----------
+        value : torch.Tensor
+            Input tensor.
+
+        dim : int or tuple of ints, optional
+            The dimension or dimensions to reduce. If None, reduces all dimensions.
+
+        keepdim : bool, optional
+            Whether the output tensor has dim retained or not.
+
+        Returns
+        -------
+        torch.Tensor
+            The logarithm of the mean of the exponentials of the input tensor.
+    """
     if dim is None:
         inputs = inputs.view(-1)
         dim = 0
@@ -45,6 +103,34 @@ def log_mean_exp(inputs, dim=None, keepdim=False):
 
 
 def get_mine_loss(preds_xy, preds_xy_tilde, metric):
+    """
+        Calculate the MINE loss based on the specified metric.
+
+        Parameters
+        ----------
+        preds_xy : torch.Tensor
+            Predictions for the joint distribution samples.
+
+        preds_xy_tilde : torch.Tensor
+            Predictions for the product of marginals distribution samples.
+
+        metric : {'donsker_varadhan', 'donsker_varadhan_softplus', 'fdivergence'}
+            The divergence metric to use for the MINE loss. Options include:
+
+            - 'donsker_varadhan': Donsker-Varadhan representation of KL divergence.
+            - 'donsker_varadhan_softplus': Softplus version of the Donsker-Varadhan representation.
+            - 'fdivergence': f-divergence representation of mutual information.
+
+        Returns
+        -------
+        loss : torch.Tensor
+            Calculated MINE loss based on the specified metric.
+
+        Raises
+        ------
+        ValueError
+            If the specified metric is not recognized.
+    """
     SMALL = 1e-8
     if metric == 'donsker_varadhan':
         loss = preds_xy.mean(dim=0) - log_mean_exp(preds_xy_tilde, dim=0)

@@ -13,6 +13,46 @@ from ..utilities import create_dimensionality_reduction_model
 class AutoTabPFNClassifier(AutomlClassifier):
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):
+        """
+            AutoTabPFNClassifier class for building and training an AutoML model using TabPFN.
+
+            Parameters
+            ----------
+            n_features : int
+                Number of features or dimensionality of the inputs.
+
+            n_classes : int
+                Number of classes in the classification data samples.
+
+            n_ensembles : int, optional, default=100
+                Number of ensemble configurations for TabPFN.
+
+            n_reduced : int, optional, default=20
+                Number of features to reduce to in case the n_features > 50.
+
+             reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf',
+            'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
+                Technique to use for feature reduction, implementation provided by (scikit-learn);
+                Must be one of:
+
+                - 'recursive_feature_elimination_et' : Recursively removes features and builds a model using ExtraTreesClassifier on those features that remain.
+                - 'recursive_feature_elimination_rf' : Recursively removes features and builds a model using RandomForest on those features that remain
+                - 'select_from_model_et' : Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier
+                - 'select_from_model_rf' : Meta-transformer for selecting features based on importance weights using RandomForestClassifier
+                - 'pca' : Reduces the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated.
+                - 'lda' : Finds a linear combination of features that characterizes or separates two or more classes.
+                - 'tsne' : t-Distributed Stochastic Neighbor Embedding,  Reduces the dimensionality of the data for the purpose of visualization.
+                - 'nmf' : Non-Negative Matrix Factorization, Factorizes the data matrix into two matrices with non-negative elements, useful for dimensionality reduction.
+
+            base_path : str, optional
+                Path to save the trained model.
+
+            random_state : int or None, optional, default=None
+                Random state for reproducibility.
+
+            **kwargs : dict, optional
+                Additional keyword arguments.
+        """
         self.n_features = n_features
         self.n_classes = n_classes
         self.logger = logging.getLogger(name=AutoTabPFNClassifier.__name__)
@@ -34,6 +74,22 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.base_path = base_path
 
     def transform(self, X, y=None):
+        """
+            Transform and reduce the feature set with dimensionality n_reduced using the feature reduction technique.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,), optional
+                Target vector.
+
+            Returns
+            -------
+            X : array-like of shape (n_samples, n_reduced)
+                Transformed feature matrix.
+        """
         self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
@@ -59,6 +115,20 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return X
 
     def fit(self, X, y, **kwd):
+        """
+            Fit the TabPFN model to the training data.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+        """
         X = self.transform(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
@@ -70,17 +140,71 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.logger.info("Fitting Done")
 
     def predict(self, X, verbose=0):
+        """
+            Predict class labels for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            y_pred : array-like of shape (n_samples,)
+                Predicted class labels.
+        """
         p = self.predict_proba(X, verbose=0)
         y_pred = np.argmax(p, axis=-1)
         self.logger.info("Predict Done")
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
+        """
+            Compute the balanced accuracy score for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                True labels.
+
+            sample_weight : array-like of shape (n_samples,), optional
+                Sample weights.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            acc : float
+                Balanced accuracy score.
+        """
         y_pred = self.predict(X)
         acc = balanced_accuracy_score(y, y_pred)
         return acc
 
     def predict_proba(self, X, batch_size=None, verbose=0):
+        """
+            Predict class probabilities for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            prob_predictions : array-like of shape (n_samples, n_classes)
+                Predicted class probabilities.
+        """
         self.logger.info("Predicting Probabilities")
         n_samples = X.shape[0]
         X = self.transform(X)
@@ -103,10 +227,28 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return y_pred
 
     def decision_function(self, X, verbose=0):
+        """
+            Compute the decision function in form of class probabilities for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            decision : array-like of shape (n_samples,)
+                Decision function values.
+        """
         return self.predict_proba(X, verbose)
 
     def clear_memory(self):
-        # Call Python's garbage collector
+        """
+                Clear memory to release resources by torch.
+        """
         import gc
         gc.collect()
         # Explicitly clear CUDA cache if available

@@ -8,9 +8,8 @@ from sklearn.linear_model import SGDClassifier, RidgeClassifier
 from sklearn.svm import LinearSVC
 
 from .. import AutoGluonClassifier
-from ..utilities import print_dictionary, sigmoid
 from ..automl.tabpfn_classifier import AutoTabPFNClassifier
-
+from ..utilities import print_dictionary, sigmoid
 
 __all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback", "get_scores"]
 
@@ -18,6 +17,24 @@ from ..utilities.metrics import remove_nan_values
 
 logger = logging.getLogger("BayesSearchUtils")
 def convert_value(value):
+    """
+        Convert a value to its appropriate type.
+
+        Parameters
+        ----------
+        value : str
+            The value to be converted.
+
+        Returns
+        -------
+        int, float or str
+            The converted value.
+
+        Notes
+        -----
+        This function tries to convert the value to an integer first. If it fails, it tries to convert it to a float.
+        If it still fails, it returns the value as a string.
+    """
     try:
         # Try converting to integer
         return int(value)
@@ -31,6 +48,28 @@ def convert_value(value):
 
 
 def get_parameters_at_k(optimizers, search_keys, k):
+    """
+        Get the parameters and loss at the k-th position.
+
+        Parameters
+        ----------
+        optimizers : list of skopt.optimizer.Optimizer
+            The list of optimizers.
+
+        search_keys : list of str
+            The search keys for the parameters.
+
+        k : int
+            The position to retrieve the parameters from.
+
+        Returns
+        -------
+        best_loss : float
+            The best loss at the k-th position.
+
+        best_params : dict
+            The best parameters at the k-th position.
+    """
     yis = []
     xis = []
     for opt in optimizers:
@@ -47,6 +86,31 @@ def get_parameters_at_k(optimizers, search_keys, k):
 
 
 def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
+    """
+        Update the learner parameters with the best parameters at the k-th position.
+
+        Parameters
+        ----------
+        bayes_search : BayesSearchCV
+            The BayesSearchCV instance.
+
+        search_keys : list of str
+            The search keys for the parameters.
+
+        learner_params : dict
+            The learner parameters to be updated.
+
+        k : int, default=0
+            The position to retrieve the parameters from.
+
+        Returns
+        -------
+        loss : float
+            The best loss at the k-th position.
+
+        learner_params : dict
+            The updated learner parameters.
+    """
     loss, best_params = get_parameters_at_k(optimizers=bayes_search.optimizers_, search_keys=search_keys, k=k)
     if version.parse(sklearn.__version__) < version.parse("0.25.0"):
         if 'criterion' in best_params.keys():
@@ -60,6 +124,19 @@ def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
 
 
 def log_callback(parameters):
+    """
+        Callback function for logging parameters and scores during Bayesian optimization.
+
+        Parameters
+        ----------
+        parameters : list of str
+            The parameters to log.
+
+        Returns
+        -------
+        on_step : callable
+            The callback function.
+    """
     def on_step(opt_result):
         """
         Callback meant to view scores after
@@ -75,6 +152,25 @@ def log_callback(parameters):
 
 
 def get_scores(X, estimator):
+    """
+        Get the predicted probabilities and labels for the input samples.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+
+        estimator : estimator object
+            The estimator to use for predictions.
+
+        Returns
+        -------
+        p_pred : array-like of shape (n_samples, n_classes)
+            Predicted class probabilities.
+
+        y_pred : array-like of shape (n_samples,)
+            Predicted class labels.
+    """
     try:
         pred_prob = estimator.predict_proba(X)
     except:
@@ -105,6 +201,31 @@ def get_scores(X, estimator):
 
 
 def probability_calibration(X_train, y_train, X_test, classifier, calibrator):
+    """
+        Calibrate the predicted probabilities.
+
+        Parameters
+        ----------
+        X_train : array-like of shape (n_samples_train, n_features)
+            Training feature matrix.
+
+        y_train : array-like of shape (n_samples_train,)
+            Training target vector.
+
+        X_test : array-like of shape (n_samples_test, n_features)
+            Test feature matrix.
+
+        classifier : estimator object
+            The classifier to use for predictions.
+
+        calibrator : calibrator object
+            The calibrator to use for calibration.
+
+        Returns
+        -------
+        y_pred_cal : array-like of shape (n_samples_test, n_classes)
+            Calibrated predicted probabilities.
+    """
     if isinstance(classifier, AbstractModel):
         n_features = X_train.shape[-1]
         n_classes = len(np.unique(y_train))

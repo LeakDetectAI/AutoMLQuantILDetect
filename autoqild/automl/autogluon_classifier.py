@@ -17,6 +17,47 @@ class AutoGluonClassifier(AutomlClassifier):
     def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
                  use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
                  remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
+        """
+            AutoGluonClassifier class for building and training an AutoML model using AutoGluon.
+
+            Parameters
+            ----------
+            n_features : int
+                Number of features or dimensionality of the inputs.
+
+            n_classes : int
+                Number of classes in the classification data samples.
+
+            time_limit : int, optional, default=1800
+                Time limit for training the model.
+
+            output_folder : str, optional
+                Path to save the trained model.
+
+            eval_metric : str, optional, default='accuracy'
+                Evaluation metric to use.
+
+            use_hyperparameters : bool, optional, default=True
+                Whether to use predefined hyperparameters for model training.
+
+            delete_tmp_folder_after_terminate : bool, optional, default=True
+                Whether to delete temporary folder after training.
+
+            auto_stack : bool, optional, default=True
+                Whether to use auto-stacking in AutoGluon.
+
+            remove_boosting_models : bool, optional, default=True
+                Whether to remove boosting models from the hyperparameters.
+
+            verbosity : int, optional, default=6
+                Verbosity level.
+
+            random_state : int or None, optional, default=None
+                Random state for reproducibility.
+
+            **kwargs : dict, optional
+                Additional keyword arguments.
+        """
         self.logger = logging.getLogger(name=AutoGluonClassifier.__name__)
         self.random_state = check_random_state(random_state)
         self.output_folder = output_folder
@@ -57,6 +98,14 @@ class AutoGluonClassifier(AutomlClassifier):
 
     @property
     def _is_fitted_(self) -> bool:
+        """
+            Check if the model is already fitted.
+
+            Returns
+            -------
+            bool
+                True if the model is fitted, False otherwise.
+        """
         basename = os.path.basename(self.output_folder)
         if os.path.exists(self.output_folder):
             try:
@@ -101,6 +150,20 @@ class AutoGluonClassifier(AutomlClassifier):
         return self.model is not None
 
     def fit(self, X, y, **kwd):
+        """
+            Fit the AutoGluon model to the training data.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            **kwd : dict, optional
+                Additional keyword arguments.
+        """
         # Set the alarm to trigger after the specified time limit
         self.logger.info("Fitting Started")
         train_data = self.convert_to_dataframe(X, y)
@@ -122,26 +185,112 @@ class AutoGluonClassifier(AutomlClassifier):
             self.model.save_space()
 
     def predict(self, X, verbose=0):
+        """
+            Predict class labels for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            y_pred : array-like of shape (n_samples,)
+                Predicted class labels.
+        """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict(test_data)
         return y_pred.values
 
     def score(self, X, y, sample_weight=None, verbose=0):
+        """
+            Compute the balanced accuracy score for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                True labels.
+
+            sample_weight : array-like of shape (n_samples,), optional
+                Sample weights.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            score : float
+                Balanced accuracy score.
+        """
         test_data = self.convert_to_dataframe(X, y)
         score = self.model.evaluate(test_data)['balanced_accuracy']
         return score
 
     def predict_proba(self, X, verbose=0):
+        """
+            Predict class probabilities for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            prob_predictions : array-like of shape (n_samples, n_classes)
+                Predicted class probabilities.
+        """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict_proba(test_data)
         return y_pred.values
 
     def decision_function(self, X, verbose=0):
+        """
+            Compute the decision function in form of class probabilities for the input samples.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            verbose : int, optional, default=0
+                Verbosity level.
+
+            Returns
+            -------
+            decision : array-like of shape (n_samples,)
+                Decision function values.
+        """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict_proba(test_data)
         return y_pred.values
 
     def convert_to_dataframe(self, X, y=None):
+        """
+            Convert the input data to a DataFrame.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,), optional
+                Target vector.
+
+            Returns
+            -------
+            df_data : pandas.DataFrame
+                DataFrame containing the input data.
+        """
         # Ensure X and y are NumPy arrays
         X = np.asarray(X)
         if y is not None:
@@ -169,12 +318,38 @@ class AutoGluonClassifier(AutomlClassifier):
         return df_data
 
     def get_k_rank_model(self, k):
+        """
+            Get the k-th ranked model from the leaderboard.
+
+            Parameters
+            ----------
+            k : int
+                Rank of the model to retrieve.
+
+            Returns
+            -------
+            model : autogluon.tabular.TabularPredictor
+                The k-th ranked model.
+        """
         self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
         model_name = self.leaderboard.iloc[k - 1]['model']
         model = self.model._trainer.load_model(model_name)
         return model
 
     def get_model(self, model_name):
+        """
+            Get a model by its name from the leaderboard.
+
+            Parameters
+            ----------
+            model_name : str
+                Name of the model to retrieve.
+
+            Returns
+            -------
+            model : autogluon.tabular.TabularPredictor
+                The specified model.
+        """
         self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
         # model_name = self.leaderboard.iloc[k - 1]['model']
         model = self.model._trainer.load_model(model_name)

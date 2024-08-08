@@ -6,8 +6,8 @@ import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 
-from .class_nn import ClassNet, own_softmax
 from .mi_base_class import MIEstimatorBase
+from .neural_networks_torch import ClassNet, own_softmax
 from .pytorch_utils import get_optimizer_and_parameters, init
 
 
