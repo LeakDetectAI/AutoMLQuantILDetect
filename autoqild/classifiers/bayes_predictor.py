@@ -31,25 +31,20 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return acc_bp
 
     def decision_function(self, X, verbose=0):
-        prob_predictions = np.zeros((X.shape[0], self.dataset_obj.n_classes))
-        for k_class in self.dataset_obj.class_labels:
-            if self.dataset_obj.flip_y == 0.0:
-                prob_predictions[:, k_class] = self.dataset_obj.get_prob_y_given_x(X=X, class_label=k_class)
-            else:
-                prob_predictions[:, k_class] = self.dataset_obj.get_prob_flip_y_given_x(X=X, class_label=k_class)
+        scores = self.predict_proba(X)
         if self.n_classes == 2:
-            prob_predictions = prob_predictions[:, 1]
-        return prob_predictions
+            scores = scores[:, 1]
+        return scores
 
     def predict_proba(self, X, verbose=0):
-        prob_predictions = np.zeros((X.shape[0], self.dataset_obj.n_classes))
+        p_pred = np.zeros((X.shape[0], self.dataset_obj.n_classes))
         for k_class in self.dataset_obj.class_labels:
             if self.dataset_obj.flip_y == 0.0:
-                prob_predictions[:, k_class] = self.dataset_obj.get_prob_y_given_x(X=X, class_label=k_class)
+                p_pred[:, k_class] = self.dataset_obj.get_prob_y_given_x(X=X, class_label=k_class)
             else:
-                prob_predictions[:, k_class] = self.dataset_obj.get_prob_flip_y_given_x(X=X, class_label=k_class)
-        prob_predictions = normalize(prob_predictions, axis=1)
-        return prob_predictions
+                p_pred[:, k_class] = self.dataset_obj.get_prob_flip_y_given_x(X=X, class_label=k_class)
+        p_pred = normalize(p_pred, axis=1)
+        return p_pred
 
     def get_bayes_predictor_scores(self):
         max_acc = -np.inf
@@ -67,6 +62,4 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
                 p_pred, y_pred = get_scores(X, self)
         return y_true, y_pred, p_pred
 
-    def decision_function(self, X, verbose=0):
-        prob_predictions = self.predict_proba(X=X, verbose=verbose)
-        return prob_predictions
+

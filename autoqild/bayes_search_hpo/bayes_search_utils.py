@@ -16,6 +16,8 @@ __all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_ca
 from ..utilities.metrics import remove_nan_values
 
 logger = logging.getLogger("BayesSearchUtils")
+
+
 def convert_value(value):
     """
         Convert a value to its appropriate type.

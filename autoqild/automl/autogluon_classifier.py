@@ -7,7 +7,7 @@ import pandas as pd
 from autogluon.tabular import TabularPredictor
 from sklearn.utils import check_random_state
 
-from .automl_core import AutomlClassifier
+from autoqild.core.automl_core import AutomlClassifier
 from .model_configurations import hyperparameters, reduced_hyperparameters
 from ..utilities.utils import log_exception_error
 
@@ -103,7 +103,7 @@ class AutoGluonClassifier(AutomlClassifier):
 
             Returns
             -------
-            bool
+            _is_fitted_: bool
                 True if the model is fitted, False otherwise.
         """
         basename = os.path.basename(self.output_folder)
@@ -246,7 +246,7 @@ class AutoGluonClassifier(AutomlClassifier):
 
             Returns
             -------
-            prob_predictions : array-like of shape (n_samples, n_classes)
+            y_pred : array-like of shape (n_samples, n_classes)
                 Predicted class probabilities.
         """
         test_data = self.convert_to_dataframe(X, None)

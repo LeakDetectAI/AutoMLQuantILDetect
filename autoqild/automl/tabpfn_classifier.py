@@ -6,7 +6,7 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.utils import check_random_state
 from tabpfn import TabPFNClassifier
 
-from .automl_core import AutomlClassifier
+from autoqild.core.automl_core import AutomlClassifier
 from ..utilities import create_dimensionality_reduction_model
 
 
@@ -188,7 +188,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         acc = balanced_accuracy_score(y, y_pred)
         return acc
 
-    def predict_proba(self, X, batch_size=None, verbose=0):
+    def predict_proba(self, X, batch_size=32, verbose=0):
         """
             Predict class probabilities for the input samples.
 
@@ -197,12 +197,16 @@ class AutoTabPFNClassifier(AutomlClassifier):
             X : array-like of shape (n_samples, n_features)
                 Feature matrix.
 
+            batch_size: int, optional, default=32
+                Number of samples for which predictions are obtained at one time using the learned model to obtain
+                preidctions on complete samples space.
+
             verbose : int, optional, default=0
                 Verbosity level.
 
             Returns
             -------
-            prob_predictions : array-like of shape (n_samples, n_classes)
+            y_pred : array-like of shape (n_samples, n_classes)
                 Predicted class probabilities.
         """
         self.logger.info("Predicting Probabilities")
@@ -247,7 +251,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
     def clear_memory(self):
         """
-                Clear memory to release resources by torch.
+            Clear memory to release resources by torch.
         """
         import gc
         gc.collect()

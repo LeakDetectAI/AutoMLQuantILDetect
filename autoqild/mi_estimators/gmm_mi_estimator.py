@@ -5,7 +5,7 @@ import numpy as np
 from infoselect import get_gmm, SelectVars
 from sklearn.linear_model import LogisticRegression
 
-from .mi_base_class import MIEstimatorBase
+from autoqild.core.mi_base_class import MIEstimatorBase
 from ..utilities import create_dimensionality_reduction_model, log_exception_error
 
 

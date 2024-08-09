@@ -1,6 +1,6 @@
 from autoqild.utilities.constants import LOG_LOSS_MI_ESTIMATION
 from autoqild.automl import AutoGluonClassifier
-from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
+from autoqild.core.mi_estimator_classification import ClassficationMIEstimator
 
 
 class AutoGluonEstimator(ClassficationMIEstimator):
