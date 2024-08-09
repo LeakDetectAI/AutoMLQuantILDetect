@@ -13,12 +13,63 @@ __all__ = ['SyntheticDatasetGeneratorDistance']
 
 
 def pdf(dist, x):
-    return np.exp(dist.logpdf(x))
+    """
+        Compute the probability density function (PDF) for the given distribution and input data.
+
+        Parameters
+        ----------
+        dist : scipy.stats._multivariate.multivariate_normal_frozen
+            The multivariate normal distribution object.
+        x : array-like of shape (n_samples, n_features)
+            Input data for which the PDF is computed.
+
+        Returns
+        -------
+        log_dist_samples: array-like
+            Probability density values for the input data.
+    """
+    log_dist_samples = np.exp(dist.logpdf(x))
+    return log_dist_samples
 
 
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type='single', **kwargs):
+        """
+            Generator for synthetic datasets with a focus on generating data with varying class distances.
+
+            This class generates synthetic datasets by adjusting the distance between class distributions, allowing for the simulation of scenarios with varying levels of overlap between classes.
+
+            Parameters
+            ----------
+            n_classes : int, default=2
+                Number of classes in the generated dataset.
+
+            n_features : int, default=2
+                Number of features in the generated dataset.
+
+            samples_per_class : int or dict, default=500
+                Number of samples per class. If an integer is provided, it is assumed that all classes have the same number of samples.
+                If a dictionary is provided, the keys should be class labels and values should be the number of samples for each class.
+
+            noise : float, default=0.1
+                The level of noise to apply when generating class distributions, affecting the overlap between classes.
+
+            random_state : int or RandomState instance, default=42
+                Random state for reproducibility.
+
+            fold_id : int, default=0
+                Fold ID used for random seed generation.
+
+            imbalance : float, default=0.0
+                Proportion of the minority class in the dataset. Must be between 0 and 1.
+
+            gen_type : str, default='single'
+                Type of generation process. It can be used to modify the dataset generation method.
+
+            **kwargs : dict
+                Additional keyword arguments.
+        """
         self.n_classes = n_classes
         self.n_features = n_features
         self.random_state = check_random_state(random_state)
@@ -45,6 +96,12 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         self.logger = logging.getLogger(SyntheticDatasetGeneratorDistance.__name__)
 
     def generate_cov_means(self):
+        """
+            Generate the mean vectors and covariance matrices for each class.
+
+            This method creates a random orthogonal matrix and generates a positive semi-definite covariance matrix.
+            It then calculates the mean vector for each class.
+        """
         seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
         rs = np.random.RandomState(seed=seed)
         Q = ortho_group.rvs(dim=self.n_features)
@@ -64,20 +121,73 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         # print(self.flip_y_prob)
 
     def get_prob_dist_x_given_y(self, k_class):
+        """
+            Get the multivariate normal distribution for a given class.
+
+            Parameters
+            ----------
+            k_class : int
+                The class label for which to get the distribution.
+
+            Returns
+            -------
+            scipy.stats._multivariate.multivariate_normal_frozen
+                The multivariate normal distribution for the given class.
+        """
         return multivariate_normal(mean=self.means[k_class], cov=self.covariances[k_class],
                                    seed=self.seeds[k_class])
 
     def get_prob_fn_margx(self):
+        """
+            Get the marginal probability distribution function for the input data.
+
+            Returns
+            -------
+            marg_x: lambda function
+                A function that computes the marginal probability for the input data.
+        """
         marg_x = lambda x: np.array([self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
                                      for k_class in self.class_labels])
         return marg_x
 
     def get_prob_x_given_y(self, X, class_label):
+        """
+           Get the probability of X given a specific class label.
+
+           Parameters
+           ----------
+           X : array-like of shape (n_samples, n_features)
+               Input data.
+
+           class_label : int
+               The class label for which to compute the probability.
+
+           Returns
+           -------
+           prob_x_given_y: array-like
+               The probability of X given the class label.
+        """
         dist = self.get_prob_dist_x_given_y(class_label)
         prob_x_given_y = pdf(dist, X)
         return prob_x_given_y
 
     def get_prob_y_given_x(self, X, class_label):
+        """
+            Get the probability of a flipped class label given the input data X.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Input data.
+
+            class_label : int
+                The class label for which to compute the probability.
+
+            Returns
+            -------
+            prob_y_given_x: array-like
+                The probability of a flipped class label given the input data X.
+        """
         pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
         marg_x = self.get_prob_fn_margx()
         x_marg = marg_x(X).sum(axis=0)
@@ -85,6 +195,21 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return prob_y_given_x
 
     def generate_samples_for_class(self, k_class):
+        """
+            Generate synthetic samples for a specific class.
+
+            Parameters
+            ----------
+            k_class : int
+                The class label for which to generate samples.
+
+            Returns
+            -------
+            data: array-like
+                A tuple containing the generated features
+            labels: array-like
+                A list of labels corresponding to the features
+        """
         seed = self.random_state.randint(2 ** 32, dtype="uint32")
         mvn = self.get_prob_dist_x_given_y(k_class)
         n_samples = self.samples_per_class[k_class]
@@ -93,6 +218,16 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return data, labels
 
     def generate_dataset(self):
+        """
+           Generate the full synthetic dataset.
+
+           Returns
+           -------
+           X : array-like of shape (n_samples, n_features)
+                Feature matrix after applying sampling to create imbalance.
+           y : array-like of shape (n_samples,)
+                Target vector after applying sampling to create imbalance.
+        """
         X = []
         y = []
         for k_class in self.class_labels:
@@ -106,6 +241,19 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return X, y
 
     def entropy_y(self, y):
+        """
+            Calculate the entropy of the class distribution in the dataset.
+
+            Parameters
+            ----------
+            y : array-like of shape (n_samples,)
+                The labels of the dataset.
+
+            Returns
+            -------
+            mi_pp: float
+                The entropy of the class distribution.
+        """
         uni, counts = np.unique(y, return_counts=True)
         y_pred = counts / np.sum(counts)
         y_pred = {i: c for i, c in zip(list(uni), y_pred)}
@@ -116,6 +264,15 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return mi_pp
 
     def calculate_mi(self):
+        """
+           Calculate the mutual information (MI) using the probability distribution function.
+           .. math::
+                I(X;Y) = H(X) - H(X|Y)
+           Returns
+           -------
+           mutual_information: float
+               The mutual information of the dataset.
+        """
         x_y_prob_list = []
         for k_class in self.class_labels:
             prob_list = -1
@@ -140,6 +297,16 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return mi
 
     def bayes_predictor_mi(self):
+        """
+           Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+           .. math::
+                I(X;Y) = H(Y) - H(Y|X)
+
+           Returns
+           -------
+           mutual_information: float
+               The mutual information of the dataset.
+        """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
         for k_class in self.class_labels:
@@ -156,6 +323,16 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return mi
 
     def bayes_predictor_pc_softmax_mi(self):
+        """
+            Estimate the mutual information using softmax and the PC-softmax loss on the class probabilities.
+
+            Returns
+            -------
+            softmax_emi: float
+                Estimated mutual information using softmax function
+            pc_softmax_emi: float
+                Estimated mutual information using PC-softmax function
+        """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
         for k_class in self.class_labels:
@@ -189,6 +366,25 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return softmax_emi, pc_softmax_emi
 
     def get_bayes_mi(self, metric_name):
+        """
+            Get the estimated mutual information based on the specified metric.
+
+            Parameters
+            ----------
+            metric_name : {'MCMCBayesMI', 'MCMCLogLossBayesMI', 'MCMCPCSoftmaxBayesMI', 'MCMCSoftmaxBayesMI'}, default='MCMCLogLossBayesMI'
+                The name of the metric to use for MI estimation.
+                Must be one of:
+
+                - 'MCMCLogLossBayesMI': Estimate mutual information using the log loss of the bayes pedictor.
+                - 'MCMCBayesMI': Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
+                - 'MCMCPCSoftmaxBayesMI': Estimate mutual information using the MCMC PC Softmax Bayes method.
+                - 'MCMCSoftmaxBayesMI': Estimate mutual information using the MCMC Softmax Bayes method.
+
+            Returns
+            -------
+            mutual_information: float
+                The estimated mutual information based on the selected metric.
+        """
         mi = 0
         if metric_name == MCMC_LOG_LOSS:
             mi = self.bayes_predictor_mi()

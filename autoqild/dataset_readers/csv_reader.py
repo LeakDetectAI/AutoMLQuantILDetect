@@ -22,6 +22,7 @@ def str2bool(v):
     return str(v).lower() in ("yes", "true", "t", "1")
 
 
+@deprecated
 class CSVReader(metaclass=ABCMeta):
     def __init__(self, folder: str, preprocessing='replace', **kwargs):
         self.logger = logging.getLogger(CSVReader.__name__)

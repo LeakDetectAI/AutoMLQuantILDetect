@@ -14,6 +14,63 @@ __all__ = ['OpenMLTimingDatasetReader', 'OpenMLPaddingDatasetReader']
 
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
+        """
+            Reader for OpenML datasets that are specifically designed for timing-based attacks.
+
+            This class is designed to process datasets that involve side-channel attacks based on timing, such as the Bleichenbacher timing attack.
+            It reads, cleans, and processes the dataset, and provides methods to create datasets with class imbalance to simulate attack scenarios.
+
+            Parameters
+            ----------
+            dataset_id : int
+                The ID of the OpenML dataset.
+
+            imbalance : float
+                The ratio of the number of minority class samples to the number of majority class samples.
+                Must be between 0 and 1.
+
+            create_datasets : bool, default=True
+                If True, creates leakage datasets during initialization.
+
+            random_state : int or RandomState instance, optional
+                Random state for reproducibility.
+
+            **kwargs : dict
+                Additional keyword arguments.
+
+            Attributes
+            ----------
+            logger : logging.Logger
+                Logger instance for logging information.
+
+            dataset_id : int
+                The ID of the OpenML dataset.
+
+            imbalance : float
+                The ratio of the number of minority class samples to the number of majority class samples.
+
+            random_state : RandomState instance
+                Random state for reproducibility.
+
+            correct_class : str
+                The correct class label, representing correctly formatted messages.
+
+            vulnerable_classes : list of str
+                List of class labels representing vulnerable (incorrectly formatted) messages.
+
+            n_features : int
+                Number of features in the dataset.
+
+            fold_id : int
+                The fold ID as specified in the dataset description.
+
+            delay : int
+                The delay associated with the timing attack in microseconds.
+
+            dataset_dictionary : dict
+                A dictionary where keys are vulnerable class labels and values are tuples of (X, y) for the respective
+                classes.
+        """
         self.logger = logging.getLogger(OpenMLTimingDatasetReader.__name__)
         self.dataset_id = dataset_id
         self.imbalance = imbalance
@@ -26,6 +83,12 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
             self.__create_leakage_datasets__()
 
     def __read_dataset__(self):
+        """
+           Reads the dataset from OpenML and extracts relevant information.
+
+           This method fetches the dataset using the OpenML API, extracts the raw data, and processes the dataset
+           description to retrieve vulnerable class labels, number of features, fold ID, and delay time.
+        """
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
         self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
@@ -43,6 +106,10 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.delay = int(description.split('Bleichenbacher Timing Attack: ')[-1].split(" micro seconds")[0])
 
     def __clean_up_dataset__(self):
+        """
+            Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
+            fills missing values, and convert class label strings to integer values.
+        """
         categorical_columns = self.data_frame_raw.select_dtypes(include=['object']).columns
         label_encoder = LabelEncoder()
         for column in categorical_columns:
@@ -70,6 +137,10 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.data_frame = self.data_frame.fillna(value=-1)
 
     def __create_leakage_datasets__(self):
+        """
+            This method creates separate datasets for each class by selecting only the samples that belong to the
+            correct class and one vulnerable class at a time.
+        """
         self.dataset_dictionary = {}
         for j, label in self.inverse_label_mapping.items():
             if label == self.correct_class:
@@ -78,6 +149,22 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
                 self.dataset_dictionary[label] = self.get_data(class_label=j)
 
     def get_data(self, class_label=1):
+        """
+            Retrieves data for a specific class label.
+
+            Parameters
+            ----------
+            class_label : int, default=1
+                The class label for which to retrieve the data.
+
+            Returns
+            -------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+        """
         df = pd.DataFrame.copy(self.data_frame)
         p = [0, class_label]
         df = df[df.label.isin(p)]
@@ -87,6 +174,25 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         return X, y
 
     def get_sampled_imbalanced_data(self, X, y):
+        """
+            Creates an imbalanced dataset by sampling from the data.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix.
+
+            y : array-like of shape (n_samples,)
+                Target vector.
+
+            Returns
+            -------
+            X : array-like of shape (n_samples, n_features)
+                Feature matrix after applying sampling to create imbalance.
+
+            y : array-like of shape (n_samples,)
+                Target vector after applying sampling to create imbalance.
+        """
         if self.imbalance < 0.5:
             # total_instances = X.shape[0]
             n_0 = len(np.where(y == 0)[0])
@@ -110,12 +216,51 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
         super().__init__(dataset_id=dataset_id, imbalance=imbalance, create_datasets=create_datasets,
                          random_state=random_state, **kwargs)
+        """
+            Reader for OpenML datasets related to leakages with respect to the error codes for each padding 
+            manipulation.
+
+            This class extends OpenMLTimingDatasetReader and is tailored for datasets extracted from network traces exploiting
+            error codes in the network traces to perform the side channel attacks, such as the Bleichenbacher timing attack. 
+            It reads, cleans, and processes the dataset, and provides methods to create datasets with class imbalance to simulate attack scenarios.
+
+            Parameters
+            ----------
+            dataset_id : int
+                The ID of the OpenML dataset.
+
+            imbalance : float
+                The ratio of the number of minority class samples to the number of majority class samples. 
+                Must be between 0 and 1.
+
+            create_datasets : bool, default=True
+                If True, creates leakage datasets during initialization.
+
+            random_state : int or RandomState instance, optional
+                Random state for reproducibility.
+
+            **kwargs : dict
+                Additional keyword arguments.
+
+            Attributes
+            ----------
+            logger : logging.Logger
+                Logger instance for logging information.
+
+            server : str
+                The server associated with the padding attack dataset.
+        """
         self.logger = logging.getLogger(OpenMLPaddingDatasetReader.__name__)
 
         if create_datasets:
             self.__create_leakage_datasets__()
 
     def __read_dataset__(self):
+        """
+            Reads the dataset from OpenML and extracts relevant information.
+            This method fetches the dataset using the OpenML API, extracts the raw data, and processes the dataset
+            description to retrieve vulnerable class labels, number of features, and server information.
+        """
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
         self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
