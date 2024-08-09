@@ -6,7 +6,7 @@ import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 
-from autoqild.core.mi_base_class import MIEstimatorBase
+from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
 from .neural_networks_torch import ClassNet, own_softmax
 from .pytorch_utils import get_optimizer_and_parameters, init
 

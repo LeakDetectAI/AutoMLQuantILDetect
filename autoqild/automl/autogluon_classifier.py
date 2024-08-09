@@ -7,7 +7,7 @@ import pandas as pd
 from autogluon.tabular import TabularPredictor
 from sklearn.utils import check_random_state
 
-from autoqild.core.automl_core import AutomlClassifier
+from autoqild.automl.automl_core import AutomlClassifier
 from .model_configurations import hyperparameters, reduced_hyperparameters
 from ..utilities.utils import log_exception_error
 

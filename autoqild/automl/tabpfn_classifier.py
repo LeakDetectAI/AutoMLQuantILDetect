@@ -6,7 +6,7 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.utils import check_random_state
 from tabpfn import TabPFNClassifier
 
-from autoqild.core.automl_core import AutomlClassifier
+from autoqild.automl.automl_core import AutomlClassifier
 from ..utilities import create_dimensionality_reduction_model
 
 

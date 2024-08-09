@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import LabelBinarizer
 from tqdm import tqdm
 
-from autoqild.core.mi_base_class import MIEstimatorBase
+from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
 from .neural_networks_torch import StatNet
 from .pytorch_utils import get_optimizer_and_parameters, init, get_mine_loss
 from ..utilities import softmax

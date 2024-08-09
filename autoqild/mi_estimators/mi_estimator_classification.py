@@ -6,7 +6,7 @@ from sklearn.utils import check_random_state
 
 from autoqild.bayes_search_hpo.bayes_search_utils import probability_calibration, get_scores
 from autoqild.detectors.utils import calibrators, calibrator_params, mi_estimation_metrics
-from autoqild.core.mi_base_class import MIEstimatorBase
+from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
 from autoqild.utilities import *
 
 

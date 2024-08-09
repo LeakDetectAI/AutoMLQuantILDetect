@@ -11,6 +11,7 @@ from ..utilities import *
 
 __all__ = ['SyntheticDatasetGeneratorDistance']
 
+
 def pdf(dist, x):
     return np.exp(dist.logpdf(x))
 
