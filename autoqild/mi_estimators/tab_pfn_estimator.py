@@ -7,7 +7,7 @@ class AutoGluonEstimator(ClassficationMIEstimator):
 
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):
-        super().__init__(random_state=random_state, **kwargs)
+        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs)
         self.base_estimator = AutoTabPFNClassifier
         self.learner_params = dict(n_features=n_features, n_classes=n_classes, n_ensembles=n_ensembles,
                                    n_reduced=n_reduced, reduction_technique=reduction_technique,
