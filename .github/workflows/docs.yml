@@ -1,16 +1,13 @@
 name: Build and Deploy Docs
-
 on:
   push:
     branches:
       - main
-      - development
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v3
 
     - name: Setup Python
@@ -18,15 +15,15 @@ jobs:
       with:
         python-version: "3.10"
 
-    - name: Install dependencies
+    - name: Install dependencies for docs
       run: |
-        export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
-        pip install -r requirements.txt
+        pip install -r docs/requirements.txt  # Install only the requirements for documentation
 
-    - name: Build the docs
+    - name: Build Sphinx docs
       run: |
-        make -C docs clean
-        make -C docs html
+        cd docs
+        make html  # or make docs based on your Makefile
+
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
