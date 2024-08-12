@@ -38,7 +38,7 @@ AutoMLQuantILDetect depends on the following libraries:
 - tqdm
 - pandas (required for data processing and generation)
 
-### ![image](https://github.com/user-attachments/assets/5618da43-e25f-45d7-84ac-5d290675c713) Citing automl-qild
+### ![image](https://github.com/user-attachments/assets/86cd39de-cd7a-4b3f-ab88-a8163235a5a2) Citing automl-qild
 
 If you use this toolkit in your research, please cite our paper available on arXiv:
 
