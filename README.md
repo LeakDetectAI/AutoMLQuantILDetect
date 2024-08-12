@@ -98,8 +98,9 @@ print(f"Model Accuracy: {accuracy}")
 
 ```
 
-## ![image](https://github.com/user-attachments/assets/86cd39de-cd7a-4b3f-ab88-a8163235a5a2) Citing automl-qild
+ 
 
+## <a href="https://arxiv.org/abs/2401.14283"> <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/cite.png" alt="Paper" width="100" height="60"> </a>  Citing automl-qild 
 If you use this toolkit in your research, please cite our paper available on arXiv:
 
 ```
