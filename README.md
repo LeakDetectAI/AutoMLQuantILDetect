@@ -21,7 +21,14 @@ pip install git+https://github.com/LeakDetectAI/AutoMLQuantILDetect.git
 Alternatively, you can clone the repository and install AutoMLQuantILDetect using:
 
 ```
+git clone https://github.com/LeakDetectAI/AutoMLQuantILDetect.git
+cd AutoMLQuantILDetect
+conda create --name ILD python=3.10
+conda activate ILD
 python setup.py install
+- **OR**
+pip install -r requirements.txt
+pip install -e ./
 ```
 
 ## ⭐ Quickstart Guide
