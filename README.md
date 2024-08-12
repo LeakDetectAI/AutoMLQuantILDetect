@@ -24,9 +24,9 @@ Alternatively, you can clone the repository and install AutoMLQuantILDetect usin
 python setup.py install
 ```
 
-## 📈 Fit an Active Learning Pipeline
-
-Fit an ALP on dataset with openmlid 31, using a random forest and margin sampling. You can find similar example code snippets in
+## 📈 Fit a Classifier to Estimate MI
+Fit an ClassficationMIEstimator on a synthetic dataset, using a random forest and estimate mutual information using the log-loss and the accuracy of the learned model and compare it with the ground-truth mutual information.
+You can find similar example code snippets in
 **examples/**.
 
 ```python
