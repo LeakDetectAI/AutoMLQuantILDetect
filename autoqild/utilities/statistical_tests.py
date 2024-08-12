@@ -6,24 +6,26 @@ from scipy.stats import t, wilcoxon
 __all__ = ["wilcoxon_signed_rank_test", "paired_ttest"]
 
 
-# def corrected_dependent_ttest(x1, x2, n_training_folds, n_test_folds, alpha):
-#     n = len(x1)
-#     differences = [(x1[i] - x2[i]) for i in range(n)]
-#     sd = stdev(differences)
-#     divisor = 1 / n * sum(differences)
-#     test_training_ratio = n_test_folds / n_training_folds
-#     denominator = sqrt(1 / n + test_training_ratio) * sd
-#     t_stat = divisor / denominator
-#     # degrees of freedom
-#     df = n - 1
-#     # calculate the critical value
-#     cv = t.ppf(1.0 - alpha, df)
-#     # calculate the p-value
-#     p = (1.0 - t.cdf(abs(t_stat), df)) * 2.0
-#     # return everything
-#     return t_stat, df, cv, p
-
 def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", verbose=False):
+    """
+        Performs the Wilcoxon signed-rank test on two sets of accuracies.
+
+        Parameters
+        ----------
+        accuracies : ndarray
+            First set of accuracy values.
+        accuracies2 : ndarray
+            Second set of accuracy values.
+        alternative : str, optional
+            Defines the alternative hypothesis (default is "two-sided").
+        verbose : bool, optional
+            If True, outputs additional logging information (default is False).
+
+        Returns
+        -------
+        p_value : float
+            The p-value from the Wilcoxon signed-rank test.
+    """
     logger = logging.getLogger('Wilcoxon-Signed_Rank')
 
     try:
@@ -36,6 +38,31 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
 
 
 def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False):
+    """
+        Performs a paired t-test on two sets of values.
+
+        Parameters
+        ----------
+        x1 : ndarray
+            First set of values.
+        x2 : ndarray
+            Second set of values.
+        n_training_folds : int
+            Number of training folds.
+        n_test_folds : int
+            Number of test folds.
+        correction : bool, optional
+            If True, applies a correction to the variance (default is True).
+        alternative : str, optional
+            Defines the alternative hypothesis (default is "two-sided").
+        verbose : bool, optional
+            If True, outputs additional logging information (default is False).
+
+        Returns
+        -------
+        p_value : float
+            The p-value from the paired t-test.
+    """
     logger = logging.getLogger('Paired T-Test')
     n = len(x1)
     df = n - 1
@@ -67,17 +94,17 @@ def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, altern
 
     # Compute p-value and plot the results
     if alternative == 'less':
-        p = t.cdf(t_static, df)
+        p_value = t.cdf(t_static, df)
     elif alternative == 'greater':
-        p = t.sf(t_static, df)
+        p_value = t.sf(t_static, df)
     elif alternative == 'two-sided':
-        p = 2 * t.sf(np.abs(t_static), df)
+        p_value = 2 * t.sf(np.abs(t_static), df)
     if verbose:
-        logger.info("Final Variance {} Sigma {} t_static {} p {}".format(sigma2, np.sqrt(sigma2), t_static, p))
+        logger.info("Final Variance {} Sigma {} t_static {} p {}".format(sigma2, np.sqrt(sigma2), t_static, p_value))
         logger.info("np.isnan(p) {}, np.isinf {},  d_bar == 0 {}, sigma2_mod == 0 {}, np.isinf(t_static) {}, "
-                    "np.isnan(t_static) {}".format(np.isnan(p), np.isinf(p), d_bar == 0, sigma2 == 0,
+                    "np.isnan(t_static) {}".format(np.isnan(p_value), np.isinf(p_value), d_bar == 0, sigma2 == 0,
                                                    np.isinf(t_static),
                                                    np.isnan(t_static)))
-    if np.isnan(p) or np.isinf(p) or d_bar == 0 or sigma2 == 0 or np.isinf(t_static) or np.isnan(t_static):
-        p = 1.0
-    return p
+    if np.isnan(p_value) or np.isinf(p_value) or d_bar == 0 or sigma2 == 0 or np.isinf(t_static) or np.isnan(t_static):
+        p_value = 1.0
+    return p_value

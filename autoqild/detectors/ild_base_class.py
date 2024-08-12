@@ -24,6 +24,7 @@ __all__ = ['InformationLeakageDetector']
 class InformationLeakageDetector(metaclass=ABCMeta):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
                  base_directory, detection_method, random_state, **kwargs):
+
         self.logger = logging.getLogger(InformationLeakageDetector.__name__)
         self.padding_name, self.padding_code = self.format_name(padding_name)
         self.fit_params = fit_params

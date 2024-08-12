@@ -7,6 +7,34 @@ from sklearn.manifold import TSNE
 
 # Create a dictionary to store the techniques and their options
 def create_dimensionality_reduction_model(reduction_technique, n_reduced=20):
+    """
+        Creates a dimensionality reduction model based on the specified technique.
+
+        Parameters
+        ----------
+        reduction_technique : str
+            The technique to use for dimensionality reduction. Options include:
+            - 'recursive_feature_elimination_et': Recursive Feature Elimination with ExtraTreesClassifier.
+            - 'recursive_feature_elimination_rf': Recursive Feature Elimination with RandomForestClassifier.
+            - 'select_from_model_et': SelectFromModel with ExtraTreesClassifier.
+            - 'select_from_model_rf': SelectFromModel with RandomForestClassifier.
+            - 'pca': Principal Component Analysis.
+            - 'lda': Linear Discriminant Analysis.
+            - 'tsne': t-Distributed Stochastic Neighbor Embedding.
+            - 'nmf': Non-negative Matrix Factorization.
+        n_reduced : int, optional
+            The number of components or features to reduce to (default is 20).
+
+        Returns
+        -------
+        object
+            A dimensionality reduction model corresponding to the specified technique.
+
+        Raises
+        ------
+        ValueError
+            If the specified reduction technique is not defined.
+    """
     reduction_techniques = {
         'recursive_feature_elimination_et': RFE(ExtraTreesClassifier(), n_features_to_select=n_reduced),
         'recursive_feature_elimination_rf': RFE(RandomForestClassifier(), n_features_to_select=n_reduced),

@@ -14,19 +14,47 @@ logger = logging.getLogger("Metrics")
 
 # logger.info(f"Nan Rows Train {nan_rows}")
 def bin_ce(p_e):
+    """
+        Computes the binary cross-entropy for a given probability `p_e`.
+
+        Parameters
+        ----------
+        p_e : float
+            Probability value for which binary cross-entropy is computed.
+
+        Returns
+        -------
+        binary_cross_entropy : float
+            The binary cross-entropy value.
+    """
     if p_e == 0:
         p_e = p_e + np.finfo(np.float32).eps
     if p_e == 1.0:
         p_e = p_e - np.finfo(np.float32).eps
-    be = -p_e * np.log2(p_e) - (1 - p_e) * np.log2(1 - p_e)
-    return be
+    binary_cross_entropy = -p_e * np.log2(p_e) - (1 - p_e) * np.log2(1 - p_e)
+    return binary_cross_entropy
 
 
 bce_f = np.vectorize(bin_ce)
 
 
 def helmann_raviv_function(n_classes, pe):
-    ls = []
+    """
+        Computes the Hellman-Raviv function for a given error probability `pe`.
+
+        Parameters
+        ----------
+        n_classes : int
+            The number of classes.
+        pe : ndarray
+            The error probability values.
+
+        Returns
+        -------
+        hrf_values : ndarray
+            The computed Hellman-Raviv function values.
+    """
+    hrf_values = []
     indicies = []
     num = pe.shape[0]
     for k in range(1, int(n_classes)):
@@ -46,7 +74,7 @@ def helmann_raviv_function(n_classes, pe):
         if len(idx) != 0:
             n_pe = pe[idx]
             l = cal_l(k, n_pe)
-            ls.extend(l)
+            hrf_values.extend(l)
         # else:
         #   print(k, l_mpe, u_mpe, mpe)
 
@@ -55,48 +83,123 @@ def helmann_raviv_function(n_classes, pe):
     if len(idx) != 0:
         n_pe = pe[idx]
         l = cal_l(k, n_pe)
-        ls.extend(l)
-    ls = np.array(ls)
-    return ls
+        hrf_values.extend(l)
+    hrf_values = np.array(hrf_values)
+    return hrf_values
 
 
 def helmann_raviv_upper_bound(y_true, y_pred):
+    """
+        Computes the Hellman-Raviv upper bound for mutual information.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted class labels.
+
+        Returns
+        -------
+        hr_u : float
+            The Hellman-Raviv upper bound.
+    """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
     error_rate = 1 - acc
     hmr = helmann_raviv_function(n_classes, np.array([error_rate]))[0]
-    u = np.log2(n_classes) - hmr
-    return u
+    hr_u = np.log2(n_classes) - hmr
+    return hr_u
 
 
 def santhi_vardi_upper_bound(y_true, y_pred):
+    """
+        Computes the Santhi-Vardi upper bound for mutual information.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted class labels.
+
+        Returns
+        -------
+        sv_u: float
+            The Santhi-Vardi upper bound.
+    """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
     error_rate = 1 - acc
     if error_rate == 1.0:
         error_rate = error_rate - np.finfo(np.float64).eps
-    u = np.log2(n_classes) + np.log2(1 - error_rate)
-    return u
+    sv_u = np.log2(n_classes) + np.log2(1 - error_rate)
+    return sv_u
 
 
 def fanos_lower_bound(y_true, y_pred):
+    """
+        Computes Fano's lower bound for mutual information.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted class labels.
+
+        Returns
+        -------
+        fanos_lb : float
+            Fano's lower bound.
+    """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
     pe = 1 - acc
     T = np.log(n_classes - 1) / np.log(n_classes)
-    l = np.log2(n_classes) * (1 - pe * T) - bin_ce(pe)
-    return l
+    fanos_lb = np.log2(n_classes) * (1 - pe * T) - bin_ce(pe)
+    return fanos_lb
 
 
 def fanos_adjusted_lower_bound(y_true, y_pred):
+    """
+        Computes the adjusted Fano's lower bound for mutual information.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted class labels.
+
+        Returns
+        -------
+        fanos_adjusted_lb : float
+            Adjusted Fano's lower bound.
+    """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
     pe = 1 - acc
-    l = np.log2(n_classes) * (1 - pe) - bce_f(pe)
-    return l
+    fanos_adjusted_lb = np.log2(n_classes) * (1 - pe) - bce_f(pe)
+    return fanos_adjusted_lb
 
 
 def mid_point_mi(y_true, y_pred):
+    """
+        Computes the midpoint mutual information estimate.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted class labels.
+
+        Returns
+        -------
+        mid_point : float
+            Midpoint mutual information estimate.
+    """
     mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(y_true, y_pred)
     mid_point = mid_point / 2.0
     mid_point = np.max([mid_point, 0.0])
@@ -104,39 +207,104 @@ def mid_point_mi(y_true, y_pred):
 
 
 def auc_score(y_true, p_pred):
+    """
+        Computes the AUC score for the given true labels and predicted probabilities.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        p_pred : ndarray
+            Predicted probabilities.
+
+        Returns
+        -------
+        auc_roc : float
+            AUC score.
+    """
     logger = logging.getLogger("AUC")
     n_classes = len(np.unique(y_true))
     if n_classes > 2:
         try:
-            metric_loss = roc_auc_score(y_true, p_pred, multi_class='ovr')
+            auc_roc = roc_auc_score(y_true, p_pred, multi_class='ovr')
         except Exception as e:
             logger.error(f"Exception: {str(e)}")
             try:
                 logger.error(f"Applying normalization to avoid exception")
                 p_pred = normalize(p_pred, axis=1)
-                metric_loss = roc_auc_score(y_true, p_pred, multi_class='ovr')
+                auc_roc = roc_auc_score(y_true, p_pred, multi_class='ovr')
             except Exception as e:
                 logger.error(f"After normalization Exception: {str(e)}")
                 logger.error(f"Setting Auc to nan")
-                metric_loss = np.nan
+                auc_roc = np.nan
     else:
-        metric_loss = roc_auc_score(y_true, p_pred)
-    return metric_loss
+        auc_roc = roc_auc_score(y_true, p_pred)
+    return auc_roc
 
 
 def false_positive_rate(y_true, y_pred):
+    """
+        Computes the false positive rate.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True binary labels.
+        y_pred : ndarray
+            Predicted binary labels.
+
+        Returns
+        -------
+        fpr : float
+            False positive rate.
+    """
     tn = np.logical_and(np.logical_not(y_true), np.logical_not(y_pred)).sum()
     fp = np.logical_and(np.logical_not(y_true), y_pred).sum()
-    return fp / (fp + tn)
+    fpr = fp / (fp + tn)
+    return fpr
 
 
 def false_negative_rate(y_true, y_pred):
+    """
+        Computes the false positive rate.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True binary labels.
+        y_pred : ndarray
+            Predicted binary labels.
+
+        Returns
+        -------
+        fnr : float
+            False negative rate.
+    """
     tp = np.logical_and(y_true, y_pred).sum()
     fn = np.logical_and(y_true, np.logical_not(y_pred)).sum()
-    return fn / (tp + fn)
+    fnr = fn / (tp + fn)
+    return fnr
 
 
 def remove_nan_values(y_pred, y_true=None):
+    """
+        Removes rows containing NaN values from the predicted probabilities and true labels.
+
+        Parameters
+        ----------
+        y_pred : ndarray
+            Predicted probabilities.
+        y_true : ndarray, optional
+            True labels corresponding to the predicted probabilities (default is None).
+
+        Returns
+        -------
+        y_pred : ndarray
+            Cleaned Predicted probabilities.
+        y_true : ndarray, optional
+            Corresponsindg remaining True labels corresponding to the non-NaN predicted probabilities.
+
+    """
     # logger.info(f"y_pred shape {y_pred.shape}")
     nan_rows = np.isnan(y_pred).any(axis=1)
     # logger.info(f"nan_rows shape {nan_rows.shape} y_pred.shape {y_pred.shape}")
@@ -149,6 +317,19 @@ def remove_nan_values(y_pred, y_true=None):
 
 
 def get_entropy_y(y_true):
+    """
+        Computes the entropy of the true labels.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+
+        Returns
+        -------
+        mi_pp : float
+            Entropy of the true labels.
+    """
     classes, counts = np.unique(y_true, return_counts=True)
     pys = counts / np.sum(counts)
     mi_pp = 0
@@ -158,6 +339,21 @@ def get_entropy_y(y_true):
 
 
 def pc_softmax_estimation(y_true, p_pred):
+    """
+        Estimates the mutual information using softmax of predicted probabilities.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        p_pred : ndarray
+            Predicted probabilities.
+
+        Returns
+        -------
+        estimated_mi : float
+            Estimated mutual information.
+    """
     p_pred[p_pred == 0] = np.finfo(float).eps
     p_pred[p_pred == 1] = 1 - np.finfo(float).eps
     p_pred, y_true = remove_nan_values(p_pred, y_true=y_true)
@@ -184,6 +380,22 @@ def pc_softmax_estimation(y_true, p_pred):
 
 
 def log_loss_estimation(y_true, y_pred):
+    """
+        Estimates mutual information by evaluating the log-loss of the predicted probabilities and entropy of outputs
+        using the class labels.
+
+        Parameters
+        ----------
+        y_true : ndarray
+            True class labels.
+        y_pred : ndarray
+            Predicted probabilities.
+
+        Returns
+        -------
+        estimated_mi : float
+            Estimated mutual information.
+    """
     y_pred[y_pred == 0] = np.finfo(float).eps
     y_pred[y_pred == 1] = 1 - np.finfo(float).eps
     y_pred, y_true = remove_nan_values(y_pred, y_true=y_true)

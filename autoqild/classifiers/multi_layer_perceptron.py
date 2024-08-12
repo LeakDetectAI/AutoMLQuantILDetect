@@ -184,8 +184,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
             epochs : int, optional, default=50
                 Number of training epochs.
 
-            batch_size : int, optional, default=32
-                Number of samples per gradient update.
+            batch_size : 
 
             callbacks : list of keras.callbacks.Callback, optional
                 List of callback instances to apply during training.
