@@ -24,12 +24,12 @@ Alternatively, you can clone the repository and install AutoMLQuantILDetect usin
 python setup.py install
 ```
 
-### ⭐ Quickstart Guide
+## ⭐ Quickstart Guide
 You can use `AutoMLQuantILDetect` in different ways.
 Quite a few classifiers and AutoML tools already exist that can be used to estimate mutual information using the log-loss and the accuracy of the learned model.
 
 
-## 📈 Fit a Classifier to Estimate MI
+### 📈 Fit a Classifier to Estimate MI
 Fit a ClassficationMIEstimator on a synthetic dataset using a random forest, estimate mutual information using the log-loss and the accuracy of the learned model and compare it with the ground-truth mutual information.
 You can find similar example code snippets in
 **examples/**.
@@ -91,7 +91,7 @@ print(f"Model Accuracy: {accuracy}")
 
 ```
 
-### ![image](https://github.com/user-attachments/assets/86cd39de-cd7a-4b3f-ab88-a8163235a5a2) Citing automl-qild
+## ![image](https://github.com/user-attachments/assets/86cd39de-cd7a-4b3f-ab88-a8163235a5a2) Citing automl-qild
 
 If you use this toolkit in your research, please cite our paper available on arXiv:
 
