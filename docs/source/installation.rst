@@ -24,10 +24,14 @@ Installation Steps
 
     .. code-block:: sh
 
+            export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+
+    .. code-block:: sh
+
             pip install -r requirements.txt
 
     - **OR**
 
     .. code-block:: sh
 
-        python setup.py install
+            python setup.py install
