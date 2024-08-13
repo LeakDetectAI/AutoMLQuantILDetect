@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build and deploy Sphinx documentation
   build-and-deploy:
     runs-on: ubuntu-20.04
 
@@ -32,51 +31,30 @@ jobs:
 
     - name: Install dependencies for docs
       run: |
-        export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
         python -m pip install --upgrade pip
         pip install -r docs/requirements.txt
-
-    - name: Debugging
-      run: |
-        pwd
-        ls -la
-        make help
 
     - name: Build Sphinx docs
       run: |
         cd docs
         make clean
-        make html  # or make docs based on your Makefile
+        make html
         sphinx-build -W -b html source _build/html
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: docs/_build/html
-
     - name: Pull latest gh-pages
-      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
-        cd ..
         git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
 
     - name: Copy new docs into gh-pages
-      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
-        branch_name=${GITHUB_REF##*/}
-        cd ../gh-pages
-        rm -rf $branch_name
-        cp -r ../${{ env.name }}/docs/build/html $branch_name
+        rm -rf gh-pages/*
+        cp -r docs/_build/html/* gh-pages/
 
     - name: Push to gh-pages
-      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
-        last_commit=$(git log --pretty=format:"%an: %s")
-        cd ../gh-pages
-        branch_name=${GITHUB_REF##*/}
-        git add $branch_name/
-        git config --global user.name 'Github Actions'
-        git config --global user.email 'not@mail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git commit -am "$last_commit"
-        git push
+        cd gh-pages
+        git add .
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'github-actions@github.com'
+        git commit -m "Update documentation"
+        git push origin gh-pages
