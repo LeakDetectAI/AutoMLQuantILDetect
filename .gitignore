@@ -16,3 +16,5 @@ sql*
 2023-04-28-journal/
 autoqild.egg-info/
 docs/reference/
+docs/_static/
+docs/_build/

@@ -4,3 +4,11 @@ nbsphinx
 myst-parser
 sphinx-autodoc-typehints
 commonmark
+sphinx_copybutton
+sphinx_toolbox
+sphinxcontrib-mermaid
+sphinxcontrib-bibtex
+sphinx-autobuild
+recommonmark
+sphinx-tabs
+furo
