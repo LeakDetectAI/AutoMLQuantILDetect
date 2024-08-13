@@ -16,7 +16,7 @@ PYTEST ?= python -m pytest
 PIP ?= python -m pip
 MAKE ?= make
 
-.PHONY: help install-dev clean docs examples
+.PHONY: help install clean docs examples
 
 help:
 	@echo "Makefile ${NAME}"
@@ -26,7 +26,7 @@ help:
 	@echo "* examples         to run and generate the examples"
 
 # Installation and Setup
-install-dev:
+install:
 	export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 	$(PIP) install -e "./"
 
