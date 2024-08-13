@@ -2,3 +2,6 @@ from .gmm_mi_estimator import GMMMIEstimator
 from .mine_estimator import MineMIEstimator
 from .mine_estimator_hpo import MineMIEstimatorHPO
 from .pc_softmax_estimator import PCSoftmaxMIEstimator
+from .mi_estimator_classification import ClassficationMIEstimator
+from .tab_pfn_estimator import TabPFNMIEstimator
+from .auto_gluon_estimator import AutoMIGluonEstimator

@@ -3,7 +3,7 @@ from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEs
 from autoqild.utilities.constants import LOG_LOSS_MI_ESTIMATION
 
 
-class AutoGluonEstimator(ClassficationMIEstimator):
+class TabPFNMIEstimator(ClassficationMIEstimator):
 
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):

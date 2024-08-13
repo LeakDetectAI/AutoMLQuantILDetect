@@ -3,7 +3,7 @@ from autoqild.automl import AutoGluonClassifier
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
 
 
-class AutoGluonEstimator(ClassficationMIEstimator):
+class AutoMIGluonEstimator(ClassficationMIEstimator):
 
     def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
                  use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
