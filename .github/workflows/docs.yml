@@ -58,4 +58,4 @@ jobs:
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'github-actions@github.com'
         git commit -m "Update documentation"
-        git push origin gh-pages
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
