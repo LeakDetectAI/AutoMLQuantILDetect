@@ -68,10 +68,10 @@ jobs:
     - name: Push to gh-pages
       if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
       run: |
-        cd gh-pages
-        git add .
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'github-actions@github.com'
+        cd gh-pages
+        git add .
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
 
     - name: Deploy to gh-pages
