@@ -2,7 +2,7 @@ import logging
 
 import openml
 
-from autoqild import OpenMLTimingDatasetReader, LABEL_COL
+from .open_ml_timming_dr import OpenMLTimingDatasetReader, LABEL_COL
 
 
 class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
