@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation Guide" href="installation.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="📖 API References" href="api.html" /><link rel="prev" title="Installation Guide" href="installation.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-        <title>AutoMLQuantILDetect 0.1.0 documentation</title>
+        <title>Quickstart Guide - AutoMLQuantILDetect 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">AutoMLQuantILDetect 0.1.0 documentation</div></a>
+      <a href="index.html"><div class="brand">AutoMLQuantILDetect 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="#">
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="index.html">
   
   
   
@@ -199,9 +199,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">OVERVIEW</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="start.html">Quickstart Guide</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Quickstart Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API REFERENCE</span></p>
 <ul>
@@ -249,7 +249,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/index.rst.txt" title="View this page">
+  <a class="muted-link" href="_sources/start.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -269,30 +269,69 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="the-autoqild-python-package">
-<h1>The <code class="docutils literal notranslate"><span class="pre">autoqild</span></code> Python package<a class="headerlink" href="#the-autoqild-python-package" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">autoqild</span></code> package utilizes AutoML approaches to detect and quantify system information leakage. It is an advanced toolkit that leverages the power of Automated Machine Learning (AutoML) to quantify information leakage accurately.
-This package estimates mutual information (MI) within systems that release classification datasets. By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects information leakage within classification datasets.
-With AutoMLQuantILDetect, users can confidently and comprehensively address the critical challenges of quantification and detection in the realm of information leakage analysis.</p>
-<section id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h2>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">OVERVIEW</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="start.html">Quickstart Guide</a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">API REFERENCE</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">📖 API References</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/autoqild.automl.html">autoqild.automl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/autoqild.classifiers.html">autoqild.classifiers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/autoqild.dataset_readers.html">autoqild.dataset_readers</a></li>
-</ul>
-</li>
-</ul>
+          <section id="quickstart-guide">
+<h1>Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Link to this heading">¶</a></h1>
+<p>You can use <cite>AutoMLQuantILDetect</cite> in different ways.
+There already exist quite some classifiers and AutoML tools which can be used to estimate mutual information using the log-loss and the accuracy of the learned model.</p>
+<section id="fit-a-classifier-to-estimate-mi">
+<h2>Fit a Classifier to Estimate MI<a class="headerlink" href="#fit-a-classifier-to-estimate-mi" title="Link to this heading">¶</a></h2>
+<p>Fit a ClassficationMIEstimator on a synthetic dataset using a random forest, estimate mutual information using the log-loss and the accuracy of the learned model and compare it with the ground-truth mutual information.
+You can find similar example code snippets in
+<strong>examples/</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">autoqild.dataset_readers.synthetic_data_generator</span> <span class="kn">import</span> <span class="n">SyntheticDatasetGenerator</span>
+<span class="kn">from</span> <span class="nn">autoqild.mi_estimators.mi_estimator_classification</span> <span class="kn">import</span> <span class="n">ClassficationMIEstimator</span>
+<span class="kn">from</span> <span class="nn">autoqild.utilities.constants</span> <span class="kn">import</span> <span class="n">LOG_LOSS_MI_ESTIMATION</span><span class="p">,</span> <span class="n">MID_POINT_MI_ESTIMATION</span>
+
+<span class="c1"># Step 1: Generate a Synthetic Dataset</span>
+<span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">n_classes</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">samples_per_class</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">flip_y</span> <span class="o">=</span> <span class="mf">0.10</span>  <span class="c1"># Small amount of noise</span>
+
+<span class="n">dataset_generator</span> <span class="o">=</span> <span class="n">SyntheticDatasetGenerator</span><span class="p">(</span>
+    <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span>
+    <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span>
+    <span class="n">samples_per_class</span><span class="o">=</span><span class="n">samples_per_class</span><span class="p">,</span>
+    <span class="n">flip_y</span><span class="o">=</span><span class="n">flip_y</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+<span class="p">)</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset_generator</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated dataset X shape: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, y shape: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Estimate Mutual Information using ClassficationMIEstimator</span>
+<span class="n">mi_estimator</span> <span class="o">=</span> <span class="n">ClassficationMIEstimator</span><span class="p">(</span><span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+<span class="c1"># Fit the estimator on the synthetic dataset</span>
+<span class="n">mi_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># Estimate MI using log-loss</span>
+<span class="n">estimated_mi_log_loss</span> <span class="o">=</span> <span class="n">mi_estimator</span><span class="o">.</span><span class="n">estimate_mi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">LOG_LOSS_MI_ESTIMATION</span><span class="p">)</span>
+<span class="n">estimated_mi_mid_point</span> <span class="o">=</span> <span class="n">mi_estimator</span><span class="o">.</span><span class="n">estimate_mi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MID_POINT_MI_ESTIMATION</span><span class="p">)</span>
+<span class="c1"># Step 3: Calculate Accuracy of the Model</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">mi_estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="c1"># Step 4: Compare with Ground-Truth MI</span>
+<span class="n">ground_truth_mi</span> <span class="o">=</span> <span class="n">dataset_generator</span><span class="o">.</span><span class="n">calculate_mi</span><span class="p">()</span>
+
+<span class="c1"># Summary of Results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##############################################################&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ground-Truth MI: </span><span class="si">{</span><span class="n">ground_truth_mi</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated MI (Log-Loss): </span><span class="si">{</span><span class="n">estimated_mi_log_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated MI (Mid-Point): </span><span class="si">{</span><span class="n">estimated_mi_mid_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">Generated</span> <span class="n">dataset</span> <span class="n">X</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">y</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">600</span><span class="p">,)</span>
+<span class="o">&gt;&gt;</span> <span class="c1">##############################################################</span>
+<span class="o">&gt;&gt;</span> <span class="n">Ground</span><span class="o">-</span><span class="n">Truth</span> <span class="n">MI</span><span class="p">:</span> <span class="mf">1.1751928845077875</span>
+<span class="o">&gt;&gt;</span> <span class="n">Estimated</span> <span class="n">MI</span> <span class="p">(</span><span class="n">Log</span><span class="o">-</span><span class="n">Loss</span><span class="p">):</span> <span class="mf">1.3193094645863748</span>
+<span class="o">&gt;&gt;</span> <span class="n">Estimated</span> <span class="n">MI</span> <span class="p">(</span><span class="n">Mid</span><span class="o">-</span><span class="n">Point</span><span class="p">):</span> <span class="mf">1.584961043823006</span>
+<span class="o">&gt;&gt;</span> <span class="n">Model</span> <span class="n">Accuracy</span><span class="p">:</span> <span class="mf">1.0</span>
+</pre></div>
 </div>
 </section>
 </section>
@@ -302,16 +341,26 @@ With AutoMLQuantILDetect, users can confidently and comprehensively address the 
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="installation.html">
+          <a class="next-page" href="api.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Installation Guide</div>
+                <div class="title">📖 API References</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          
+          <a class="prev-page" href="installation.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Installation Guide</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -342,10 +391,8 @@ With AutoMLQuantILDetect, users can confidently and comprehensively address the 
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">The <code class="docutils literal notranslate"><span class="pre">autoqild</span></code> Python package</a><ul>
-<li><a class="reference internal" href="#contents">Contents</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Quickstart Guide</a><ul>
+<li><a class="reference internal" href="#fit-a-classifier-to-estimate-mi">Fit a Classifier to Estimate MI</a></li>
 </ul>
 </li>
 </ul>
@@ -364,7 +411,5 @@ With AutoMLQuantILDetect, users can confidently and comprehensively address the 
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=ccdb6887"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

@@ -1,0 +1,12 @@
+autoqild.classifiers.layers
+===========================
+
+.. automodule:: autoqild.classifiers.layers
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      NormalizedDense
+   
