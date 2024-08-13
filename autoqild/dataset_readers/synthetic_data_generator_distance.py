@@ -33,43 +33,43 @@ def pdf(dist, x):
 
 
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
+    """
+        Generator for synthetic datasets with a focus on generating data with varying class distances.
+
+        This class generates synthetic datasets by adjusting the distance between class distributions, allowing for the simulation of scenarios with varying levels of overlap between classes.
+
+        Parameters
+        ----------
+        n_classes : int, default=2
+            Number of classes in the generated dataset.
+
+        n_features : int, default=2
+            Number of features in the generated dataset.
+
+        samples_per_class : int or dict, default=500
+            Number of samples per class. If an integer is provided, it is assumed that all classes have the same number of samples.
+            If a dictionary is provided, the keys should be class labels and values should be the number of samples for each class.
+
+        noise : float, default=0.1
+            The level of noise to apply when generating class distributions, affecting the overlap between classes.
+
+        random_state : int or RandomState instance, default=42
+            Random state for reproducibility.
+
+        fold_id : int, default=0
+            Fold ID used for random seed generation.
+
+        imbalance : float, default=0.0
+            Proportion of the minority class in the dataset. Must be between 0 and 1.
+
+        gen_type : str, default='single'
+            Type of generation process. It can be used to modify the dataset generation method.
+
+        **kwargs : dict
+            Additional keyword arguments.
+    """
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type='single', **kwargs):
-        """
-            Generator for synthetic datasets with a focus on generating data with varying class distances.
-
-            This class generates synthetic datasets by adjusting the distance between class distributions, allowing for the simulation of scenarios with varying levels of overlap between classes.
-
-            Parameters
-            ----------
-            n_classes : int, default=2
-                Number of classes in the generated dataset.
-
-            n_features : int, default=2
-                Number of features in the generated dataset.
-
-            samples_per_class : int or dict, default=500
-                Number of samples per class. If an integer is provided, it is assumed that all classes have the same number of samples.
-                If a dictionary is provided, the keys should be class labels and values should be the number of samples for each class.
-
-            noise : float, default=0.1
-                The level of noise to apply when generating class distributions, affecting the overlap between classes.
-
-            random_state : int or RandomState instance, default=42
-                Random state for reproducibility.
-
-            fold_id : int, default=0
-                Fold ID used for random seed generation.
-
-            imbalance : float, default=0.0
-                Proportion of the minority class in the dataset. Must be between 0 and 1.
-
-            gen_type : str, default='single'
-                Type of generation process. It can be used to modify the dataset generation method.
-
-            **kwargs : dict
-                Additional keyword arguments.
-        """
         self.n_classes = n_classes
         self.n_features = n_features
         self.random_state = check_random_state(random_state)

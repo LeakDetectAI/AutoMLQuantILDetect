@@ -20,10 +20,17 @@ jobs:
         export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
         pip install -r docs/requirements.txt 
 
+    - name: Debugging
+      run: |
+        pwd
+        ls -la
+        make help
+    
     - name: Build Sphinx docs
       run: |
         cd docs
         make html  # or make docs based on your Makefile
+        sphinx-build -W -b html source _build/html
 
 
     - name: Deploy to GitHub Pages
