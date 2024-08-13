@@ -46,6 +46,7 @@ source_suffix = {
     ".rst": "restructuredtext",
     ".md": "markdown",
 }
+exclude_patterns = ['/autoqild/automl/model_configurations.py']
 
 # -- Options for HTML output -----------------------------------------------------------------------
 html_theme = "furo"

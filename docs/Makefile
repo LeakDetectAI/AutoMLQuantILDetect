@@ -16,4 +16,5 @@ help:
 # "make mode" option. Check Sphinx's command line parsing for the detail
 # of what is going on here.
 %: Makefile
+	@echo "Building documentation with verbosity level: $(SPHINXOPTS)"
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
