@@ -21,9 +21,13 @@ Installation Steps
         conda create --name ILD python=3.10
         conda activate ILD
 3. **Installation**:
-    .. code-block:: sh
-        pip install -r requirements.txt
-    - **OR**
-    .. code-block:: sh
-        python setup.py install
 
+    .. code-block:: sh
+
+            pip install -r requirements.txt
+
+    - **OR**
+
+    .. code-block:: sh
+
+        python setup.py install

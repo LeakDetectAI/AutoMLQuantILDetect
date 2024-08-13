@@ -19,12 +19,6 @@ Contents
    start
 
 .. toctree::
-   :maxdepth: 1
-   :caption: TUTORIALS
-
-   notebooks/
-
-.. toctree::
    :maxdepth: 2
    :caption: API REFERENCE
 
