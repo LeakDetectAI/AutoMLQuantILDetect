@@ -54,14 +54,29 @@ jobs:
       with:
         path: docs/_build/html
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-20.04
-    needs: build-and-deploy
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    - name: Pull latest gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      run: |
+        cd ..
+        git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
+
+    - name: Copy new docs into gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      run: |
+        branch_name=${GITHUB_REF##*/}
+        cd ../gh-pages
+        rm -rf $branch_name
+        cp -r ../${{ env.name }}/docs/build/html $branch_name
+
+    - name: Push to gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      run: |
+        last_commit=$(git log --pretty=format:"%an: %s")
+        cd ../gh-pages
+        branch_name=${GITHUB_REF##*/}
+        git add $branch_name/
+        git config --global user.name 'Github Actions'
+        git config --global user.email 'not@mail.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git commit -am "$last_commit"
+        git push
