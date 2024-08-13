@@ -3,21 +3,30 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        python-version: "3.10"
+        python-version: "3.9.5"
 
     - name: Install dependencies for docs
       run: |
         export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+        python -m pip install --upgrade pip
         pip install -r docs/requirements.txt 
 
     - name: Debugging
@@ -29,12 +38,24 @@ jobs:
     - name: Build Sphinx docs
       run: |
         cd docs
+        make clean
         make html  # or make docs based on your Makefile
         sphinx-build -W -b html source _build/html
 
 
     - name: Deploy to GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: docs/_build/html
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions@github.com"
+        git clone --depth 1 --branch gh-pages https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages
+        rm -rf gh-pages/*
+        cp -r docs/_build/html/* gh-pages/
+        cd gh-pages
+        git add .
+        git commit -m "Update documentation"
+        git push origin gh-pages
