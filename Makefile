@@ -27,7 +27,7 @@ help:
 
 # Installation and Setup
 install:
-	export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+	@export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 	$(PIP) install -e "./"
 
 # Documentation

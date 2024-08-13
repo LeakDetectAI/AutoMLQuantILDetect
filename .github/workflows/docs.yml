@@ -17,7 +17,8 @@ jobs:
 
     - name: Install dependencies for docs
       run: |
-        pip install -r docs/requirements.txt  # Install only the requirements for documentation
+        export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+        pip install -r docs/requirements.txt 
 
     - name: Build Sphinx docs
       run: |
