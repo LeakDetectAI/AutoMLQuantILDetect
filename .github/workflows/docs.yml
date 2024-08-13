@@ -59,3 +59,11 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git commit -m "Update documentation"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build-and-deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
