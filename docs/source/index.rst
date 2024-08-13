@@ -19,14 +19,6 @@ Contents
    start
 
 .. toctree::
-   :maxdepth: 1
-   :caption: TUTORIALS
-
-   notebooks/test_active_learning_pipeline
-   notebooks/test_active_learning_pipeline_evaluator
-   notebooks/run_experiments
-
-.. toctree::
    :maxdepth: 2
    :caption: API REFERENCE
 

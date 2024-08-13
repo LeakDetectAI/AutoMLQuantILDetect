@@ -360,13 +360,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def calculate_mi(self):
         """
-           Calculate the mutual information (MI) using the probability distribution function.
-           .. math::
+            Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+
+            .. math::
                 I(X;Y) = H(X) - H(X|Y)
-           Returns
-           -------
-           mutual_information: float
-               The mutual information of the dataset.
+
+            Returns
+            -------
+            mutual_information : float
+                The mutual information of the dataset.
         """
         x_y_prob_list = []
         for k_class in self.class_labels:
@@ -402,7 +404,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
     def bayes_predictor_mi(self):
         """
            Calculate the mutual information (MI) using the probability distribution function using the formulae below.
-           .. math::
+            .. math::
                 I(X;Y) = H(Y) - H(Y|X)
 
            Returns
