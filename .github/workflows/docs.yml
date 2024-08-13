@@ -62,19 +62,16 @@ jobs:
       run: |
         cd gh-pages
         git add .
-        if git diff-index --quiet HEAD; then
-          echo "No changes to commit"
-          exit 0
-        fi
+        git diff-index --quiet HEAD || git commit -m "Update documentation"
+    
 
     - name: Push to gh-pages
-      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
       run: |
         cd gh-pages
         git add .
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'github-actions@github.com'
-        git commit -m "Update documentation" || exit 0
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
 
     - name: Deploy to gh-pages
