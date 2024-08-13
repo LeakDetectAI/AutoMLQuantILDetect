@@ -52,17 +52,29 @@ jobs:
         git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
 
     - name: Copy new docs into gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
+        cd ../gh-pages
         rm -rf gh-pages/*
         cp -r docs/_build/html/* gh-pages/
 
+    - name: Check for changes
+      run: |
+        cd gh-pages
+        git add .
+        if git diff-index --quiet HEAD; then
+          echo "No changes to commit"
+          exit 0
+        fi
+
     - name: Push to gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
         cd gh-pages
         git add .
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'github-actions@github.com'
-        git commit -m "Update documentation"
+        git commit -m "Update documentation" || exit 0
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
 
     - name: Deploy to gh-pages
