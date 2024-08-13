@@ -1,6 +1,6 @@
 # Minimal Makefile for Sphinx documentation
 # You can set these variables from the command line.
-SPHINXOPTS    = -v -W --keep-going
+SPHINXOPTS    = -vv --keep-going
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = AutoMLQuantILDetect
 SOURCEDIR     = source
