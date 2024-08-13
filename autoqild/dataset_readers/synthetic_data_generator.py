@@ -360,15 +360,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def calculate_mi(self):
         """
-            Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+        Calculate the mutual information (MI) using the probability distribution function.
 
-            .. math::
-                I(X;Y) = H(X) - H(X|Y)
+        .. math::
+            I(X;Y) = H(X) - H(X|Y)
 
-            Returns
-            -------
-            mutual_information : float
-                The mutual information of the dataset.
+        Returns
+        -------
+        mutual_information : float
+            The mutual information of the dataset.
         """
         x_y_prob_list = []
         for k_class in self.class_labels:
@@ -403,14 +403,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def bayes_predictor_mi(self):
         """
-           Calculate the mutual information (MI) using the probability distribution function using the formulae below.
-            .. math::
-                I(X;Y) = H(Y) - H(Y|X)
+        Calculate the mutual information (MI) using the probability distribution function.
 
-           Returns
-           -------
-           mutual_information: float
-               The mutual information of the dataset.
+        .. math::
+            I(X;Y) = H(X) - H(X|Y)
+
+        Returns
+        -------
+        mutual_information : float
+            The mutual information of the dataset.
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
@@ -434,14 +435,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def bayes_predictor_pc_softmax_mi(self):
         """
-            Estimate the mutual information using softmax and the PC-softmax loss on the class probabilities.
+        Calculate the mutual information (MI) using the probability distribution function.
 
-            Returns
-            -------
-            softmax_emi: float
-                Estimated mutual information using softmax function
-            pc_softmax_emi: float
-                Estimated mutual information using PC-softmax function
+        .. math::
+            I(X;Y) = H(Y) - H(Y|X)
+
+        Returns
+        -------
+        mutual_information : float
+            The mutual information of the dataset.
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
