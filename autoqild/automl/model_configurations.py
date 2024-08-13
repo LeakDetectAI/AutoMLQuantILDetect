@@ -62,6 +62,10 @@ hyperparameters = {
         "p": Categorical(1, 2, 3),
     },
 }
+"""This dictionary defines the hyperparameters for several models like `NN_TORCH`, `GBM`, `CAT`, `XGB`, 
+`FASTAI`, `RF`, `XT`, and `KNN`. These models are commonly used in machine learning pipelines, 
+and each hyperparameter is configured using the `Real`, `Int`, or `Categorical` space from AutoGluon, which supports 
+hyperparameter tuning."""
 
 reduced_hyperparameters = {
     "FASTAI": {
@@ -90,6 +94,9 @@ reduced_hyperparameters = {
         "class_weight": Categorical("balanced")
     },
 }
+"""This dictionary defines the hyperparameters for simpler models like `FASTAI`, `RF` and `XT`. These models are 
+commonly used in machine learning pipelines, and each hyperparameter is configured using the `Real`, `Int`, or 
+`Categorical` space from AutoGluon, which supports  hyperparameter tuning."""
 
 # NN: `autogluon.tabular.models.tabular_nn.hyperparameters.parameters`
 # Note: certain hyperparameter settings may cause these neural networks to train much slower.
