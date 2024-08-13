@@ -50,7 +50,8 @@ jobs:
     - name: Pull latest gh-pages
       run: |
         git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
-
+        ls
+        
     - name: Copy new docs into gh-pages
       if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
       run: |
