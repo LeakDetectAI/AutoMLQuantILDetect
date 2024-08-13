@@ -5,7 +5,7 @@ import commonmark
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("../../alpbench"))
+sys.path.insert(0, os.path.abspath("../../autoqild"))
 
 import autoqild
 
@@ -14,11 +14,11 @@ master_doc = "index"
 
 # -- Project information ---------------------------------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-project = "alpbench"
+project = "AutoMLQuantILDetect"
 copyright = "2024, Gupta et al."
 author = "Pritha Gupta"
-release = autoqild.__version__
-version = autoqild.__version__
+release = "0.1.0"
+version = "0.1.0"
 
 # -- General configuration -------------------------------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -46,15 +46,6 @@ source_suffix = {
     ".rst": "restructuredtext",
     ".md": "markdown",
 }
-
-intersphinx_mapping = {
-    "python3": ("https://docs.python.org/3", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy", None),
-    "matplotlib": ("https://matplotlib.org/stable", None),
-    "PIL": ("https://pillow.readthedocs.io/en/stable/", None),
-}
-
 
 # -- Options for HTML output -----------------------------------------------------------------------
 html_theme = "furo"
