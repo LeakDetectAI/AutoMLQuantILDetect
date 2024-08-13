@@ -13,11 +13,7 @@ from ..utilities.utils import log_exception_error
 
 
 class AutoGluonClassifier(AutomlClassifier):
-
-    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
-                 use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
-                 remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
-        """
+    """
             AutoGluonClassifier class for building and training an AutoML model using AutoGluon.
 
             Parameters
@@ -57,7 +53,10 @@ class AutoGluonClassifier(AutomlClassifier):
 
             **kwargs : dict, optional
                 Additional keyword arguments.
-        """
+    """
+    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
+                 use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
+                 remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
         self.logger = logging.getLogger(name=AutoGluonClassifier.__name__)
         self.random_state = check_random_state(random_state)
         self.output_folder = output_folder

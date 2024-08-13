@@ -1,5 +1,5 @@
 The ``autoqild`` Python package
-================================
+=================================
 
 The ``autoqild`` package utilizes AutoML approaches to detect and quantify system information leakage. It is an advanced toolkit that leverages the power of Automated Machine Learning (AutoML) to quantify information leakage accurately.
 This package estimates mutual information (MI) within systems that release classification datasets. By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects information leakage within classification datasets.

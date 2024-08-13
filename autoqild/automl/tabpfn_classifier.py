@@ -11,9 +11,7 @@ from ..utilities import create_dimensionality_reduction_model
 
 
 class AutoTabPFNClassifier(AutomlClassifier):
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
-                 base_path=None, random_state=None, **kwargs):
-        """
+    """
             AutoTabPFNClassifier class for building and training an AutoML model using TabPFN.
 
             Parameters
@@ -52,7 +50,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
             **kwargs : dict, optional
                 Additional keyword arguments.
-        """
+    """
+    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
+                 base_path=None, random_state=None, **kwargs):
         self.n_features = n_features
         self.n_classes = n_classes
         self.logger = logging.getLogger(name=AutoTabPFNClassifier.__name__)
