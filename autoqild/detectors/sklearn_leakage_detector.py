@@ -9,8 +9,7 @@ from sklearn.model_selection import train_test_split
 
 from .ild_base_class import InformationLeakageDetector
 from ..automl.tabpfn_classifier import AutoTabPFNClassifier
-from ..bayes_search_hpo import *
-from ..bayes_search_hpo.bayes_search_utils import get_scores
+from ..bayes_search import *
 from ..utilities import *
 
 
