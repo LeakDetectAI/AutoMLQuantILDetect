@@ -14,7 +14,7 @@ from sklearn.utils import check_random_state
 from statsmodels.stats.multitest import multipletests
 
 from autoqild.detectors.utils import *
-from autoqild.bayes_search_hpo.bayes_search_utils import get_scores, probability_calibration
+from autoqild.bayes_search.bayes_search_utils import get_scores, probability_calibration
 from autoqild.classifiers import MajorityVoting, RandomClassifier
 from autoqild.utilities import *
 

@@ -6,37 +6,19 @@ from scipy.stats import multivariate_normal
 from scipy.stats import ortho_group
 from sklearn.utils import check_random_state, shuffle
 
-from .utils import FACTOR
+from .utils import FACTOR, pdf
 from ..utilities import *
 
 __all__ = ['SyntheticDatasetGenerator']
-
-
-def pdf(dist, x):
-    """
-        Compute the probability density function (PDF) for the given distribution and input data.
-
-        Parameters
-        ----------
-        dist : scipy.stats._multivariate.multivariate_normal_frozen
-            The multivariate normal distribution object.
-        x : array-like of shape (n_samples, n_features)
-            Input data for which the PDF is computed.
-
-        Returns
-        -------
-        log_dist_samples: array-like
-            Probability density values for the input data.
-    """
-    log_dist_samples = np.exp(dist.logpdf(x))
-    return log_dist_samples
 
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
     """
         Generator for synthetic datasets with a focus on generating data with varying class distances.
 
-        This class generates synthetic datasets by adjusting the distance between class distributions, allowing for the simulation of scenarios with varying levels of overlap between classes.
+        This class generates synthetic datasets by adjusting the distance between class distributions, allowing
+        for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
+        in scenarios like testing classifiers on datasets with controlled class separability.
 
         Parameters
         ----------
@@ -47,11 +29,12 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             Number of features in the generated dataset.
 
         samples_per_class : int or dict, default=500
-            Number of samples per class. If an integer is provided, it is assumed that all classes have the same number of samples.
-            If a dictionary is provided, the keys should be class labels and values should be the number of samples for each class.
+            Number of samples per class. If an integer is provided, it is assumed that all classes have the same
+            number of samples. If a dictionary is provided, the keys should be class labels and values should be
+            the number of samples for each class.
 
-        noise : float, default=0.1
-            The level of noise to apply when generating class distributions, affecting the overlap between classes.
+        flip_y : float, default=0.1
+            The fraction of samples whose class labels will be randomly flipped to simulate noise.
 
         random_state : int or RandomState instance, default=42
             Random state for reproducibility.
@@ -68,6 +51,63 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         **kwargs : dict
             Additional keyword arguments.
 
+        Attributes
+        ----------
+        n_classes : int
+            Number of classes in the generated dataset.
+
+        n_features : int
+            Number of features in the generated dataset.
+
+        random_state : RandomState instance
+            Random state instance for reproducibility.
+
+        fold_id : int
+            Fold ID used for random seed generation.
+
+        means : dict
+            Dictionary storing the mean vectors for each class.
+
+        covariances : dict
+            Dictionary storing the covariance matrices for each class.
+
+        seeds : dict
+            Dictionary storing the random seeds used for generating each class.
+
+        samples_per_class : dict
+            Dictionary storing the number of samples for each class.
+
+        imbalance : float
+            Proportion of the minority class in the dataset.
+
+        gen_type : str
+            Type of generation process.
+
+        n_instances : int
+            Total number of instances in the generated dataset.
+
+        class_labels : numpy.ndarray
+            Array of class labels.
+
+        y_prob : dict
+            Dictionary storing the probability of each class.
+
+        ent_y : float or None
+            Entropy of the class distribution.
+
+        flip_y_prob : dict
+            Dictionary storing the probability of flipped class labels for each class.
+
+        flip_y : float
+            The fraction of samples whose class labels will be randomly flipped to simulate noise.
+
+        logger : logging.Logger
+            Logger instance for logging information.
+
+        Private Methods
+        ---------------
+        __generate_cov_means():
+            Generate the mean vectors and covariance matrices for each class.
     """
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type='single', **kwargs):
@@ -361,7 +401,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def calculate_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -404,7 +444,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def bayes_predictor_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -436,15 +476,40 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def bayes_predictor_pc_softmax_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given the
+        input data X, applying both the Softmax and PC-Softmax functions.
 
         .. math::
+
             I(X;Y) = H(Y) - H(Y|X)
+
+        Softmax Function:
+
+        .. math::
+
+            \text{Softmax}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( K \) is the total number of classes.
+
+        PC-Softmax (Probability-Corrected Softmax) Function:
+
+        .. math::
+
+            \text{PC-Softmax}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j} \cdot p_j}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
 
         Returns
         -------
-        mutual_information : float
-            The mutual information of the dataset.
+        softmax_emi : float
+            Estimated softmax mutual information.
+
+        pc_softmax_emi : float
+            Estimated PC-softmax mutual information.
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))

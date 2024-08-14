@@ -10,63 +10,64 @@ from ..utilities import create_dimensionality_reduction_model, log_exception_err
 
 
 class GMMMIEstimator(MIEstimatorBase):
+    """
+        GMMMIEstimator class for estimating Mutual Information (MI) using Gaussian Mixture Models (GMMs)
+        and performing classification using Logistic Regression.
+
+        Parameters
+        ----------
+        n_classes : int
+            Number of classes in the classification data samples.
+
+        n_features : int
+            Number of features or dimensionality of the inputs of the classification data samples.
+
+        y_cat : bool, optional, default=False
+            Indicates if the target variable should be considered categorical or real valued.
+
+        covariance_type : {'full', 'tied', 'diag', 'spherical'}, default='full'
+            String describing the type of covariance parameters to use.
+            Must be one of:
+
+            - 'full': each component has its own general covariance matrix.
+            - 'tied': all components share the same general covariance matrix.
+            - 'diag': each component has its own diagonal covariance matrix.
+            - 'spherical': each component has its own single variance.
+
+        reg_covar : float, default=1e-6
+            Non-negative regularization added to the diagonal of covariance.
+            Allows to assure that the covariance matrices are all positive.
+
+        val_size : float, optional, default=0.30
+            Validation set size as a proportion of the dataset to estimate GMMs
+
+        n_reduced : int, optional, default=20
+            Number of features to reduce to in case the n_features>100
+
+        reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf',
+        'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
+            Technique to use for feature reduction, implementation provided by (scikit-learn);
+            Must be one of:
+
+            - 'recursive_feature_elimination_et' : Recursively removes features and builds a model using ExtraTreesClassifier on those features that remain.
+            - 'recursive_feature_elimination_rf' : Recursively removes features and builds a model using RandomForest on those features that remain
+            - 'select_from_model_et' : Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier
+            - 'select_from_model_rf' : Meta-transformer for selecting features based on importance weights using RandomForestClassifier
+            - 'pca' : Reduces the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated.
+            - 'lda' : Finds a linear combination of features that characterizes or separates two or more classes.
+            - 'tsne' : t-Distributed Stochastic Neighbor Embedding,  Reduces the dimensionality of the data for the purpose of visualization.
+            - 'nmf' : Non-Negative Matrix Factorization, Factorizes the data matrix into two matrices with non-negative elements, useful for dimensionality reduction.
+
+        random_state : int or object, optional, default=42
+            Random state for reproducibility.
+
+        **kwargs : dict, optional
+            Additional keyword arguments.
+    """
+
     def __init__(self, n_classes, n_features, y_cat=False, covariance_type='full', reg_covar=1e-06, val_size=0.30,
                  n_reduced=20, reduction_technique='select_from_model_rf', random_state=42, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
-        """
-            GMMMIEstimator class for estimating Mutual Information (MI) using Gaussian Mixture Models (GMMs)
-            and performing classification using Logistic Regression.
-
-            Parameters
-            ----------
-            n_classes : int
-                Number of classes in the classification data samples.
-
-            n_features : int
-                Number of features or dimensionality of the inputs of the classification data samples.
-
-            y_cat : bool, optional, default=False
-                Indicates if the target variable should be considered categorical or real valued.
-            
-            covariance_type : {'full', 'tied', 'diag', 'spherical'}, default='full'
-                String describing the type of covariance parameters to use.
-                Must be one of:
-                
-                - 'full': each component has its own general covariance matrix.
-                - 'tied': all components share the same general covariance matrix.
-                - 'diag': each component has its own diagonal covariance matrix.
-                - 'spherical': each component has its own single variance.
-
-            reg_covar : float, default=1e-6
-                Non-negative regularization added to the diagonal of covariance.
-                Allows to assure that the covariance matrices are all positive.
-
-            val_size : float, optional, default=0.30
-                Validation set size as a proportion of the dataset to estimate GMMs
-                
-            n_reduced : int, optional, default=20
-                Number of features to reduce to in case the n_features>100
-
-            reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf', 
-            'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
-                Technique to use for feature reduction, implementation provided by (scikit-learn);
-                Must be one of:
-                
-                - 'recursive_feature_elimination_et' : Recursively removes features and builds a model using ExtraTreesClassifier on those features that remain.
-                - 'recursive_feature_elimination_rf' : Recursively removes features and builds a model using RandomForest on those features that remain
-                - 'select_from_model_et' : Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier
-                - 'select_from_model_rf' : Meta-transformer for selecting features based on importance weights using RandomForestClassifier
-                - 'pca' : Reduces the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated.
-                - 'lda' : Finds a linear combination of features that characterizes or separates two or more classes.
-                - 'tsne' : t-Distributed Stochastic Neighbor Embedding,  Reduces the dimensionality of the data for the purpose of visualization.
-                - 'nmf' : Non-Negative Matrix Factorization, Factorizes the data matrix into two matrices with non-negative elements, useful for dimensionality reduction.
-
-            random_state : int or object, optional, default=42
-                Random state for reproducibility.
-
-            **kwargs : dict, optional
-                Additional keyword arguments.
-        """
         self.y_cat = y_cat
         self.num_comps = list(np.arange(2, 20, 2))
         self.reg_covar = reg_covar

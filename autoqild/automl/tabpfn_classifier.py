@@ -12,44 +12,54 @@ from ..utilities import create_dimensionality_reduction_model
 
 class AutoTabPFNClassifier(AutomlClassifier):
     """
-            AutoTabPFNClassifier class for building and training an AutoML model using TabPFN.
+        AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
+        Fully Bayesian Network) for classification tasks.
 
-            Parameters
-            ----------
-            n_features : int
-                Number of features or dimensionality of the inputs.
+        This class provides a high-level interface to automatically build, train, and evaluate a
+        TabPFN model on tabular data. It supports various configurations and allows for dimensionality
+        reduction if the number of features exceeds a specified threshold. The class is equipped to
+        handle different feature reduction techniques and can operate on both CPU and GPU, depending on
+        the available resources.
 
-            n_classes : int
-                Number of classes in the classification data samples.
+        Attributes
+        ----------
+        n_features : int
+            The number of features in the input data.
 
-            n_ensembles : int, optional, default=100
-                Number of ensemble configurations for TabPFN.
+        n_classes : int
+            The number of classes in the classification task.
 
-            n_reduced : int, optional, default=20
-                Number of features to reduce to in case the n_features > 50.
+        n_ensembles : int
+            The number of ensemble configurations used by the TabPFN model. Default is 100.
 
-             reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf',
-            'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
-                Technique to use for feature reduction, implementation provided by (scikit-learn);
-                Must be one of:
+        n_reduced : int
+            The number of features to reduce to if `n_features` exceeds 50. Default is 20.
 
-                - 'recursive_feature_elimination_et' : Recursively removes features and builds a model using ExtraTreesClassifier on those features that remain.
-                - 'recursive_feature_elimination_rf' : Recursively removes features and builds a model using RandomForest on those features that remain
-                - 'select_from_model_et' : Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier
-                - 'select_from_model_rf' : Meta-transformer for selecting features based on importance weights using RandomForestClassifier
-                - 'pca' : Reduces the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated.
-                - 'lda' : Finds a linear combination of features that characterizes or separates two or more classes.
-                - 'tsne' : t-Distributed Stochastic Neighbor Embedding,  Reduces the dimensionality of the data for the purpose of visualization.
-                - 'nmf' : Non-Negative Matrix Factorization, Factorizes the data matrix into two matrices with non-negative elements, useful for dimensionality reduction.
+        reduction_technique : str
+            The technique used for feature reduction, chosen from a set of options including PCA, LDA, and t-SNE.
+            Default is 'select_from_model_rf'.
 
-            base_path : str, optional
-                Path to save the trained model.
+        base_path : str or None
+            The path where the trained model and other outputs are saved. If None, no model is saved.
 
-            random_state : int or None, optional, default=None
-                Random state for reproducibility.
+        random_state : int or None
+            Seed for random number generation to ensure reproducibility. Default is None.
 
-            **kwargs : dict, optional
-                Additional keyword arguments.
+        device : str
+            The device used for computation, either 'cpu' or 'cuda' depending on the availability of a GPU.
+
+        selection_model : object or None
+            The model used for dimensionality reduction. Initialized during the first call to `transform`.
+
+        logger : logging.Logger
+            Logger object used for logging messages and errors.
+
+        model : TabPFNClassifier or None
+            The TabPFN model object, initialized after fitting.
+
+        __is_fitted__ : bool
+            Flag indicating whether the dimensionality reduction model is fitted.
+
     """
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):
@@ -136,7 +146,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
         self.model = TabPFNClassifier(**params)
         self.model.fit(X, y, overwrite_warning=True)
-        self.clear_memory()
+        self.__clear_memory__()
         self.logger.info("Fitting Done")
 
     def predict(self, X, verbose=0):
@@ -227,7 +237,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
             y_pred = np.concatenate(predictions, axis=0)
         self.logger.info("Predicting Probabilities Done")
-        self.clear_memory()
+        self.__clear_memory__()
         return y_pred
 
     def decision_function(self, X, verbose=0):
@@ -249,7 +259,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         """
         return self.predict_proba(X, verbose)
 
-    def clear_memory(self):
+    @staticmethod
+    def __clear_memory__():
         """
             Clear memory to release resources by torch.
         """

@@ -6,44 +6,71 @@ __all__ = ['RandomClassifier', 'MajorityVoting', 'PriorClassifier']
 
 
 class RandomClassifier(DummyClassifier):
-    def __init__(self, **kwargs):
-        """
-           A classifier that predicts classes randomly according to a uniform distribution.
+    """
+       A classifier that predicts classes randomly according to a uniform distribution.
 
-           Parameters
-           ----------
-           **kwargs : dict, optional
-               Additional keyword arguments to pass to DummyClassifier.
-        """
+       Parameters
+       ----------
+       **kwargs : dict, optional
+           Additional keyword arguments to pass to DummyClassifier.
+    """
+
+    def __init__(self, **kwargs):
         super(RandomClassifier, self).__init__(strategy='uniform', **kwargs)
 
 
 class MajorityVoting(DummyClassifier):
-    def __init__(self, **kwargs):
-        """
-            A classifier that always predicts the most frequent class.
+    """
+        A classifier that always predicts the most frequent class.
 
-            Parameters
-            ----------
-            **kwargs : dict, optional
-                Additional keyword arguments to pass to DummyClassifier.
-        """
+        Parameters
+        ----------
+        **kwargs : dict, optional
+            Additional keyword arguments to pass to DummyClassifier.
+    """
+
+    def __init__(self, **kwargs):
         super(MajorityVoting, self).__init__(strategy='most_frequent', **kwargs)
 
 
 class PriorClassifier(DummyClassifier):
+    """
+        PriorClassifier is a simple classifier that predicts class labels based on the prior distribution
+        of the classes in the training data. This classifier is essentially a wrapper around the
+        `DummyClassifier` from scikit-learn with a strategy set to 'prior'.
+
+        Parameters
+        ----------
+        random_state : int or None, optional, default=None
+            Random state for reproducibility.
+
+        **kwargs : dict, optional
+            Additional keyword arguments to pass to `DummyClassifier`.
+
+        Attributes
+        ----------
+        class_probabilities : array-like of shape (n_classes,)
+            The prior probabilities of each class, calculated from the training data.
+
+        classes_ : array-like of shape (n_classes,)
+            The unique classes found in the training data.
+
+        n_classes : int
+            The number of unique classes in the training data.
+
+        random_state : RandomState
+            Random state instance for reproducibility.
+
+        Methods
+        -------
+        fit(X, y, sample_weight=None)
+            Fits the classifier according to the given training data.
+
+        predict(X)
+            Predicts class labels for the given input samples based on the class prior probabilities.
+    """
+
     def __init__(self, random_state=None, **kwargs):
-        """
-            A classifier that predicts classes according to the class prior probabilities.
-
-            Parameters
-            ----------
-            random_state : int or None, optional, default=None
-                Random state for reproducibility.
-
-            **kwargs : dict, optional
-                Additional keyword arguments to pass to DummyClassifier.
-        """
         super(PriorClassifier, self).__init__(strategy='prior', **kwargs)
         self.class_probabilities = [0.5, 0.5]
         self.classes_ = [0, 1]

@@ -4,8 +4,55 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 
 class AutomlClassifier(BaseEstimator, ClassifierMixin):
+    """
+        Abstract base class for AutoML classifiers.
+
+        This class serves as a base for implementing various AutoML classifiers.
+        It inherits from `sklearn.base.BaseEstimator` and `sklearn.base.ClassifierMixin`,
+        providing standard interfaces for scikit-learn estimators and classifiers.
+
+        The class is abstract, meaning it cannot be instantiated directly.
+        Subclasses must implement the `fit` method to provide functionality for training the classifier.
+
+        Attributes
+        ----------
+        None
+
+        Examples
+        --------
+        To create a custom AutoML classifier, subclass `AutomlClassifier` and implement the `fit` method:
+
+        >>> class CustomClassifier(AutomlClassifier):
+        >>>     def fit(self, X, y, **kwd):
+        >>>         # Implement your fitting logic here
+        >>>         pass
+    """
     @abstractmethod
     def fit(self, X, y, **kwd):
+        """
+            Fit the AutoML classifier on the provided dataset.
+
+            Parameters
+            ----------
+            X : array-like of shape (n_samples, n_features)
+                Training data.
+
+            y : array-like of shape (n_samples,)
+                Target values.
+
+            **kwd : keyword arguments
+                Additional parameters for the fit method.
+
+            Returns
+            -------
+            self : object
+                Returns the instance itself.
+
+            Notes
+            -----
+            This method must be implemented by subclasses. It should contain the logic
+            for training the classifier on the dataset provided in `X` and `y`.
+        """
         pass
 
     @abstractmethod

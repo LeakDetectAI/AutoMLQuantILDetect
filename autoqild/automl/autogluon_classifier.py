@@ -14,45 +14,112 @@ from ..utilities.utils import log_exception_error
 
 class AutoGluonClassifier(AutomlClassifier):
     """
-            AutoGluonClassifier class for building and training an AutoML model using AutoGluon.
+    AutoGluonClassifier is a wrapper for building, training, and evaluating an AutoML model using AutoGluon.
 
-            Parameters
-            ----------
-            n_features : int
-                Number of features or dimensionality of the inputs.
+    This class facilitates the use of AutoGluon for automatic machine learning (AutoML) tasks,
+    specifically focusing on classification problems. It handles various aspects of model training,
+    including hyperparameter tuning, model stacking, and model evaluation. The class is designed to
+    work seamlessly with the AutoGluon library, allowing users to leverage its powerful features with
+    minimal setup.
 
-            n_classes : int
-                Number of classes in the classification data samples.
+    Parameters
+    ----------
+    n_features : int
+        Number of features or dimensionality of the input data.
 
-            time_limit : int, optional, default=1800
-                Time limit for training the model.
+    n_classes : int
+        Number of classes in the classification problem.
 
-            output_folder : str, optional
-                Path to save the trained model.
+    time_limit : int, optional
+        Time limit for training the model, in seconds. Default is 1800.
 
-            eval_metric : str, optional, default='accuracy'
-                Evaluation metric to use.
+    output_folder : str, optional
+        Path to the directory where the trained model and related files will be saved. Default is None.
 
-            use_hyperparameters : bool, optional, default=True
-                Whether to use predefined hyperparameters for model training.
+    eval_metric : str, optional
+        Evaluation metric used to assess the performance of the model. Default is 'accuracy'.
 
-            delete_tmp_folder_after_terminate : bool, optional, default=True
-                Whether to delete temporary folder after training.
+    use_hyperparameters : bool, optional
+        Flag indicating whether to use predefined hyperparameters for model training. Default is True.
 
-            auto_stack : bool, optional, default=True
-                Whether to use auto-stacking in AutoGluon.
+    delete_tmp_folder_after_terminate : bool, optional
+        Flag indicating whether to delete the temporary folder after model training is complete. Default is True.
 
-            remove_boosting_models : bool, optional, default=True
-                Whether to remove boosting models from the hyperparameters.
+    auto_stack : bool, optional
+        Flag indicating whether to use automatic stacking of models in AutoGluon. Default is True.
 
-            verbosity : int, optional, default=6
-                Verbosity level.
+    remove_boosting_models : bool, optional
+        Flag indicating whether to exclude boosting models (like GBM, CAT, XGB) from the hyperparameters. Default is True.
 
-            random_state : int or None, optional, default=None
-                Random state for reproducibility.
+    verbosity : int, optional
+        Level of verbosity for logging and output. Default is 6.
 
-            **kwargs : dict, optional
-                Additional keyword arguments.
+    random_state : int or None, optional
+        Seed for random number generation to ensure reproducibility. Default is None.
+
+    Attributes
+    ----------
+    logger : logging.Logger
+        Logger object used for logging messages and errors.
+
+    random_state : np.random.RandomState
+        Random state instance for reproducibility.
+
+    output_folder : str
+        Path to the directory where the trained model and related files will be saved.
+
+    delete_tmp_folder_after_terminate : bool
+        Flag indicating whether to delete the temporary folder after model training is complete.
+
+    hyperparameter_tune_kwargs : dict
+        Dictionary containing options for hyperparameter tuning, including the scheduler and searcher.
+
+    eval_metric : str
+        Evaluation metric used to assess the performance of the model.
+
+    use_hyperparameters : bool
+        Flag indicating whether to use predefined hyperparameters for model training.
+
+    verbosity : int
+        Level of verbosity for logging and output.
+
+    hyperparameters : dict or None
+        Dictionary of hyperparameters used for model training. If `use_hyperparameters` is False, this is None.
+
+    exclude_model_types : list
+        List of model types to exclude from the training process.
+
+    auto_stack : bool
+        Flag indicating whether to use automatic stacking of models in AutoGluon.
+
+    n_features : int
+        Number of features or dimensionality of the input data.
+
+    n_classes : int
+        Number of classes in the classification problem.
+
+    sample_weight : str
+        Method for determining sample weights during training, default is 'auto_weight'.
+
+    time_limit : int
+        Time limit for training the model, in seconds.
+
+    model : autogluon.tabular.TabularPredictor or None
+        The AutoGluon model object, initialized after fitting.
+
+    class_label : str
+        Name of the target label column.
+
+    columns : list
+        List of column names for the input DataFrame, including feature names and the class label.
+
+    leaderboard : pandas.DataFrame or None
+        DataFrame containing information about the models trained during the fitting process.
+
+    Private Methods
+    ---------------
+    _is_fitted_() -> bool
+        Check if the model is already fitted.
     """
     def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
                  use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
@@ -89,21 +156,16 @@ class AutoGluonClassifier(AutomlClassifier):
         if self.n_classes == 2:
             self.problem_type = 'binary'
         self.leaderboard = None
-        #        if "pc2" in os.environ["HOME"]:
-        #            tmp_dir_path = os.path.join(os.environ["PFS_FOLDER"], "tmp")
-        #            if not os.path.isdir(tmp_dir_path):
-        #                os.mkdir(tmp_dir_path)
-        #            os.environ['RAY_LOG_DIR'] = os.environ['RAY_HOME'] = os.environ['TMPDIR'] = tmp_dir_path
 
     @property
     def _is_fitted_(self) -> bool:
         """
-            Check if the model is already fitted.
+        Check if the model is already fitted.
 
-            Returns
-            -------
-            _is_fitted_: bool
-                True if the model is fitted, False otherwise.
+        Returns
+        -------
+        _is_fitted_ : bool
+            True if the model is fitted, False otherwise.
         """
         basename = os.path.basename(self.output_folder)
         if os.path.exists(self.output_folder):
@@ -150,20 +212,19 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def fit(self, X, y, **kwd):
         """
-            Fit the AutoGluon model to the training data.
+        Fit the AutoGluon model to the training data.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                Target vector.
+        y : array-like of shape (n_samples,)
+            Target vector.
 
-            **kwd : dict, optional
-                Additional keyword arguments.
+        **kwd : dict, optional
+            Additional keyword arguments.
         """
-        # Set the alarm to trigger after the specified time limit
         self.logger.info("Fitting Started")
         train_data = self.convert_to_dataframe(X, y)
         while not self._is_fitted_:
@@ -172,7 +233,7 @@ class AutoGluonClassifier(AutomlClassifier):
                 self.model = TabularPredictor(label=self.class_label, sample_weight=self.sample_weight,
                                               problem_type=self.problem_type, eval_metric=self.eval_metric,
                                               path=self.output_folder, verbosity=self.verbosity)
-                self.model.fit(train_data, time_limit=self.time_limit, hyperparameters=hyperparameters,
+                self.model.fit(train_data, time_limit=self.time_limit, hyperparameters=self.hyperparameters,
                                hyperparameter_tune_kwargs=self.hyperparameter_tune_kwargs, auto_stack=self.auto_stack,
                                excluded_model_types=self.exclude_model_types)
             except Exception as error:
@@ -185,20 +246,20 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def predict(self, X, verbose=0):
         """
-            Predict class labels for the input samples.
+        Predict class labels for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            y_pred : array-like of shape (n_samples,)
-                Predicted class labels.
+        Returns
+        -------
+        y_pred : array-like of shape (n_samples,)
+            Predicted class labels.
         """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict(test_data)
@@ -206,26 +267,26 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def score(self, X, y, sample_weight=None, verbose=0):
         """
-            Compute the balanced accuracy score for the input samples.
+        Compute the balanced accuracy score for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                True labels.
+        y : array-like of shape (n_samples,)
+            True labels.
 
-            sample_weight : array-like of shape (n_samples,), optional
-                Sample weights.
+        sample_weight : array-like of shape (n_samples,), optional
+            Sample weights.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            score : float
-                Balanced accuracy score.
+        Returns
+        -------
+        score : float
+            Balanced accuracy score.
         """
         test_data = self.convert_to_dataframe(X, y)
         score = self.model.evaluate(test_data)['balanced_accuracy']
@@ -233,20 +294,20 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def predict_proba(self, X, verbose=0):
         """
-            Predict class probabilities for the input samples.
+        Predict class probabilities for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            y_pred : array-like of shape (n_samples, n_classes)
-                Predicted class probabilities.
+        Returns
+        -------
+        y_pred : array-like of shape (n_samples, n_classes)
+            Predicted class probabilities.
         """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict_proba(test_data)
@@ -254,20 +315,20 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def decision_function(self, X, verbose=0):
         """
-            Compute the decision function in form of class probabilities for the input samples.
+        Compute the decision function in form of class probabilities for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            decision : array-like of shape (n_samples,)
-                Decision function values.
+        Returns
+        -------
+        decision : array-like of shape (n_samples,)
+            Decision function values.
         """
         test_data = self.convert_to_dataframe(X, None)
         y_pred = self.model.predict_proba(test_data)
@@ -275,60 +336,54 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def convert_to_dataframe(self, X, y=None):
         """
-            Convert the input data to a DataFrame.
+        Convert the input data to a DataFrame.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,), optional
-                Target vector.
+        y : array-like of shape (n_samples,), optional
+            Target vector.
 
-            Returns
-            -------
-            df_data : pandas.DataFrame
-                DataFrame containing the input data.
+        Returns
+        -------
+        df_data : pandas.DataFrame
+            DataFrame containing the input data.
         """
-        # Ensure X and y are NumPy arrays
         X = np.asarray(X)
         if y is not None:
             y = np.asarray(y)
-        # If y is None, generate random labels
         else:
             n_instances = X.shape[0]
             y = self.random_state.choice(self.n_classes, size=n_instances)
 
-        # Ensure X and y are writeable
         X = np.copy(X)
         X.flags.writeable = True
         y = np.copy(y)
         y.flags.writeable = True
 
-        # Concatenate X and y
         data = np.concatenate((X, y[:, None]), axis=1)
 
-        # Check the number of features
         if self.n_features != X.shape[-1]:
             raise ValueError(f"Dataset passed does not contain {self.n_features} features")
 
-        # Convert to DataFrame
         df_data = pd.DataFrame(data=data, columns=self.columns)
         return df_data
 
     def get_k_rank_model(self, k):
         """
-            Get the k-th ranked model from the leaderboard.
+        Get the k-th ranked model from the leaderboard.
 
-            Parameters
-            ----------
-            k : int
-                Rank of the model to retrieve.
+        Parameters
+        ----------
+        k : int
+            Rank of the model to retrieve.
 
-            Returns
-            -------
-            model : autogluon.tabular.TabularPredictor
-                The k-th ranked model.
+        Returns
+        -------
+        model : autogluon.tabular.TabularPredictor
+            The k-th ranked model.
         """
         self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
         model_name = self.leaderboard.iloc[k - 1]['model']
@@ -337,19 +392,18 @@ class AutoGluonClassifier(AutomlClassifier):
 
     def get_model(self, model_name):
         """
-            Get a model by its name from the leaderboard.
+        Get a model by its name from the leaderboard.
 
-            Parameters
-            ----------
-            model_name : str
-                Name of the model to retrieve.
+        Parameters
+        ----------
+        model_name : str
+            Name of the model to retrieve.
 
-            Returns
-            -------
-            model : autogluon.tabular.TabularPredictor
-                The specified model.
+        Returns
+        -------
+        model : autogluon.tabular.TabularPredictor
+            The specified model.
         """
         self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
-        # model_name = self.leaderboard.iloc[k - 1]['model']
         model = self.model._trainer.load_model(model_name)
         return model

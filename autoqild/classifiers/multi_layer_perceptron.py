@@ -17,63 +17,64 @@ from .layers import NormalizedDense
 
 
 class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
+    """
+        MultiLayerPerceptron class for building and training a feedforward neural network using Keras.
+
+        Parameters
+        ----------
+        n_features : int
+            Number of features or dimensionality of the inputs.
+
+        n_classes : int
+            Number of classes in the classification data samples.
+
+        n_hidden : int, optional, default=10
+            Number of hidden layers.
+
+        n_units : int, optional, default=100
+            Number of units per hidden layer.
+
+        batch_normalization : bool, optional, default=True
+            Whether to use batch normalization.
+
+        activation : str, optional, default='relu'
+            Activation function to use in the hidden layers.
+
+        loss_function : str, optional, default='categorical_crossentropy'
+            Loss function to use for training.
+
+        metrics : list of str, optional, default=['accuracy']
+            List of metrics to be evaluated by the model during training and testing.
+
+        optimizer_str : {'adam', 'sgd', ...}, default='adam'
+            Optimizer to use for training. Must be one of the optimizers available in Keras.
+
+        reg_strength : float, optional, default=1e-4
+            Regularization strength for the L2 regularizer.
+
+        kernel_initializer : str, optional, default="lecun_normal"
+            Initializer for the kernel weights matrix.
+
+        learning_rate : float, optional, default=0.001
+            Learning rate for the optimizer.
+
+        early_stopping : bool, optional, default=False
+            Whether to use early stopping during training.
+
+        model_save_path : str, optional, default=''
+            Path to save the trained model.
+
+        random_state : int or None, optional, default=None
+            Random state for reproducibility.
+
+        **kwargs : dict, optional
+            Additional keyword arguments.
+    """
+
     def __init__(self, n_features, n_classes, n_hidden=10, n_units=100, batch_normalization=True, activation='relu',
                  loss_function='categorical_crossentropy', metrics=['accuracy'], optimizer_str='adam',
                  reg_strength=1e-4, kernel_initializer="lecun_normal", learning_rate=0.001,
                  early_stopping=False, model_save_path='', random_state=None, **kwargs):
-        """
-            MultiLayerPerceptron class for building and training a feedforward neural network using Keras.
-
-            Parameters
-            ----------
-            n_features : int
-                Number of features or dimensionality of the inputs.
-
-            n_classes : int
-                Number of classes in the classification data samples.
-
-            n_hidden : int, optional, default=10
-                Number of hidden layers.
-
-            n_units : int, optional, default=100
-                Number of units per hidden layer.
-
-            batch_normalization : bool, optional, default=True
-                Whether to use batch normalization.
-
-            activation : str, optional, default='relu'
-                Activation function to use in the hidden layers.
-
-            loss_function : str, optional, default='categorical_crossentropy'
-                Loss function to use for training.
-
-            metrics : list of str, optional, default=['accuracy']
-                List of metrics to be evaluated by the model during training and testing.
-
-            optimizer_str : {'adam', 'sgd', ...}, default='adam'
-                Optimizer to use for training. Must be one of the optimizers available in Keras.
-
-            reg_strength : float, optional, default=1e-4
-                Regularization strength for the L2 regularizer.
-
-            kernel_initializer : str, optional, default="lecun_normal"
-                Initializer for the kernel weights matrix.
-
-            learning_rate : float, optional, default=0.001
-                Learning rate for the optimizer.
-
-            early_stopping : bool, optional, default=False
-                Whether to use early stopping during training.
-
-            model_save_path : str, optional, default=''
-                Path to save the trained model.
-
-            random_state : int or None, optional, default=None
-                Random state for reproducibility.
-
-            **kwargs : dict, optional
-                Additional keyword arguments.
-        """
         self.logger = logging.getLogger(name=MultiLayerPerceptron.__name__)
         self.n_features = n_features
         self.n_classes = n_classes

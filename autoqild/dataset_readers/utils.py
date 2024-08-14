@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-__all__ = ['GEN_TYPES', 'FACTOR', 'generate_samples_per_class', 'clean_class_label', 'LABEL_COL']
+__all__ = ['GEN_TYPES', 'FACTOR', 'LABEL_COL', 'generate_samples_per_class', 'clean_class_label', 'pdf']
 
 
 GEN_TYPES = ['single', 'multiple', 'FACTOR']
@@ -135,4 +135,21 @@ def clean_class_label(string):
     return string
 
 
+def pdf(dist, x):
+    """
+        Compute the probability density function (PDF) for the given distribution and input data.
 
+        Parameters
+        ----------
+        dist : scipy.stats._multivariate.multivariate_normal_frozen
+            The multivariate normal distribution object.
+        x : array-like of shape (n_samples, n_features)
+            Input data for which the PDF is computed.
+
+        Returns
+        -------
+        log_dist_samples: array-like
+            Probability density values for the input data.
+    """
+    log_dist_samples = np.exp(dist.logpdf(x))
+    return log_dist_samples

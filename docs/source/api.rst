@@ -9,5 +9,6 @@ Documentation of the API for public objects and functions in ``autoqild``.
     :recursive:
 
     autoqild.automl
+    autoqild.bayes_search
     autoqild.classifiers
     autoqild.dataset_readers

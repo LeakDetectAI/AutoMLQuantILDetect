@@ -7,12 +7,12 @@ from .open_ml_timming_dr import OpenMLTimingDatasetReader, LABEL_COL
 
 class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
     """
-        Reader for OpenML datasets related to leakages with respect to the error codes for each padding
-        manipulation.
+        Reader for OpenML datasets related to leakages with respect to the error codes for each padding manipulation.
 
-        This class extends OpenMLTimingDatasetReader and is tailored for datasets extracted from network traces exploiting
-        error codes in the network traces to perform the side channel attacks, such as the Bleichenbacher timing attack.
-        It reads, cleans, and processes the dataset, and provides methods to create datasets with class imbalance to simulate attack scenarios.
+        This class extends `OpenMLTimingDatasetReader` and is tailored for datasets extracted from network traces
+        exploiting error codes in the network traces to perform side-channel attacks, such as the Bleichenbacher
+        timing attack. It reads, cleans, and processes the dataset, and provides methods to create datasets with
+        class imbalance to simulate attack scenarios.
 
         Parameters
         ----------
@@ -37,8 +37,41 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         logger : logging.Logger
             Logger instance for logging information.
 
+        dataset : openml.datasets.OpenMLDataset
+            The OpenML dataset object.
+
+        data_frame_raw : pandas.DataFrame
+            The raw DataFrame containing the dataset.
+
+        attribute_names : list of str
+            List of attribute names (features) in the dataset.
+
+        dataset_dictionary : dict
+            A dictionary where keys are vulnerable class labels and values are tuples of (X, y) for the respective classes.
+
+        n_features : int
+            Number of features in the dataset.
+
         server : str
             The server associated with the padding attack dataset.
+
+        vulnerable_classes : list of str
+            List of class labels representing vulnerable (incorrectly formatted) messages.
+
+        correct_class : str
+            The correct class label, representing correctly formatted messages.
+
+        Private Methods
+        ---------------
+        __read_dataset__()
+            Reads the dataset from OpenML and extracts relevant information.
+
+        __create_leakage_datasets__()
+            Creates separate datasets for each class by selecting only the samples that belong to the correct class
+            and one vulnerable class at a time.
+
+        __clean_up_dataset__()
+            Cleans and preprocesses the dataset.
     """
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
         super().__init__(dataset_id=dataset_id, imbalance=imbalance, create_datasets=create_datasets,
@@ -68,6 +101,20 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(',')]
         self.n_features = len(self.dataset.features) - 1
         self.server = self.dataset.name.split('padding-attack-dataset-')[-1]
+
+    def __create_leakage_datasets__(self):
+        """
+            This method creates separate datasets for each class by selecting only the samples that belong to the
+            correct class and one vulnerable class at a time.
+        """
+        super().__create_leakage_datasets__()
+
+    def __clean_up_dataset__(self):
+        """
+            Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
+            fills missing values, and convert class label strings to integer values.
+        """
+        super().__clean_up_dataset__()
 
     def get_data(self, class_label=1):
         """

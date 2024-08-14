@@ -2,7 +2,7 @@ import logging
 import os.path
 
 from ..automl import AutoGluonClassifier
-from ..bayes_search_hpo.bayes_search_utils import get_scores
+from ..bayes_search.bayes_search_utils import get_scores
 from .ild_base_class import InformationLeakageDetector
 from ..utilities import *
 

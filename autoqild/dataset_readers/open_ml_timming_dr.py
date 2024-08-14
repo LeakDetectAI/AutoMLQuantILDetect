@@ -14,62 +14,76 @@ __all__ = ['OpenMLTimingDatasetReader']
 
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):
     """
-        Reader for OpenML datasets that are specifically designed for timing-based attacks.
+    Reader for OpenML datasets that are specifically designed for timing-based attacks.
 
-        This class is designed to process datasets that involve side-channel attacks based on timing, such as the Bleichenbacher timing attack.
-        It reads, cleans, and processes the dataset, and provides methods to create datasets with class imbalance to simulate attack scenarios.
+    This class is designed to process datasets that involve side-channel attacks based on timing, such as the
+    Bleichenbacher timing attack. It reads, cleans, and processes the dataset, and provides methods to create
+    datasets with class imbalance to simulate attack scenarios.
 
-        Parameters
-        ----------
-        dataset_id : int
-            The ID of the OpenML dataset.
+    Parameters
+    ----------
+    dataset_id : int
+        The ID of the OpenML dataset.
 
-        imbalance : float
-            The ratio of the number of minority class samples to the number of majority class samples.
-            Must be between 0 and 1.
+    imbalance : float
+        The ratio of the number of minority class samples to the number of majority class samples.
+        Must be between 0 and 1.
 
-        create_datasets : bool, default=True
-            If True, creates leakage datasets during initialization.
+    create_datasets : bool, default=True
+        If True, creates leakage datasets during initialization.
 
-        random_state : int or RandomState instance, optional
-            Random state for reproducibility.
+    random_state : int or RandomState instance, optional
+        Random state for reproducibility.
 
-        **kwargs : dict
-            Additional keyword arguments.
+    **kwargs : dict
+        Additional keyword arguments.
 
-        Attributes
-        ----------
-        logger : logging.Logger
-            Logger instance for logging information.
+    Attributes
+    ----------
+    logger : logging.Logger
+        Logger instance for logging information.
 
-        dataset_id : int
-            The ID of the OpenML dataset.
+    dataset_id : int
+        The ID of the OpenML dataset.
 
-        imbalance : float
-            The ratio of the number of minority class samples to the number of majority class samples.
+    imbalance : float
+        The ratio of the number of minority class samples to the number of majority class samples.
 
-        random_state : RandomState instance
-            Random state for reproducibility.
+    random_state : RandomState instance
+        Random state for reproducibility.
 
-        correct_class : str
-            The correct class label, representing correctly formatted messages.
+    correct_class : str
+        The correct class label, representing correctly formatted messages.
 
-        vulnerable_classes : list of str
-            List of class labels representing vulnerable (incorrectly formatted) messages.
+    vulnerable_classes : list of str
+        List of class labels representing vulnerable (incorrectly formatted) messages.
 
-        n_features : int
-            Number of features in the dataset.
+    n_features : int
+        Number of features in the dataset.
 
-        fold_id : int
-            The fold ID as specified in the dataset description.
+    fold_id : int
+        The fold ID as specified in the dataset description.
 
-        delay : int
-            The delay associated with the timing attack in microseconds.
+    delay : int
+        The delay associated with the timing attack in microseconds.
 
-        dataset_dictionary : dict
-            A dictionary where keys are vulnerable class labels and values are tuples of (X, y) for the respective
-                    classes.
+    dataset_dictionary : dict
+        A dictionary where keys are vulnerable class labels and values are tuples of (X, y) for the respective
+        classes.
+
+    Private Methods
+    ---------------
+    __read_dataset__()
+        Reads the dataset from OpenML and extracts relevant information.
+
+    __clean_up_dataset__()
+        Cleans and preprocesses the dataset.
+
+    __create_leakage_datasets__()
+        Creates separate datasets for each class by selecting only the samples that belong to the correct class
+        and one vulnerable class at a time.
     """
+
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
 
         self.logger = logging.getLogger(OpenMLTimingDatasetReader.__name__)

@@ -9,75 +9,88 @@ from skopt.utils import eval_callbacks, point_asdict
 from ..utilities import log_exception_error
 
 __all__ = ["BayesSearchCV"]
+
+
 class BayesSearchCV(BayesSearchCVSK):
     """
-        BayesSearchCV class for performing hyperparameter optimization using Bayesian optimization.
+    BayesSearchCV is a custom implementation of Bayesian optimization-based hyperparameter tuning,
+    extending the functionality of `BayesSearchCV` from the `scikit-optimize` library. This class
+    facilitates efficient exploration of hyperparameter spaces to identify the best-performing model
+    configurations.
 
-        Parameters
-        ----------
-        estimator : estimator object
-            The object to use to fit the data.
+    This implementation provides additional functionality for logging, handling optimizer states,
+    and saving optimization progress to a file, enabling resumption of interrupted searches.
 
-        search_spaces : dict, list of dict or list of tuple
-            The search space for the hyperparameters.
+    Attributes
+    ----------
+    logger : logging.Logger
+        Logger instance used for logging the optimization process and any errors encountered.
 
-        optimizer_kwargs : dict, optional
-            Additional arguments for the optimizer.
+    optimizers_file_path : str
+        Path to the file where the optimizer states are saved. This allows for resuming optimization
+        from where it was left off in case of interruptions.
 
-        n_iter : int, default=50
-            Number of parameter settings that are sampled.
+    Methods
+    -------
+    _step(search_space, optimizer, evaluate_candidates, n_points=1)
+        Generates parameter combinations and evaluates them in parallel.
 
-        scoring : string, callable or None, default=None
-            A single string or a callable to evaluate the predictions on the test set.
+    _run_search(evaluate_candidates)
+        Runs the search process to find the best hyperparameters by iteratively evaluating different
+        configurations based on the Bayesian optimization strategy.
 
-        fit_params : dict, optional
-            Parameters to pass to the fit method of the estimator.
+    Parameters
+    ----------
+    estimator : estimator object
+        The object to use to fit the data.
 
-        n_jobs : int, default=1
-            Number of jobs to run in parallel.
+    search_spaces : dict, list of dict or list of tuple
+        The search space for the hyperparameters.
 
-        n_points : int, default=1
-            Number of parameter settings to sample in parallel.
+    optimizer_kwargs : dict, optional
+        Additional arguments for the optimizer.
 
-        iid : boolean, default=True
-            If True, return the average score across folds.
+    n_iter : int, default=50
+        Number of parameter settings that are sampled.
 
-        refit : boolean, default=True
-            Refit the best estimator with the entire dataset.
+    scoring : string, callable or None, default=None
+        A single string or a callable to evaluate the predictions on the test set.
 
-        cv : int, cross-validation generator or an iterable, optional
-            Determines the cross-validation splitting strategy.
+    fit_params : dict, optional
+        Parameters to pass to the fit method of the estimator.
 
-        verbose : int, default=0
-            Controls the verbosity.
+    n_jobs : int, default=1
+        Number of jobs to run in parallel.
 
-        pre_dispatch : int or string, default='2*n_jobs'
-            Controls the number of jobs that get dispatched during parallel execution.
+    n_points : int, default=1
+        Number of parameter settings to sample in parallel.
 
-        random_state : int, RandomState instance or None, optional
-            Controls the randomness of the estimator.
+    iid : boolean, default=True
+        If True, return the average score across folds.
 
-        error_score : 'raise' or numeric, default='raise'
-            Value to assign to the score if an error occurs.
+    refit : boolean, default=True
+        Refit the best estimator with the entire dataset.
 
-        return_train_score : boolean, default=False
-            If False, the cv_results_ attribute will not include training scores.
+    cv : int, cross-validation generator or an iterable, optional
+        Determines the cross-validation splitting strategy.
 
-        optimizers_file_path : string, default='results.pkl'
-            Path to save the optimizer states.
+    verbose : int, default=0
+        Controls the verbosity.
 
-        Attributes
-        ----------
-        logger : logging.Logger
-            Logger instance for logging information.
+    pre_dispatch : int or string, default='2*n_jobs'
+        Controls the number of jobs that get dispatched during parallel execution.
 
-        Methods
-        -------
-        _step(search_space, optimizer, evaluate_candidates, n_points=1)
-            Generate n_jobs parameters and evaluate them in parallel.
+    random_state : int, RandomState instance or None, optional
+        Controls the randomness of the estimator.
 
-        _run_search(evaluate_candidates)
-            Run the search for the best parameters.
+    error_score : 'raise' or numeric, default='raise'
+        Value to assign to the score if an error occurs.
+
+    return_train_score : boolean, default=False
+        If False, the cv_results_ attribute will not include training scores.
+
+    optimizers_file_path : string, default='results.pkl'
+        Path to save the optimizer states.
     """
 
     def __init__(
@@ -122,28 +135,26 @@ class BayesSearchCV(BayesSearchCVSK):
         self.logger = logging.getLogger(BayesSearchCV.__name__)
 
     def _step(self, search_space, optimizer, evaluate_candidates, n_points=1):
-        """
-            Generate n_jobs parameters and evaluate them in parallel.
+        """Generate n_jobs parameters and evaluate them in parallel.
 
-            Parameters
-            ----------
-            search_space : dict
-                The search space for the hyperparameters.
+        Parameters
+        ----------
+        search_space : dict
+            The search space for the hyperparameters.
 
-            optimizer : skopt.optimizer.Optimizer
-                The optimizer instance.
+        optimizer : skopt.optimizer.Optimizer
+            The optimizer instance.
 
-            evaluate_candidates : callable
-                The function to evaluate the candidates.
+        evaluate_candidates : callable
+            The function to evaluate the candidates.
 
-            n_points : int, default=1
-                Number of parameter settings to sample in parallel.
+        n_points : int, default=1
+            Number of parameter settings to sample in parallel.
 
-            Returns
-            -------
-            optimizer : skopt.optimizer.Optimizer
-                The updated optimizer instance.
-        """
+        Returns
+        -------
+        optimizer : skopt.optimizer.Optimizer
+            The updated optimizer instance."""
         # get parameter values to evaluate
         params = optimizer.ask(n_points=n_points)
 
@@ -166,14 +177,12 @@ class BayesSearchCV(BayesSearchCVSK):
         return optimizer.tell(params, [-score for score in local_results])
 
     def _run_search(self, evaluate_candidates):
-        """
-            Run the search for the best parameters.
+        """Run the search for the best parameters.
 
-            Parameters
-            ----------
-            evaluate_candidates : callable
-                The function to evaluate the candidates.
-        """
+        Parameters
+        ----------
+        evaluate_candidates : callable
+            The function to evaluate the candidates."""
         # check if space is a single dict, convert to list if so
         search_spaces = self.search_spaces
         if isinstance(search_spaces, dict):

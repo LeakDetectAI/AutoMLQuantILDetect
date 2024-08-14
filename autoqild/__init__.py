@@ -1,5 +1,5 @@
 from .automl import *
-from .bayes_search_hpo import *
+from .bayes_search import *
 from .classifiers import *
 from .dataset_readers import *
 from .detectors import *

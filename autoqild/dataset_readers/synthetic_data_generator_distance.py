@@ -6,67 +6,103 @@ from scipy.stats import multivariate_normal
 from scipy.stats import ortho_group
 from sklearn.utils import check_random_state
 
-from .utils import FACTOR
+from .utils import FACTOR, pdf
 from ..utilities import *
 
 __all__ = ['SyntheticDatasetGeneratorDistance']
 
 
-def pdf(dist, x):
-    """
-        Compute the probability density function (PDF) for the given distribution and input data.
-
-        Parameters
-        ----------
-        dist : scipy.stats._multivariate.multivariate_normal_frozen
-            The multivariate normal distribution object.
-        x : array-like of shape (n_samples, n_features)
-            Input data for which the PDF is computed.
-
-        Returns
-        -------
-        log_dist_samples: array-like
-            Probability density values for the input data.
-    """
-    log_dist_samples = np.exp(dist.logpdf(x))
-    return log_dist_samples
-
-
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
     """
-        Generator for synthetic datasets with a focus on generating data with varying class distances.
+    Generator for synthetic datasets with a focus on generating data with varying class distances.
 
-        This class generates synthetic datasets by adjusting the distance between class distributions, allowing for the simulation of scenarios with varying levels of overlap between classes.
+    This class generates synthetic datasets by adjusting the distance between class distributions, allowing
+    for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
+    in scenarios like testing classifiers on datasets with controlled class separability, with a focus on
+    distance-based variations.
 
-        Parameters
-        ----------
-        n_classes : int, default=2
-            Number of classes in the generated dataset.
+    Parameters
+    ----------
+    n_classes : int, default=2
+        Number of classes in the generated dataset.
 
-        n_features : int, default=2
-            Number of features in the generated dataset.
+    n_features : int, default=2
+        Number of features in the generated dataset.
 
-        samples_per_class : int or dict, default=500
-            Number of samples per class. If an integer is provided, it is assumed that all classes have the same number of samples.
-            If a dictionary is provided, the keys should be class labels and values should be the number of samples for each class.
+    samples_per_class : int or dict, default=500
+        Number of samples per class. If an integer is provided, it is assumed that all classes have the same
+        number of samples. If a dictionary is provided, the keys should be class labels and values should be
+        the number of samples for each class.
 
-        noise : float, default=0.1
-            The level of noise to apply when generating class distributions, affecting the overlap between classes.
+    noise : float, default=0.1
+        The level of noise to apply when generating class distributions, affecting the overlap between classes.
 
-        random_state : int or RandomState instance, default=42
-            Random state for reproducibility.
+    random_state : int or RandomState instance, default=42
+        Random state for reproducibility.
 
-        fold_id : int, default=0
-            Fold ID used for random seed generation.
+    fold_id : int, default=0
+        Fold ID used for random seed generation.
 
-        imbalance : float, default=0.0
-            Proportion of the minority class in the dataset. Must be between 0 and 1.
+    imbalance : float, default=0.0
+        Proportion of the minority class in the dataset. Must be between 0 and 1.
 
-        gen_type : str, default='single'
-            Type of generation process. It can be used to modify the dataset generation method.
+    gen_type : str, default='single'
+        Type of generation process. It can be used to modify the dataset generation method.
 
-        **kwargs : dict
-            Additional keyword arguments.
+    **kwargs : dict
+        Additional keyword arguments.
+
+    Attributes
+    ----------
+    n_classes : int
+        Number of classes in the generated dataset.
+
+    n_features : int
+        Number of features in the generated dataset.
+
+    random_state : RandomState instance
+        Random state instance for reproducibility.
+
+    fold_id : int
+        Fold ID used for random seed generation.
+
+    means : dict
+        Dictionary storing the mean vectors for each class.
+
+    covariances : dict
+        Dictionary storing the covariance matrices for each class.
+
+    seeds : dict
+        Dictionary storing the random seeds used for generating each class.
+
+    samples_per_class : dict
+        Dictionary storing the number of samples for each class.
+
+    imbalance : float
+        Proportion of the minority class in the dataset.
+
+    gen_type : str
+        Type of generation process.
+
+    n_instances : int
+        Total number of instances in the generated dataset.
+
+    class_labels : numpy.ndarray
+        Array of class labels.
+
+    y_prob : dict
+        Dictionary storing the probability of each class.
+
+    noise : float
+        The level of noise applied when generating class distributions.
+
+    logger : logging.Logger
+        Logger instance for logging information.
+
+    Private Methods
+    ---------------
+    __generate_cov_means():
+        Generate the mean vectors and covariance matrices for each class.
     """
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type='single', **kwargs):
@@ -265,7 +301,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
 
     def calculate_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -299,7 +335,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
 
     def bayes_predictor_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(Y) - H(Y|X)
@@ -326,15 +362,40 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
 
     def bayes_predictor_pc_softmax_mi(self):
         """
-        Calculate the mutual information (MI) using the probability distribution function.
+        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given the
+        input data X, applying both the Softmax and PC-Softmax functions.
 
         .. math::
+
             I(X;Y) = H(Y) - H(Y|X)
+
+        Softmax Function:
+
+        .. math::
+
+            \text{Softmax}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( K \) is the total number of classes.
+
+        PC-Softmax (Probability-Corrected Softmax) Function:
+
+        .. math::
+
+            \text{PC-Softmax}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j} \cdot p_j}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
 
         Returns
         -------
-        mutual_information : float
-            The mutual information of the dataset.
+        softmax_emi : float
+            Estimated softmax mutual information.
+
+        pc_softmax_emi : float
+            Estimated PC-softmax mutual information.
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
@@ -388,15 +449,15 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
             mutual_information: float
                 The estimated mutual information based on the selected metric.
         """
-        mi = 0
+        mutual_information = 0
         if metric_name == MCMC_LOG_LOSS:
-            mi = self.bayes_predictor_mi()
+            mutual_information = self.bayes_predictor_mi()
         if metric_name == MCMC_MI_ESTIMATION:
-            mi = self.calculate_mi()
+            mutual_information = self.calculate_mi()
         softmax_emi, pc_softmax_emi = self.bayes_predictor_pc_softmax_mi()
         if metric_name == MCMC_PC_SOFTMAX:
-            mi = pc_softmax_emi
+            mutual_information = pc_softmax_emi
         if metric_name == MCMC_SOFTMAX:
-            mi = softmax_emi
-        mi = np.max([mi, 0.0])
-        return mi
+            mutual_information = softmax_emi
+        mutual_information = np.max([mutual_information, 0.0])
+        return mutual_information
