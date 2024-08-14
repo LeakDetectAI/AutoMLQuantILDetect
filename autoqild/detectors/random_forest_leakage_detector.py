@@ -25,3 +25,10 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
 
     def fit(self, X, y):
         super().fit(X, y)
+
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
+                                p_pred=p_pred, model=model, n_model=n_model)
+
+    def detect(self):
+        return super().detect()

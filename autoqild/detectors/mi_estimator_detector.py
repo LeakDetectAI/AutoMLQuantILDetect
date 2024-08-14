@@ -49,4 +49,4 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
                     self.logger.info(f"Metric {ESTIMATED_MUTUAL_INFORMATION}: Value {metric_loss}")
                     model_name = list(self.results.keys())[i]
                     self.results[model_name][ESTIMATED_MUTUAL_INFORMATION].append(metric_loss)
-            self.store_results()
+            self.__store_results__()

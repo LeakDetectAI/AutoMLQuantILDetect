@@ -32,7 +32,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         self.n_jobs = 10
 
     def perform_hyperparameter_optimization(self, X, y):
-        X_train, y_train = self.get_training_dataset(X, y)
+        X_train, y_train = self.__get_training_dataset__(X, y)
         learner = self.base_detector(**self.learner_params)
         bayes_search_params = dict(estimator=learner, search_spaces=self.search_space, n_iter=self.hp_iters,
                                    scoring=self.validation_loss, n_jobs=self.n_jobs, cv=self.inner_cv_iterator,
@@ -84,8 +84,8 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     self.logger.info(f"************************* Split {k + 1} **************************")
                     self.evaluate_scores(X_test, X_train, y_test, y_train, y_pred, p_pred, model, i)
                     if i == 0:
-                        self.calculate_random_classifier_accuracy(X_train, y_train, X_test, y_test)
-                        self.calculate_majority_voting_accuracy(X_train, y_train, X_test, y_test)
+                        self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
+                        self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
                     directory_path = learner_params.get('base_path', None)
                     if directory_path is not None:
                         try:
@@ -93,7 +93,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                             self.logger.info(f"The directory '{directory_path}' has been removed.")
                         except OSError as e:
                             self.logger.error(f"Error: {directory_path} : {e.strerror}")
-            self.store_results()
+            self.__store_results__()
 
     def reduce_dataset(self, X, y):
         if X.shape[0] > 4000 and self.base_detector == AutoTabPFNClassifier:
@@ -102,3 +102,10 @@ class SklearnLeakageDetector(InformationLeakageDetector):
             X, _, y, _ = train_test_split(X, y, train_size=reduced_size,
                                           stratify=y, random_state=self.random_state)
         return X, y
+    
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
+                                p_pred=p_pred, model=model, n_model=n_model)
+
+    def detect(self):
+        return super().detect()

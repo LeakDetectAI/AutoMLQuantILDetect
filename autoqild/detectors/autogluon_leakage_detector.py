@@ -26,7 +26,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         self.logger = logging.getLogger(AutoGluonLeakageDetector.__name__)
 
     def perform_hyperparameter_optimization(self, X, y):
-        X_train, y_train = self.get_training_dataset(X, y)
+        X_train, y_train = self.__get_training_dataset__(X, y)
         self.learner = self.base_detector(**self.learner_params)
         self.learner.fit(X_train, y_train)
         for i in range(self.n_hypothesis * 3):
@@ -53,8 +53,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                         X_train, X_test = X[train_index], X[test_index]
                         y_train, y_test = y[train_index], y[test_index]
                         if i == 0:
-                            self.calculate_random_classifier_accuracy(X_train, y_train, X_test, y_test)
-                            self.calculate_majority_voting_accuracy(X_train, y_train, X_test, y_test)
+                            self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
+                            self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
                         train_data = self.learner.convert_to_dataframe(X_train, y_train)
                         test_data = self.learner.convert_to_dataframe(X_test, None)
                         X_t = train_data.drop(columns=['class'])  # Extract the features from the training data
@@ -69,4 +69,11 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                 except Exception as error:
                     log_exception_error(self.logger, error)
                     self.logger.error(f"Problem with fitting the model")
-            self.store_results()
+            self.__store_results__()
+
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
+                                p_pred=p_pred, model=model, n_model=n_model)
+
+    def detect(self):
+        return super().detect()
