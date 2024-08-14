@@ -487,7 +487,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
         .. math::
 
-            S(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}
+            S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
 
         where:
             - \( z_k \) is the logit or raw score for class \( k \).
@@ -497,7 +497,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
         .. math::
 
-            S_{pc}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j} \cdot p_j}
+            S_{pc}(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j} \\cdot p_j}
 
         where:
             - \( z_k \) is the logit or raw score for class \( k \).
