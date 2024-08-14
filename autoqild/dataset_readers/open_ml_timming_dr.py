@@ -98,12 +98,10 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
             self.__create_leakage_datasets__()
 
     def __read_dataset__(self):
-        """
-           Reads the dataset from OpenML and extracts relevant information.
+        """Reads the dataset from OpenML and extracts relevant information.
 
            This method fetches the dataset using the OpenML API, extracts the raw data, and processes the dataset
-           description to retrieve vulnerable class labels, number of features, fold ID, and delay time.
-        """
+           description to retrieve vulnerable class labels, number of features, fold ID, and delay time."""
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
         self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
@@ -121,10 +119,8 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.delay = int(description.split('Bleichenbacher Timing Attack: ')[-1].split(" micro seconds")[0])
 
     def __clean_up_dataset__(self):
-        """
-            Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
-            fills missing values, and convert class label strings to integer values.
-        """
+        """Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
+            fills missing values, and convert class label strings to integer values."""
         categorical_columns = self.data_frame_raw.select_dtypes(include=['object']).columns
         label_encoder = LabelEncoder()
         for column in categorical_columns:
@@ -152,10 +148,8 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.data_frame = self.data_frame.fillna(value=-1)
 
     def __create_leakage_datasets__(self):
-        """
-            This method creates separate datasets for each class by selecting only the samples that belong to the
-            correct class and one vulnerable class at a time.
-        """
+        """This method creates separate datasets for each class by selecting only the samples that belong to the
+            correct class and one vulnerable class at a time."""
         self.dataset_dictionary = {}
         for j, label in self.inverse_label_mapping.items():
             if label == self.correct_class:
@@ -164,8 +158,7 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
                 self.dataset_dictionary[label] = self.get_data(class_label=j)
 
     def get_data(self, class_label=1):
-        """
-            Retrieves data for a specific class label.
+        """Retrieves data for a specific class label.
 
             Parameters
             ----------
@@ -189,8 +182,7 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         return X, y
 
     def get_sampled_imbalanced_data(self, X, y):
-        """
-            Creates an imbalanced dataset by sampling from the data.
+        """Creates an imbalanced dataset by sampling from the data.
 
             Parameters
             ----------

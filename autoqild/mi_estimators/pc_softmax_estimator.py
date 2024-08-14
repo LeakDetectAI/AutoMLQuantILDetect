@@ -12,6 +12,52 @@ from .pytorch_utils import get_optimizer_and_parameters, init
 
 
 class PCSoftmaxMIEstimator(MIEstimatorBase):
+    """
+    PCSoftmaxMIEstimator estimates Mutual Information (MI) using a neural network trained with a modified softmax function.
+
+    This class uses a neural network to estimate the MI between input features and class labels. The neural network is trained using a custom softmax function that accounts for label proportions, which can help in handling imbalanced data.
+
+    Parameters
+    ----------
+    n_classes : int
+        Number of classes in the classification task.
+    n_features : int
+        Number of features or dimensionality of the input data.
+    n_hidden : int, optional, default=10
+        Number of hidden layers in the neural network.
+    n_units : int, optional, default=100
+        Number of units in each hidden layer.
+    loss_function : torch.nn.Module, optional, default=torch.nn.NLLLoss()
+        Loss function to be used during training.
+    optimizer_str : str, optional, default='adam'
+        Optimizer to use for training. Options include 'adam', 'sgd', 'RMSprop', etc.
+    learning_rate : float, optional, default=0.001
+        Learning rate for the optimizer.
+    reg_strength : float, optional, default=0.001
+        Regularization strength for the optimizer.
+    is_pc_softmax : bool, optional, default=False
+        If True, use the custom softmax function that accounts for label proportions.
+    random_state : int, optional, default=42
+        Seed for random number generation to ensure reproducibility.
+
+    Attributes
+    ----------
+    logger : logging.Logger
+        Logger for logging messages and errors.
+    optimizer : torch.optim.Optimizer
+        Optimizer used for training the neural network.
+    class_net : ClassNet
+        Instance of the neural network used for classification.
+    dataset_properties : list
+        Proportions of each class in the dataset.
+    final_loss : float
+        Final loss value after training.
+    mi_val : float
+        Estimated mutual information after training.
+    device : torch.device
+        Device used for computation (CPU or GPU).
+    """
+
     def __init__(self, n_classes, n_features, n_hidden=10, n_units=100, loss_function=nn.NLLLoss(),
                  optimizer_str='adam', learning_rate=0.001, reg_strength=0.001, is_pc_softmax=False, random_state=42):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
@@ -26,7 +72,6 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.n_units = n_units
         self.loss_function = loss_function
         self.device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
-        self.logger.info(f"device {self.device} cuda {torch.cuda.is_available()} device {torch.cuda.device_count()}")
         self.optimizer = None
         self.class_net = None
         self.dataset_properties = None
@@ -34,17 +79,57 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.mi_val = 0
 
     def pytorch_tensor_dataset(self, X, y, batch_size=32):
+        """
+        Create a PyTorch dataset and data loader from the input data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+        y : array-like of shape (n_samples,)
+            Target labels.
+        batch_size : int, optional, default=32
+            Number of samples per batch.
+
+        Returns
+        -------
+        dataset_prop : list
+            Proportions of each class in the dataset.
+        tra_dataloader : torch.utils.data.DataLoader
+            DataLoader for the training data.
+        """
         y_l, counts = np.unique(y, return_counts=True)
         total = len(y)
-        dataset_prop = list([x / total for x in counts])
-        tensor_x = torch.tensor(X, dtype=torch.float32)  # transform to torch tensor
-        tensor_y = torch.tensor(y, dtype=torch.int64)
-        my_dataset = TensorDataset(tensor_x, tensor_y)  # create your datset
+        dataset_prop = [x / total for x in counts]
+        tensor_x = torch.tensor(X, dtype=torch.float32).to(self.device)  # transform to torch tensor
+        tensor_y = torch.tensor(y, dtype=torch.int64).to(self.device)
+        my_dataset = TensorDataset(tensor_x, tensor_y)  # create your dataset
         tra_dataloader = DataLoader(my_dataset, num_workers=1, batch_size=batch_size, shuffle=True, drop_last=False,
                                     pin_memory=True)
         return dataset_prop, tra_dataloader
 
     def fit(self, X, y, epochs=50, verbose=0, **kwd):
+        """
+        Fit the neural network to the data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training data.
+        y : array-like of shape (n_samples,)
+            Target labels.
+        epochs : int, optional, default=50
+            Number of training epochs.
+        verbose : int, optional, default=0
+            Verbosity level.
+        **kwd : dict, optional
+            Additional keyword arguments.
+
+        Returns
+        -------
+        self : PCSoftmaxMIEstimator
+            Fitted estimator.
+        """
         self.class_net = ClassNet(in_dim=self.n_features, out_dim=self.n_classes, n_hidden=self.n_hidden,
                                   n_units=self.n_units, device=self.device, is_pc_softmax=self.is_pc_softmax)
         self.class_net.apply(init)
@@ -79,6 +164,21 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return self
 
     def predict(self, X, verbose=0):
+        """
+        Predict class labels for the input samples.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+        verbose : int, optional, default=0
+            Verbosity level.
+
+        Returns
+        -------
+        predicted : array-like of shape (n_samples,)
+            Predicted class labels.
+        """
         y = np.random.choice(self.n_classes, X.shape[0])
         dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
@@ -89,6 +189,25 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return predicted.detach().numpy()
 
     def score(self, X, y, sample_weight=None, verbose=0):
+        """
+        Compute the score of the neural network.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+        y : array-like of shape (n_samples,)
+            True labels for `X`.
+        sample_weight : array-like of shape (n_samples,), optional
+            Sample weights.
+        verbose : int, optional, default=0
+            Verbosity level.
+
+        Returns
+        -------
+        score : float
+            Negative loss of the model on the validation data.
+        """
         y_pred = self.predict(X, verbose=0)
         acc = np.mean(y == y_pred)
         if np.isnan(self.final_loss) or np.isinf(self.final_loss):
@@ -106,10 +225,22 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.logger.info(f"Loss {self.final_loss} Accuracy {acc} pyx {pyx} MI {self.mi_val} Val loss {val_loss}")
         return -val_loss
 
-    # def score(self, X, y, sample_weight=None, verbose=0):
-    #     return self.estimate_mi(X=X, y=y, verbose=verbose)
-
     def predict_proba(self, X, verbose=0):
+        """
+        Predict class probabilities for the input samples.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+        verbose : int, optional, default=0
+            Verbosity level.
+
+        Returns
+        -------
+        p_pred : array-like of shape (n_samples, n_classes)
+            Predicted class probabilities.
+        """
         y = np.random.choice(self.n_classes, X.shape[0])
         dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
@@ -118,6 +249,21 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return test_.detach().numpy()
 
     def decision_function(self, X, verbose=0):
+        """
+        Compute the decision function in form of class probabilities for the input samples.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
+        verbose : int, optional, default=0
+            Verbosity level.
+
+        Returns
+        -------
+        decision : array-like of shape (n_samples, n_classes)
+            Decision function values.
+        """
         y = np.random.choice(self.n_classes, X.shape[0])
         dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
@@ -126,15 +272,31 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return test_.detach().numpy()
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
+        """
+        Estimate Mutual Information using the trained neural network using PC-sosftmax loss function.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
+        y : array-like of shape (n_samples,)
+            Target labels.
+        verbose : int, optional, default=1
+            Verbosity level.
+        **kwargs : dict, optional
+            Additional keyword arguments.
+
+        Returns
+        -------
+        mi_estimated : float
+            The estimated mutual information.
+        """
         dataset_prop, test_dataset = self.pytorch_tensor_dataset(X, y, batch_size=1)
-        if verbose != 0:
-            self.logger.info('MI estimation. ')
         softmax_list = []
         for a_data, a_label in test_dataset:
             int_label = a_label.cpu().item()
             a_data = a_data.unsqueeze(0).to(self.device)
             test_ = self.class_net(a_data, dataset_prop)
-            test_1 = self.class_net.score(a_data, dataset_prop)
             if self.is_pc_softmax:
                 a_softmax = torch.flatten(own_softmax(test_, dataset_prop, self.device))[int_label]
             else:
@@ -143,23 +305,11 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
                 softmax_list.append(math.log2(a_softmax.cpu().item()))
             else:
                 softmax_list.append(math.log2(a_softmax.cpu().item()) + math.log2(len(dataset_prop)))
-            if verbose != 0:
-                self.logger.info("####################################################################################")
-                self.logger.info(f"Score {test_1.detach().numpy()}, Test Score {test_.detach().numpy()}")
-                self.logger.info(f"Data {a_data} Label {a_label}")
-                self.logger.info(f"a_softmax {a_softmax} Label {a_label}")
-                self.logger.info(f"Log Softmax {math.log(a_softmax.cpu().item())} Log M {math.log(len(dataset_prop))} "
-                                 f"Label {int_label}")
-                self.logger.info("####################################################################################")
-
         mi_estimated = np.nanmean(softmax_list)
-        if verbose != 0:
-            self.logger.error(f'Estimated MI: {mi_estimated}')
         if np.isnan(mi_estimated) or np.isinf(mi_estimated):
-            if verbose != 0:
-                self.logger.error(f'Setting MI to 0')
             mi_estimated = 0
         if self.mi_val - mi_estimated > .01:
             mi_estimated = self.mi_val
         mi_estimated = np.max([mi_estimated, 0.0])
         return mi_estimated
+

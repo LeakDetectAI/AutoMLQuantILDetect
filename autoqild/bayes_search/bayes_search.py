@@ -30,15 +30,6 @@ class BayesSearchCV(BayesSearchCVSK):
         Path to the file where the optimizer states are saved. This allows for resuming optimization
         from where it was left off in case of interruptions.
 
-    Methods
-    -------
-    _step(search_space, optimizer, evaluate_candidates, n_points=1)
-        Generates parameter combinations and evaluates them in parallel.
-
-    _run_search(evaluate_candidates)
-        Runs the search process to find the best hyperparameters by iteratively evaluating different
-        configurations based on the Bayesian optimization strategy.
-
     Parameters
     ----------
     estimator : estimator object
@@ -91,6 +82,15 @@ class BayesSearchCV(BayesSearchCVSK):
 
     optimizers_file_path : string, default='results.pkl'
         Path to save the optimizer states.
+
+    Private Methods
+    ---------------
+    _step(search_space, optimizer, evaluate_candidates, n_points=1)
+        Generates parameter combinations and evaluates them in parallel.
+
+    _run_search(evaluate_candidates)
+        Runs the search process to find the best hyperparameters by iteratively evaluating different
+        configurations based on the Bayesian optimization strategy.
     """
 
     def __init__(

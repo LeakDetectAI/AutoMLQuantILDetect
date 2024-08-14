@@ -12,3 +12,4 @@ Documentation of the API for public objects and functions in ``autoqild``.
     autoqild.bayes_search
     autoqild.classifiers
     autoqild.dataset_readers
+    autoqild.mi_estimators

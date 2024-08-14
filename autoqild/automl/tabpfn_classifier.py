@@ -12,54 +12,83 @@ from ..utilities import create_dimensionality_reduction_model
 
 class AutoTabPFNClassifier(AutomlClassifier):
     """
-        AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
-        Fully Bayesian Network) for classification tasks.
+    AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
+    Fully Bayesian Network) for classification tasks.
 
-        This class provides a high-level interface to automatically build, train, and evaluate a
-        TabPFN model on tabular data. It supports various configurations and allows for dimensionality
-        reduction if the number of features exceeds a specified threshold. The class is equipped to
-        handle different feature reduction techniques and can operate on both CPU and GPU, depending on
-        the available resources.
+    This class provides a high-level interface to automatically build, train, and evaluate a
+    TabPFN model on tabular data. It supports various configurations and allows for dimensionality
+    reduction if the number of features exceeds a specified threshold. The class is equipped to
+    handle different feature reduction techniques and can operate on both CPU and GPU, depending on
+    the available resources.
 
-        Attributes
-        ----------
-        n_features : int
-            The number of features in the input data.
+    Parameters
+    ----------
+    n_features : int
+        The number of features in the input data.
 
-        n_classes : int
-            The number of classes in the classification task.
+    n_classes : int
+        The number of classes in the classification task.
 
-        n_ensembles : int
-            The number of ensemble configurations used by the TabPFN model. Default is 100.
+    n_ensembles : int, default=100
+        The number of ensemble configurations used by the TabPFN model.
 
-        n_reduced : int
-            The number of features to reduce to if `n_features` exceeds 50. Default is 20.
+    n_reduced : int, default=20
+        The number of features to reduce to if `n_features` exceeds 50.
 
-        reduction_technique : str
-            The technique used for feature reduction, chosen from a set of options including PCA, LDA, and t-SNE.
-            Default is 'select_from_model_rf'.
+    reduction_technique : str, default='select_from_model_rf'
+        The technique used for feature reduction, chosen from a set of options including PCA, LDA, and t-SNE.
 
-        base_path : str or None
-            The path where the trained model and other outputs are saved. If None, no model is saved.
+    base_path : str or None, default=None
+        The path where the trained model and other outputs are saved. If None, no model is saved.
 
-        random_state : int or None
-            Seed for random number generation to ensure reproducibility. Default is None.
+    random_state : int or None, default=None
+        Seed for random number generation to ensure reproducibility.
 
-        device : str
-            The device used for computation, either 'cpu' or 'cuda' depending on the availability of a GPU.
+    **kwargs : dict
+        Additional keyword arguments.
 
-        selection_model : object or None
-            The model used for dimensionality reduction. Initialized during the first call to `transform`.
+    Attributes
+    ----------
+    n_features : int
+        The number of features in the input data.
 
-        logger : logging.Logger
-            Logger object used for logging messages and errors.
+    n_classes : int
+        The number of classes in the classification task.
 
-        model : TabPFNClassifier or None
-            The TabPFN model object, initialized after fitting.
+    n_ensembles : int
+        The number of ensemble configurations used by the TabPFN model.
 
-        __is_fitted__ : bool
-            Flag indicating whether the dimensionality reduction model is fitted.
+    n_reduced : int
+        The number of features to reduce to if `n_features` exceeds 50.
 
+    reduction_technique : str
+        The technique used for feature reduction.
+
+    base_path : str or None
+        The path where the trained model and other outputs are saved.
+
+    random_state : int or None
+        Seed for random number generation to ensure reproducibility.
+
+    device : str
+        The device used for computation, either 'cpu' or 'cuda' depending on the availability of a GPU.
+
+    selection_model : object or None
+        The model used for dimensionality reduction. Initialized during the first call to `transform`.
+
+    logger : logging.Logger
+        Logger object used for logging messages and errors.
+
+    model : TabPFNClassifier or None
+        The TabPFN model object, initialized after fitting.
+
+    __is_fitted__ : bool
+        Flag indicating whether the dimensionality reduction model is fitted.
+
+    Private Methods
+    ---------------
+    __clear_memory__()
+        Clear memory to release resources by torch.
     """
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):
@@ -67,7 +96,6 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.n_classes = n_classes
         self.logger = logging.getLogger(name=AutoTabPFNClassifier.__name__)
         self.random_state = check_random_state(random_state)
-
         self.n_reduced = n_reduced
         self.reduction_technique = reduction_technique
         self.selection_model = None
@@ -84,22 +112,20 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.base_path = base_path
 
     def transform(self, X, y=None):
-        """
-            Transform and reduce the feature set with dimensionality n_reduced using the feature reduction technique.
+        """Transform and reduce the feature set with dimensionality `n_reduced` using the feature reduction technique.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,), optional
-                Target vector.
+        y : array-like of shape (n_samples,), optional
+            Target vector.
 
-            Returns
-            -------
-            X : array-like of shape (n_samples, n_reduced)
-                Transformed feature matrix.
-        """
+        Returns
+        -------
+        X : array-like of shape (n_samples, n_reduced)
+            Transformed feature matrix."""
         self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
@@ -125,20 +151,18 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return X
 
     def fit(self, X, y, **kwd):
-        """
-            Fit the TabPFN model to the training data.
+        """Fit the TabPFN model to the training data.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                Target vector.
+        y : array-like of shape (n_samples,)
+            Target vector.
 
-            **kwd : dict, optional
-                Additional keyword arguments.
-        """
+        **kwd : dict, optional
+            Additional keyword arguments."""
         X = self.transform(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
@@ -150,75 +174,68 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.logger.info("Fitting Done")
 
     def predict(self, X, verbose=0):
-        """
-            Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            y_pred : array-like of shape (n_samples,)
-                Predicted class labels.
-        """
+        Returns
+        -------
+        y_pred : array-like of shape (n_samples,)
+            Predicted class labels."""
         p = self.predict_proba(X, verbose=0)
         y_pred = np.argmax(p, axis=-1)
         self.logger.info("Predict Done")
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-            Compute the balanced accuracy score for the input samples.
+        """Compute the balanced accuracy score for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                True labels.
+        y : array-like of shape (n_samples,)
+            True labels.
 
-            sample_weight : array-like of shape (n_samples,), optional
-                Sample weights.
+        sample_weight : array-like of shape (n_samples,), optional
+            Sample weights.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            acc : float
-                Balanced accuracy score.
-        """
+        Returns
+        -------
+        acc : float
+            Balanced accuracy score."""
         y_pred = self.predict(X)
         acc = balanced_accuracy_score(y, y_pred)
         return acc
 
     def predict_proba(self, X, batch_size=32, verbose=0):
-        """
-            Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            batch_size: int, optional, default=32
-                Number of samples for which predictions are obtained at one time using the learned model to obtain
-                preidctions on complete samples space.
+        batch_size : int, optional, default=32
+            Number of samples for which predictions are obtained at one time using the learned model.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            y_pred : array-like of shape (n_samples, n_classes)
-                Predicted class probabilities.
-        """
+        Returns
+        -------
+        y_pred : array-like of shape (n_samples, n_classes)
+            Predicted class probabilities."""
         self.logger.info("Predicting Probabilities")
         n_samples = X.shape[0]
         X = self.transform(X)
@@ -241,29 +258,25 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return y_pred
 
     def decision_function(self, X, verbose=0):
-        """
-            Compute the decision function in form of class probabilities for the input samples.
+        """Compute the decision function in form of class probabilities for the input samples.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            verbose : int, optional, default=0
-                Verbosity level.
+        verbose : int, optional, default=0
+            Verbosity level.
 
-            Returns
-            -------
-            decision : array-like of shape (n_samples,)
-                Decision function values.
-        """
+        Returns
+        -------
+        decision : array-like of shape (n_samples,)
+            Decision function values."""
         return self.predict_proba(X, verbose)
 
     @staticmethod
     def __clear_memory__():
-        """
-            Clear memory to release resources by torch.
-        """
+        """Clear memory to release resources by torch."""
         import gc
         gc.collect()
         # Explicitly clear CUDA cache if available

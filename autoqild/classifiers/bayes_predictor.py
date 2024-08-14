@@ -10,59 +10,39 @@ from ..utilities import normalize
 
 class BayesPredictor(BaseEstimator, ClassifierMixin):
     """
-        It is a Bayes-optimal classifier that predicts on the given dataset using the defined joint and conidtional
-        distributions defined ina a dataset object, used to generate then underlying data, which is the best performing
-        classifier. This class stores the PDFs, and predict class probabilities and labels given the input features using
-        them.
+    A Bayes-optimal classifier that predicts on the given dataset using the defined joint and conditional
+    distributions. This classifier leverages a dataset object, used to generate underlying data,
+    which represents the best-performing classifier. This class stores the PDFs and predicts class probabilities
+    and labels given the input features.
 
-        Parameters
-        ----------
-        dataset_obj : object
-            An object representing the dataset. This object should provide methods like
-            `generate_dataset`, `get_prob_y_given_x`, and `get_prob_flip_y_given_x`.
+    Parameters
+    ----------
+    dataset_obj : object
+        An object representing the dataset. This object should provide methods like
+        `generate_dataset`, `get_prob_y_given_x`, and `get_prob_flip_y_given_x`.
 
-        random_state : int or None, optional, default=None
-            Random state for reproducibility.
+    random_state : int or None, optional, default=None
+        Random state for reproducibility.
 
-        **kwargs : dict, optional
-            Additional keyword arguments.
+    **kwargs : dict, optional
+        Additional keyword arguments.
 
-        Attributes
-        ----------
-        dataset_obj : object
-            The dataset object provided during initialization. Used for generating datasets
-            and computing class probabilities.
+    Attributes
+    ----------
+    dataset_obj : object
+        The dataset object provided during initialization. Used for generating datasets
+        and computing class probabilities.
 
-        random_state : RandomState
-            Random state instance for reproducibility.
+    random_state : RandomState
+        Random state instance for reproducibility.
 
-        logger : logging.Logger
-            Logger instance for logging information.
+    logger : logging.Logger
+        Logger instance for logging information.
 
-        n_classes : int or None
-            Number of classes in the classification data samples. Set during the `fit` method.
-
-        Methods
-        -------
-        fit(X, y, **kwd)
-            Fits the classifier to the provided training data.
-
-        predict(X, verbose=0)
-            Predicts class labels for the given input samples.
-
-        score(X, y, sample_weight=None, verbose=0)
-            Computes the accuracy score for the input samples.
-
-        decision_function(X, verbose=0)
-            Computes the decision function in the form of class probabilities for the input samples.
-
-        predict_proba(X, verbose=0)
-            Predicts class probabilities for the input samples.
-
-        get_bayes_predictor_scores()
-            Generates datasets and evaluates the accuracy of the Bayes predictor, returning the best estimate of
-            true and predicted labels along with prediction probabilities.
+    n_classes : int or None
+        Number of classes in the classification data samples. Set during the `fit` method.
     """
+
     def __init__(self, dataset_obj, random_state=None, **kwargs):
         self.dataset_obj = dataset_obj
         self.random_state = check_random_state(random_state)
@@ -70,8 +50,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         self.n_classes = None
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the BayesPredictor model.
+        """Fit the BayesPredictor model.
 
         This method sets the number of classes in the training data but does not perform any
         actual fitting. It is intended to be overridden or expanded in a subclass.
@@ -88,11 +67,10 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
             Additional keyword arguments.
         """
         self.n_classes = len(np.unique(y))
-        pass
+        return self
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -112,8 +90,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the accuracy of the predictions.
+        """Compute the accuracy of the predictions.
 
         Parameters
         ----------
@@ -139,8 +116,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return acc_bp
 
     def decision_function(self, X, verbose=0):
-        """
-        Compute the decision function for the input samples.
+        """Compute the decision function for the input samples.
 
         The decision function returns the probability estimates of the positive class
         for binary classification problems.
@@ -164,8 +140,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return scores
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -190,8 +165,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return p_pred
 
     def get_bayes_predictor_scores(self):
-        """
-        Generate datasets and evaluate the accuracy of the Bayes predictor.
+        """Generate datasets and evaluate the accuracy of the Bayes predictor.
 
         This method generates multiple datasets and evaluates the accuracy of the Bayes predictor
         on each one. It returns the true and predicted labels along with the prediction probabilities
@@ -222,6 +196,3 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
                 y_true = np.copy(y)
                 p_pred, y_pred = get_scores(X, self)
         return y_true, y_pred, p_pred
-
-
-
