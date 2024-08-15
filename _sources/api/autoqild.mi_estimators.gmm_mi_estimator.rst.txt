@@ -1,0 +1,12 @@
+autoqild.mi\_estimators.gmm\_mi\_estimator
+==========================================
+
+.. automodule:: autoqild.mi_estimators.gmm_mi_estimator
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GMMMIEstimator
+   
