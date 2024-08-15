@@ -1,3 +1,4 @@
+"""A versatile leakage detection class built on top of the scikit-learn framework, supporting multiple estimators."""
 import copy
 import gc
 import logging
@@ -223,11 +224,11 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     if i == 0:
                         self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
                         self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
-                    directory_path = learner_params.get('base_path', None)
+                    directory_path = learner_params.get(`base_path`, None)
                     if directory_path is not None:
                         try:
                             os.rmdir(directory_path)
-                            self.logger.info(f"The directory '{directory_path}' has been removed.")
+                            self.logger.info(f"The directory `{directory_path}` has been removed.")
                         except OSError as e:
                             self.logger.error(f"Error: {directory_path} : {e.strerror}")
             self.__store_results__()
@@ -263,7 +264,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         """
         Evaluate and store model performance metrics for the detection process.
 
-        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model's
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model`s
         predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling.
         The results are stored and logged for further analysis.
 

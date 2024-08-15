@@ -37,17 +37,17 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
     loss_function : torch.nn.Module, optional, default=torch.nn.NLLLoss()
         Loss function to be used during training.
 
-    optimizer_str : {'RMSprop', 'sgd', 'adam', 'AdamW', 'Adagrad', 'Adamax', 'Adadelta'}, default='adam'
+    optimizer_str : {`RMSprop`, `sgd`, `adam`, `AdamW`, `Adagrad`, `Adamax`, `Adadelta`}, default=`adam`
         Optimizer type to use for training the neural network.
         Must be one of:
 
-        - 'RMSprop': RMSprop optimizer.
-        - 'sgd': Stochastic Gradient Descent optimizer.
-        - 'adam': Adam optimizer.
-        - 'AdamW': AdamW optimizer.
-        - 'Adagrad': Adagrad optimizer.
-        - 'Adamax': Adamax optimizer.
-        - 'Adadelta': Adadelta optimizer.
+        - `RMSprop`: RMSprop optimizer.
+        - `sgd`: Stochastic Gradient Descent optimizer.
+        - `adam`: Adam optimizer.
+        - `AdamW`: AdamW optimizer.
+        - `Adagrad`: Adagrad optimizer.
+        - `Adamax`: Adamax optimizer.
+        - `Adadelta`: Adadelta optimizer.
 
     learning_rate : float, optional, default=0.001
         Learning rate for the optimizer.
@@ -77,7 +77,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
     """
 
     def __init__(self, n_classes, n_features, n_hidden=10, n_units=100, loss_function=nn.NLLLoss(),
-                 optimizer_str='adam', learning_rate=0.001, reg_strength=0.001, is_pc_softmax=False, random_state=42):
+                 optimizer_str=`adam`, learning_rate=0.001, reg_strength=0.001, is_pc_softmax=False, random_state=42):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(PCSoftmaxMIEstimator.__name__)
         self.optimizer_str = optimizer_str
@@ -89,7 +89,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.n_hidden = n_hidden
         self.n_units = n_units
         self.loss_function = loss_function
-        self.device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(`cuda` if torch.cuda.is_available() else "cpu")
         self.optimizer = None
         self.class_net = None
         self.dataset_properties = None
@@ -175,8 +175,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
                 _, predicted = torch.max(preds_, 1)
                 correct += (predicted == tensor_y).sum().item()
                 accuracy = 100 * correct / tensor_y.size(0)
-                print(f'For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %')
-                self.logger.error(f'For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %')
+                print(f`For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %`)
+                self.logger.error(f`For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %`)
         self.mi_val = self.estimate_mi(X, y, verbose=0)
         self.logger.info(f"Fit Loss {self.final_loss} MI Val: {self.mi_val}")
         return self

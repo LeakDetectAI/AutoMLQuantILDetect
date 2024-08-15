@@ -1,3 +1,5 @@
+"""Generates synthetic datasets by instroducing noise with reducing the distance between gaussians of each class,
+simulating different distributions."""
 import logging
 from abc import ABCMeta
 
@@ -9,7 +11,7 @@ from sklearn.utils import check_random_state
 from .utils import FACTOR, pdf
 from ..utilities import *
 
-__all__ = ['SyntheticDatasetGeneratorDistance']
+__all__ = [`SyntheticDatasetGeneratorDistance`]
 
 
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
@@ -46,7 +48,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
     imbalance : float, default=0.0
         Proportion of the minority class in the dataset. Must be between 0 and 1.
 
-    gen_type : str, default='single'
+    gen_type : str, default=`single`
         Type of generation process. It can be used to modify the dataset generation method.
 
     **kwargs : dict
@@ -107,7 +109,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         It then calculates the mean vector for each class.
     """
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type='single', **kwargs):
+                 imbalance=0.0, gen_type=`single`, **kwargs):
         self.n_classes = n_classes
         self.n_features = n_features
         self.random_state = check_random_state(random_state)
@@ -431,14 +433,14 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
 
         Parameters
         ----------
-        metric_name : {'MCMCBayesMI', 'MCMCLogLossBayesMI', 'MCMCPCSoftmaxBayesMI', 'MCMCSoftmaxBayesMI'}, default='MCMCLogLossBayesMI'
+        metric_name : {`MCMCBayesMI`, `MCMCLogLossBayesMI`, `MCMCPCSoftmaxBayesMI`, `MCMCSoftmaxBayesMI`}, default=`MCMCLogLossBayesMI`
             The name of the metric to use for MI estimation.
             Must be one of:
 
-            - 'MCMCLogLossBayesMI': Estimate mutual information using the log loss of the bayes pedictor.
-            - 'MCMCBayesMI': Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
-            - 'MCMCPCSoftmaxBayesMI': Estimate mutual information using the MCMC PC Softmax Bayes method.
-            - 'MCMCSoftmaxBayesMI': Estimate mutual information using the MCMC Softmax Bayes method.
+            - `MCMCLogLossBayesMI`: Estimate mutual information using the log loss of the bayes pedictor.
+            - `MCMCBayesMI`: Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
+            - `MCMCPCSoftmaxBayesMI`: Estimate mutual information using the MCMC PC Softmax Bayes method.
+            - `MCMCSoftmaxBayesMI`: Estimate mutual information using the MCMC Softmax Bayes method.
 
         Returns
         -------

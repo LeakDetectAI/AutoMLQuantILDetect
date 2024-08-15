@@ -1,7 +1,8 @@
+"""Uses a Multi-Layer Perceptron (MLP) for detecting leakage using deep learning approaches."""
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..classifiers import MultiLayerPerceptron
 
-__all__ = ['MLPLeakageDetector']
+__all__ = [`MLPLeakageDetector`]
 
 
 class MLPLeakageDetector(SklearnLeakageDetector):
@@ -118,7 +119,7 @@ class MLPLeakageDetector(SklearnLeakageDetector):
         """
         Evaluate and store model performance metrics for the detection process.
 
-        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model's
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model`s
         predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling.
         The results are stored and logged for further analysis.
 

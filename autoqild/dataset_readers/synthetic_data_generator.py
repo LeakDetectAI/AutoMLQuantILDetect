@@ -1,3 +1,5 @@
+"""Generates synthetic datasets with introducing noise by flipping certain percentage of labels for testing and
+evaluating machine learning models."""
 import logging
 from abc import ABCMeta
 
@@ -9,7 +11,7 @@ from sklearn.utils import check_random_state, shuffle
 from .utils import FACTOR, pdf
 from ..utilities import *
 
-__all__ = ['SyntheticDatasetGenerator']
+__all__ = [`SyntheticDatasetGenerator`]
 
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
@@ -45,7 +47,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
     imbalance : float, default=0.0
         Proportion of the minority class in the dataset. Must be between 0 and 1.
 
-    gen_type : str, default='single'
+    gen_type : str, default=`single`
         Type of generation process. It can be used to modify the dataset generation method.
 
     **kwargs : dict
@@ -113,7 +115,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
     """
 
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type='single', **kwargs):
+                 imbalance=0.0, gen_type=`single`, **kwargs):
 
         self.n_classes = n_classes
         self.n_features = n_features
@@ -302,7 +304,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         mvn = self.get_prob_dist_x_given_y(k_class)
         n_samples = self.samples_per_class[k_class]
         data = mvn.rvs(n_samples, random_state=seed)
-        labels = np.zeros(n_samples, dtype='int64') + k_class
+        labels = np.zeros(n_samples, dtype=`int64`) + k_class
         return data, labels
 
     def generate_dataset(self):
@@ -549,14 +551,14 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
         Parameters
         ----------
-        metric_name : {'MCMCBayesMI', 'MCMCLogLossBayesMI', 'MCMCPCSoftmaxBayesMI', 'MCMCSoftmaxBayesMI'}, default='MCMCLogLossBayesMI'
+        metric_name : {`MCMCBayesMI`, `MCMCLogLossBayesMI`, `MCMCPCSoftmaxBayesMI`, `MCMCSoftmaxBayesMI`}, default=`MCMCLogLossBayesMI`
             The name of the metric to use for MI estimation.
             Must be one of:
 
-            - 'MCMCLogLossBayesMI': Estimate mutual information using the log loss of the bayes pedictor.
-            - 'MCMCBayesMI': Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
-            - 'MCMCPCSoftmaxBayesMI': Estimate mutual information using the MCMC PC Softmax Bayes method.
-            - 'MCMCSoftmaxBayesMI': Estimate mutual information using the MCMC Softmax Bayes method.
+            - `MCMCLogLossBayesMI`: Estimate mutual information using the log loss of the bayes pedictor.
+            - `MCMCBayesMI`: Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
+            - `MCMCPCSoftmaxBayesMI`: Estimate mutual information using the MCMC PC Softmax Bayes method.
+            - `MCMCSoftmaxBayesMI`: Estimate mutual information using the MCMC Softmax Bayes method.
 
         Returns
         -------

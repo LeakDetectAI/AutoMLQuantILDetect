@@ -1,3 +1,5 @@
+"""AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
+    Fully Bayesian Network) for classification tasks."""
 import logging
 
 import numpy as np
@@ -35,18 +37,18 @@ class AutoTabPFNClassifier(AutomlClassifier):
     n_reduced : int, default=20
         The number of features to reduce to if `n_features` exceeds 50.
 
-    reduction_technique : str, optional, default='select_from_model_rf'
+    reduction_technique : str, optional, default=`select_from_model_rf`
         Technique to use for feature reduction, provided by scikit-learn.
         Must be one of:
 
-        - 'recursive_feature_elimination_et': Uses ExtraTreesClassifier to recursively remove features and build a model.
-        - 'recursive_feature_elimination_rf': Uses RandomForestClassifier to recursively remove features and build a model.
-        - 'select_from_model_et': Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier.
-        - 'select_from_model_rf': Meta-transformer for selecting features based on importance weights using RandomForestClassifier.
-        - 'pca': Principal Component Analysis for dimensionality reduction.
-        - 'lda': Linear Discriminant Analysis for separating classes.
-        - 'tsne': t-Distributed Stochastic Neighbor Embedding for visualization purposes.
-        - 'nmf': Non-Negative Matrix Factorization for dimensionality reduction.
+        - `recursive_feature_elimination_et`: Uses ExtraTreesClassifier to recursively remove features and build a model.
+        - `recursive_feature_elimination_rf`: Uses RandomForestClassifier to recursively remove features and build a model.
+        - `select_from_model_et`: Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier.
+        - `select_from_model_rf`: Meta-transformer for selecting features based on importance weights using RandomForestClassifier.
+        - `pca`: Principal Component Analysis for dimensionality reduction.
+        - `lda`: Linear Discriminant Analysis for separating classes.
+        - `tsne`: t-Distributed Stochastic Neighbor Embedding for visualization purposes.
+        - `nmf`: Non-Negative Matrix Factorization for dimensionality reduction.
 
     base_path : str or None, default=None
         The path where the trained model and other outputs are saved. If None, no model is saved.
@@ -81,7 +83,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Seed for random number generation to ensure reproducibility.
 
     device : str
-        The device used for computation, either 'cpu' or 'cuda' depending on the availability of a GPU.
+        The device used for computation, either `cpu` or `cuda` depending on the availability of a GPU.
 
     selection_model : object or None
         The model used for dimensionality reduction. Initialized during the first call to `transform`.
@@ -101,10 +103,10 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Clear memory to release resources by torch.
 
     __transform__(X, y=None):
-        Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
-        technique to the feature matrix with 'n_reduced' features.
+        Transform and reduce the feature matrix with `n_features` features, using the specified reduction
+        technique to the feature matrix with `n_reduced` features.
     """
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
+    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique=`select_from_model_rf`,
                  base_path=None, random_state=None, **kwargs):
         self.n_features = n_features
         self.n_classes = n_classes
@@ -116,9 +118,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.__is_fitted__ = False
 
         if torch.cuda.is_available():
-            device = 'cuda'
+            device = `cuda`
         else:
-            device = 'cpu'
+            device = `cpu`
         self.device = device
         self.logger.info(f"Device {self.device}")
         self.n_ensembles = n_ensembles
@@ -127,8 +129,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
     def __transform__(self, X, y=None):
         """
-        Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
-        technique to the feature matrix with 'n_reduced' features.
+        Transform and reduce the feature matrix with `n_features` features, using the specified reduction
+        technique to the feature matrix with `n_reduced` features.
 
         Parameters
         ----------
@@ -184,7 +186,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         X = self.__transform__(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
-            params['base_path'] = self.base_path
+            params[`base_path`] = self.base_path
 
         self.model = TabPFNClassifier(**params)
         self.model.fit(X, y, overwrite_warning=True)

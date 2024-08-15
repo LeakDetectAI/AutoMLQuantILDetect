@@ -19,7 +19,7 @@ def own_softmax(x, label_proportions, device):
         The proportions of each class in the dataset. This should be a list or tensor of shape `(n_classes,)`
         representing the proportion of each class in the dataset.
     device : torch.device
-        The device on which to perform the computation (e.g., 'cpu' or 'cuda').
+        The device on which to perform the computation (e.g., `cpu` or `cuda`).
 
     Returns
     -------
@@ -154,7 +154,7 @@ class StatNet(nn.Module):
         Number of units in each hidden layer.
     n_hidden : int, optional, default=1
         Number of hidden layers.
-    device : torch.device, optional, default='cpu'
+    device : torch.device, optional, default=`cpu`
         Device to run the network on (CPU or GPU).
 
     Attributes
@@ -167,7 +167,7 @@ class StatNet(nn.Module):
         Output layer.
     """
 
-    def __init__(self, in_dim, cls_enc=1, n_units=100, n_hidden=1, device='cpu'):
+    def __init__(self, in_dim, cls_enc=1, n_units=100, n_hidden=1, device=`cpu`):
         super(StatNet, self).__init__()
         self.device = device
         self.input = nn.Linear(in_dim + cls_enc, n_units).to(self.device)

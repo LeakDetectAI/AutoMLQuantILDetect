@@ -27,18 +27,18 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
     n_reduced : int, optional, default=20
         Number of features to reduce to if `reduction_technique` is applied.
 
-    reduction_technique : str, optional, default='select_from_model_rf'
+    reduction_technique : str, optional, default=`select_from_model_rf`
         Technique to use for feature reduction, provided by scikit-learn.
         Must be one of:
 
-        - 'recursive_feature_elimination_et': Uses ExtraTreesClassifier to recursively remove features and build a model.
-        - 'recursive_feature_elimination_rf': Uses RandomForestClassifier to recursively remove features and build a model.
-        - 'select_from_model_et': Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier.
-        - 'select_from_model_rf': Meta-transformer for selecting features based on importance weights using RandomForestClassifier.
-        - 'pca': Principal Component Analysis for dimensionality reduction.
-        - 'lda': Linear Discriminant Analysis for separating classes.
-        - 'tsne': t-Distributed Stochastic Neighbor Embedding for visualization purposes.
-        - 'nmf': Non-Negative Matrix Factorization for dimensionality reduction.
+        - `recursive_feature_elimination_et`: Uses ExtraTreesClassifier to recursively remove features and build a model.
+        - `recursive_feature_elimination_rf`: Uses RandomForestClassifier to recursively remove features and build a model.
+        - `select_from_model_et`: Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier.
+        - `select_from_model_rf`: Meta-transformer for selecting features based on importance weights using RandomForestClassifier.
+        - `pca`: Principal Component Analysis for dimensionality reduction.
+        - `lda`: Linear Discriminant Analysis for separating classes.
+        - `tsne`: t-Distributed Stochastic Neighbor Embedding for visualization purposes.
+        - `nmf`: Non-Negative Matrix Factorization for dimensionality reduction.
 
     base_path : str, optional
         Directory to save model files. Default is None.
@@ -62,7 +62,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
 
     """
 
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
+    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique=`select_from_model_rf`,
                  base_path=None, random_state=None, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs)
         self.base_estimator = AutoTabPFNClassifier
@@ -191,17 +191,17 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         y : array-like of shape (n_samples,)
             Target labels.
 
-        method : str, optional, default='LogLossMI'
+        method : str, optional, default=`LogLossMI`
             The method to use for mutual information estimation.
             Options include:
 
-            - 'LogLossMI': Estimate MI using Log-Loss method.
-            - 'LogLossMIIsotonicRegression': Estimate MI using Log-Loss method with Isotonic Regression.
-            - 'LogLossMIPlattScaling': Estimate MI using Log-Loss method with Platt Scaling.
-            - 'LogLossMIBetaCalibration': Estimate MI using Log-Loss method with Beta Calibration.
-            - 'LogLossMITemperatureScaling': Estimate MI using Log-Loss method with Temperature Scaling.
-            - 'LogLossMIHistogramBinning': Estimate MI using Log-Loss method with Histogram Binning.
-            - 'PCSoftmaxMI': Estimate MI using Softmax probabilities.
+            - `LogLossMI`: Estimate MI using Log-Loss method.
+            - `LogLossMIIsotonicRegression`: Estimate MI using Log-Loss method with Isotonic Regression.
+            - `LogLossMIPlattScaling`: Estimate MI using Log-Loss method with Platt Scaling.
+            - `LogLossMIBetaCalibration`: Estimate MI using Log-Loss method with Beta Calibration.
+            - `LogLossMITemperatureScaling`: Estimate MI using Log-Loss method with Temperature Scaling.
+            - `LogLossMIHistogramBinning`: Estimate MI using Log-Loss method with Histogram Binning.
+            - `PCSoftmaxMI`: Estimate MI using Softmax probabilities.
 
         **kwargs : dict, optional
             Additional keyword arguments passed to the estimation methods.

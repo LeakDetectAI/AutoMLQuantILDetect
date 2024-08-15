@@ -7,10 +7,10 @@ import h5py
 import numpy as np
 from sklearn.preprocessing import RobustScaler
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings(`ignore`)
 
-__all__ = ['logsumexp', 'softmax', 'sigmoid', 'normalize', 'progress_bar', 'print_dictionary', 'standardize_features',
-           'standardize_features', 'create_directory_safely', 'log_exception_error', 'check_and_delete_corrupt_h5_file']
+__all__ = [`logsumexp`, `softmax`, `sigmoid`, `normalize`, `progress_bar`, `print_dictionary`, `standardize_features`,
+           `standardize_features`, `create_directory_safely`, `log_exception_error`, `check_and_delete_corrupt_h5_file`]
 
 
 def logsumexp(x, axis=1):
@@ -93,7 +93,7 @@ def normalize(x, axis=1):
     return normed
 
 
-def progress_bar(count, total, status=''):
+def progress_bar(count, total, status=``):
     """
     Display a progress bar in the console.
 
@@ -109,13 +109,13 @@ def progress_bar(count, total, status=''):
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
 
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+    bar = `=` * filled_len + `-` * (bar_len - filled_len)
 
-    sys.stdout.write('[%s] %s/%s ...%s\r' % (bar, count, total, status))
+    sys.stdout.write(`[%s] %s/%s ...%s\r` % (bar, count, total, status))
     sys.stdout.flush()
 
 
-def print_dictionary(dictionary, sep='\n', n_keys=None):
+def print_dictionary(dictionary, sep=`\n`, n_keys=None):
     """
     Print a dictionary with keys and values formatted with a separator.
 
@@ -124,7 +124,7 @@ def print_dictionary(dictionary, sep='\n', n_keys=None):
     dictionary : dict
         The dictionary to print.
     sep : str, optional
-        Separator between key-value pairs (default is '\n').
+        Separator between key-value pairs (default is `\n`).
     n_keys : int, optional
         Number of key-value pairs to print. If None, prints all.
 
@@ -260,7 +260,7 @@ def log_exception_error(logger, e):
     e : Exception
         Exception instance to log.
     """
-    if hasattr(e, 'message'):
+    if hasattr(e, `message`):
         message = e.message
     else:
         message = e
@@ -303,25 +303,25 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
     if os.path.exists(file_path):
         try:
             if os.path.getsize(file_path) == 0:
-                logger.info(f"The file '{basename}' is empty.")
+                logger.info(f"The file `{basename}` is empty.")
                 os.remove(file_path)
-                logger.info(f"The file '{basename}' has been deleted.")
+                logger.info(f"The file `{basename}` has been deleted.")
                 return
-            with h5py.File(file_path, 'r') as h5_file:
+            with h5py.File(file_path, `r`) as h5_file:
                 group_names = list(h5_file.keys())
                 if group_names:
                     group_name = group_names[0]
                     group = h5_file[group_name]
-                    logger.info(f"The first group '{group_name}' in the file '{basename}' has been "
+                    logger.info(f"The first group `{group_name}` in the file `{basename}` has been "
                                 f"accessed successfully.")
                 else:
-                    logger.info(f"No groups found in the file '{basename}'.")
-            logger.info(f"The file '{basename}' is not corrupt.")
+                    logger.info(f"No groups found in the file `{basename}`.")
+            logger.info(f"The file `{basename}` is not corrupt.")
         except (OSError, KeyError, ValueError, Exception) as error:
             log_exception_error(logger, error)
-            logger.error(f"The file '{basename}' is corrupt.")
+            logger.error(f"The file `{basename}` is corrupt.")
             os.remove(file_path)
-            logger.error(f"The file '{basename}' has been deleted.")
+            logger.error(f"The file `{basename}` has been deleted.")
     else:
         logger.info(f"File does not exist {basename}")
 

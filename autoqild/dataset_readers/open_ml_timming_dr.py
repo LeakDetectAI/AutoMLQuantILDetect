@@ -1,3 +1,4 @@
+"""Reader for OpenML datasets focusing on timing features for data leakage analysis."""
 import logging
 from abc import ABCMeta
 
@@ -9,7 +10,7 @@ from sklearn.utils import check_random_state
 
 from .utils import *
 
-__all__ = ['OpenMLTimingDatasetReader']
+__all__ = [`OpenMLTimingDatasetReader`]
 
 
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):
@@ -93,7 +94,7 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.dataset_id = dataset_id
         self.imbalance = imbalance
         self.random_state = check_random_state(random_state)
-        self.correct_class = 'Correctly_formatted_PKCS#1_PMS_message'
+        self.correct_class = `Correctly_formatted_PKCS#1_PMS_message`
         self.vulnerable_classes = []
         self.__read_dataset__()
         self.__clean_up_dataset__()
@@ -103,22 +104,22 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
     def __read_dataset__(self):
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
-        self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
+        self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format=`dataframe`)
         self.attribute_names.remove(LABEL_COL)
         self.dataset_dictionary = {}
         if self.correct_class not in self.data_frame_raw[LABEL_COL].unique():
-            raise ValueError(f'Dataframe is does not contain correct class {self.correct_class}')
+            raise ValueError(f`Dataframe is does not contain correct class {self.correct_class}`)
         self.logger.info(f"Class Labels unformulated {list(self.data_frame_raw[LABEL_COL].unique())}")
         description = self.dataset.description
-        vulnerable_classes_str = description.split('\n')[-1].split("vulnerable_classes ")[-1]
-        vulnerable_classes_str = vulnerable_classes_str.strip('[]')
-        self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(',')]
+        vulnerable_classes_str = description.split(`\n`)[-1].split("vulnerable_classes ")[-1]
+        vulnerable_classes_str = vulnerable_classes_str.strip(`[]`)
+        self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(`,`)]
         self.n_features = len(self.dataset.features) - 1
-        self.fold_id = int(description.split('\n')[-2].split("fold_id ")[-1])
-        self.delay = int(description.split('Bleichenbacher Timing Attack: ')[-1].split(" micro seconds")[0])
+        self.fold_id = int(description.split(`\n`)[-2].split("fold_id ")[-1])
+        self.delay = int(description.split(`Bleichenbacher Timing Attack: `)[-1].split(" micro seconds")[0])
 
     def __clean_up_dataset__(self):
-        categorical_columns = self.data_frame_raw.select_dtypes(include=['object']).columns
+        categorical_columns = self.data_frame_raw.select_dtypes(include=[`object`]).columns
         label_encoder = LabelEncoder()
         for column in categorical_columns:
             if column != LABEL_COL:

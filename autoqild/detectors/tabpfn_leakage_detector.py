@@ -1,10 +1,11 @@
+"""Uses the TabPFN model to detect information leakage, particularly in small tabular datasets."""
 import os
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..automl import AutoTabPFNClassifier
 from ..utilities import *
 
-__all__ = ['TabPFNLeakageDetector']
+__all__ = [`TabPFNLeakageDetector`]
 
 
 class TabPFNLeakageDetector(SklearnLeakageDetector):
@@ -67,15 +68,15 @@ class TabPFNLeakageDetector(SklearnLeakageDetector):
         self.n_jobs = 8
         self.base_detector = AutoTabPFNClassifier
         if self.base_detector == AutoTabPFNClassifier:
-            self.learner_params['base_path'] = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value,
+            self.learner_params[`base_path`] = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value,
                                                             self.padding_code)
 
     def hyperparameter_optimization(self, X, y):
         train_size = super().hyperparameter_optimization(X, y)
-        directory_path = self.learner_params['base_path']
+        directory_path = self.learner_params[`base_path`]
         try:
             os.rmdir(directory_path)
-            self.logger.info(f"The directory '{directory_path}' has been removed.")
+            self.logger.info(f"The directory `{directory_path}` has been removed.")
         except OSError as e:
             self.logger.error(f"Error: {directory_path} : {e.strerror}")
         return train_size

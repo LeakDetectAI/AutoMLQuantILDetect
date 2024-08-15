@@ -1,8 +1,9 @@
+"""A leakage detector that utilizes RandomForest models for robust and interpretable detection."""
 from sklearn.ensemble import RandomForestClassifier
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
 
-__all__ = ['RandomForestLeakageDetector']
+__all__ = [`RandomForestLeakageDetector`]
 
 
 class RandomForestLeakageDetector(SklearnLeakageDetector):
@@ -57,9 +58,9 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
                  base_directory, search_space, hp_iters, n_inner_folds, validation_loss, random_state=None, **kwargs):
         if "n_classes" in learner_params.keys():
-            del learner_params['n_classes']
+            del learner_params[`n_classes`]
         if "n_features" in learner_params.keys():
-            del learner_params['n_features']
+            del learner_params[`n_features`]
         super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
                          hash_value=hash_value, cv_iterations=cv_iterations, n_hypothesis=n_hypothesis,
                          base_directory=base_directory, search_space=search_space, hp_iters=hp_iters,
@@ -122,7 +123,7 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         """
         Evaluate and store model performance metrics for the detection process.
 
-        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model's
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model`s
         predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling.
         The results are stored and logged for further analysis.
 

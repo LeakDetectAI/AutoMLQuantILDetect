@@ -1,3 +1,4 @@
+"""Configurations for search space for AutoGluon tools"""
 from autogluon.common.space import Real, Int, Categorical
 
 hyperparameters = {
@@ -116,4 +117,4 @@ commonly used in machine learning pipelines, and each hyperparameter is configur
 # Note: Hyperparameter tuning is disabled for this model.
 # LR: `autogluon.tabular.models.lr.hyperparameters.parameters`
 # Note: Hyperparameter tuning is disabled for this model.
-# Note: 'penalty' parameter can be used for regression to specify regularization method: 'L1' and 'L2' values are supported.
+# Note: `penalty` parameter can be used for regression to specify regularization method: `L1` and `L2` values are supported.

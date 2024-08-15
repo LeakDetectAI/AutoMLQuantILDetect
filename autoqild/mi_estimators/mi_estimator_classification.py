@@ -191,16 +191,16 @@ class ClassficationMIEstimator(MIEstimatorBase):
         y : array-like of shape (n_samples,)
             Target labels.
 
-        method : str, optional, default='LogLossMI'
+        method : str, optional, default=`LogLossMI`
             The method to use for mutual information estimation. Options include:
 
-            - 'LogLossMI': Estimate MI using Log-Loss method.
-            - 'LogLossMIIsotonicRegression': Estimate MI using Log-Loss method with Isotonic Regression.
-            - 'LogLossMIPlattScaling': Estimate MI using Log-Loss method with Platt Scaling.
-            - 'LogLossMIBetaCalibration': Estimate MI using Log-Loss method with Beta Calibration.
-            - 'LogLossMITemperatureScaling': Estimate MI using Log-Loss method with Temperature Scaling.
-            - 'LogLossMIHistogramBinning': Estimate MI using Log-Loss method with Histogram Binning.
-            - 'PCSoftmaxMI': Estimate MI using Softmax probabilities.
+            - `LogLossMI`: Estimate MI using Log-Loss method.
+            - `LogLossMIIsotonicRegression`: Estimate MI using Log-Loss method with Isotonic Regression.
+            - `LogLossMIPlattScaling`: Estimate MI using Log-Loss method with Platt Scaling.
+            - `LogLossMIBetaCalibration`: Estimate MI using Log-Loss method with Beta Calibration.
+            - `LogLossMITemperatureScaling`: Estimate MI using Log-Loss method with Temperature Scaling.
+            - `LogLossMIHistogramBinning`: Estimate MI using Log-Loss method with Histogram Binning.
+            - `PCSoftmaxMI`: Estimate MI using Softmax probabilities.
 
         **kwargs : dict, optional
             Additional keyword arguments passed to the estimation methods.

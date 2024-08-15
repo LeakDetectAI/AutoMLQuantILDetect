@@ -1,8 +1,9 @@
+"""Detects leakage by estimating mutual information using GMM or MINE estimators."""
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..mi_estimators import GMMMIEstimator, MineMIEstimatorMSE
 from ..utilities import *
 
-__all__ = ['MIEstimationLeakageDetector']
+__all__ = [`MIEstimationLeakageDetector`]
 
 
 class MIEstimationLeakageDetector(SklearnLeakageDetector):
@@ -17,8 +18,8 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
     ----------
     mi_technique : str
         The MI estimation technique to use. Options include:
-        - 'mine_mi_estimator': Uses MINE model to estimate mutual information.
-        - 'gmm_mi_estimator': Uses GMM model to estimate mutual information.
+        - `mine_mi_estimator`: Uses MINE model to estimate mutual information.
+        - `gmm_mi_estimator`: Uses GMM model to estimate mutual information.
 
     padding_name : str
         The name of the padding method used in the experiments to obscure or detect leakage.
@@ -104,8 +105,8 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         This method is intended for internal use only and is automatically called during initialization.
         """
         for i in range(self.n_hypothesis):
-            self.results[f'model_{i}'] = {}
-            self.results[f'model_{i}'][ESTIMATED_MUTUAL_INFORMATION] = []
+            self.results[f`model_{i}`] = {}
+            self.results[f`model_{i}`][ESTIMATED_MUTUAL_INFORMATION] = []
 
     def hyperparameter_optimization(self, X, y):
         """
