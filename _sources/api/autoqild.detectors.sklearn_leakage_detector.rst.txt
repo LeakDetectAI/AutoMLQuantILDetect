@@ -1,0 +1,12 @@
+autoqild.detectors.sklearn\_leakage\_detector
+=============================================
+
+.. automodule:: autoqild.detectors.sklearn_leakage_detector
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SklearnLeakageDetector
+   

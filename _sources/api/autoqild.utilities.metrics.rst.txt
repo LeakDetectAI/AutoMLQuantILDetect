@@ -1,0 +1,25 @@
+autoqild.utilities.metrics
+==========================
+
+.. automodule:: autoqild.utilities.metrics
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      auc_score
+      bin_ce
+      false_negative_rate
+      false_positive_rate
+      fanos_adjusted_lower_bound
+      fanos_lower_bound
+      get_entropy_y
+      helmann_raviv_function
+      helmann_raviv_upper_bound
+      log_loss_estimation
+      mid_point_mi
+      pc_softmax_estimation
+      remove_nan_values
+      santhi_vardi_upper_bound
+   
