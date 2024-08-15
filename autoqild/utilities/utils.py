@@ -1,7 +1,5 @@
-"""
-Implements several utility functions for array normalization, logging exceptions, managing HDF5 files,
-and creating directories safely.
-"""
+"""Implements several utility functions for array normalization, logging
+exceptions, managing HDF5 files, and creating directories safely."""
 
 import os
 import sys
@@ -19,8 +17,7 @@ __all__ = ["logsumexp", "softmax", "sigmoid", "normalize", "progress_bar", "prin
 
 
 def logsumexp(x, axis=1):
-    """
-    Compute the log of the sum of exponentials of input elements.
+    """Compute the log of the sum of exponentials of input elements.
 
     Parameters
     ----------
@@ -40,8 +37,7 @@ def logsumexp(x, axis=1):
 
 
 def softmax(x, axis=1):
-    """
-    Compute the softmax of input elements.
+    """Compute the softmax of input elements.
 
     Parameters
     ----------
@@ -61,8 +57,7 @@ def softmax(x, axis=1):
 
 
 def sigmoid(x):
-    """
-    Compute the sigmoid of the input array.
+    """Compute the sigmoid of the input array.
 
     Parameters
     ----------
@@ -79,8 +74,7 @@ def sigmoid(x):
 
 
 def normalize(x, axis=1):
-    """
-    Normalize the input array along the specified axis.
+    """Normalize the input array along the specified axis.
 
     Parameters
     ----------
@@ -99,8 +93,7 @@ def normalize(x, axis=1):
 
 
 def progress_bar(count, total, status=""):
-    """
-    Display a progress bar in the console.
+    """Display a progress bar in the console.
 
     Parameters
     ----------
@@ -121,8 +114,7 @@ def progress_bar(count, total, status=""):
 
 
 def print_dictionary(dictionary, sep='\n', n_keys=None):
-    """
-    Prints a dictionary with keys and values formatted with a separator.
+    """Prints a dictionary with keys and values formatted with a separator.
 
     Parameters
     ----------
@@ -151,8 +143,7 @@ def print_dictionary(dictionary, sep='\n', n_keys=None):
 
 
 def log_exception_error(logger, e):
-    """
-    Log an exception with traceback details.
+    """Log an exception with traceback details.
 
     Parameters
     ----------
@@ -170,8 +161,8 @@ def log_exception_error(logger, e):
 
 
 def create_directory_safely(path, is_file_path=False):
-    """
-    Create a directory if it does not exist, handling potential errors safely.
+    """Create a directory if it does not exist, handling potential errors
+    safely.
 
     Parameters
     ----------
@@ -190,8 +181,7 @@ def create_directory_safely(path, is_file_path=False):
 
 
 def check_and_delete_corrupt_h5_file(file_path, logger):
-    """
-    Check if an HDF5 file is corrupt and delete it if necessary.
+    """Check if an HDF5 file is corrupt and delete it if necessary.
 
     Parameters
     ----------
@@ -228,8 +218,8 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
 
 
 def standardize_features(x_train, x_test):
-    """
-    Standardize the features in the training and test sets using RobustScaler as a default.
+    """Standardize the features in the training and test sets using
+    RobustScaler as a default.
 
     Parameters
     ----------
@@ -252,8 +242,7 @@ def standardize_features(x_train, x_test):
 
 
 class Standardize:
-    """
-    A class for standardizing features using a specified scaler.
+    """A class for standardizing features using a specified scaler.
 
     Parameters
     ----------
@@ -267,8 +256,7 @@ class Standardize:
         self.scalars = dict()
 
     def fit(self, X):
-        """
-        Fit the scaler to the data.
+        """Fit the scaler to the data.
 
         Parameters
         ----------
@@ -291,8 +279,7 @@ class Standardize:
             self.n_features = X.shape[-1]
 
     def transform(self, X):
-        """
-        Apply the scaling transformation to the data.
+        """Apply the scaling transformation to the data.
 
         Parameters
         ----------
@@ -312,8 +299,7 @@ class Standardize:
         return X
 
     def fit_transform(self, X):
-        """
-        Fit the scaler and transform the data.
+        """Fit the scaler and transform the data.
 
         Parameters
         ----------

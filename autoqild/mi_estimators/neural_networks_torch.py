@@ -1,4 +1,5 @@
-"""Neural Nwtowkr implementations for running the PC-softmax and Mine MI estimator."""
+"""Neural Nwtowkr implementations for running the PC-softmax and Mine MI
+estimator."""
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -7,8 +8,8 @@ from autoqild.mi_estimators.pytorch_utils import own_softmax
 
 
 class ClassNet(nn.Module):
-    """
-    ClassNet is a fully connected neural network used for classification tasks.
+    """ClassNet is a fully connected neural network used for classification
+    tasks.
 
     This class implements a simple feedforward neural network with a configurable number of hidden layers and units.
     It supports a custom softmax function (PC-softmax) for handling imbalanced data.
@@ -51,8 +52,7 @@ class ClassNet(nn.Module):
         self.device = device
 
     def forward(self, x_in, label_proportions):
-        """
-        Forward pass through the network.
+        """Forward pass through the network.
 
         Parameters
         ----------
@@ -77,8 +77,7 @@ class ClassNet(nn.Module):
         return x_in
 
     def score(self, x_in, label_proportions):
-        """
-        Compute class probabilities for the input samples.
+        """Compute class probabilities for the input samples.
 
         Parameters
         ----------
@@ -101,9 +100,9 @@ class ClassNet(nn.Module):
 
 
 class StatNet(nn.Module):
-    """
-    StatNet is a fully connected neural network used for statistical modeling in MINE (Mutual Information Neural Estimation)
-    tasks to estimate mutual information.
+    """StatNet is a fully connected neural network used for statistical
+    modeling in MINE (Mutual Information Neural Estimation) tasks to estimate
+    mutual information.
 
     This class implements a simple feedforward neural network with a configurable number of hidden layers and units.
     It is typically used to model the joint distribution of input features and class labels for MI estimation.
@@ -139,8 +138,7 @@ class StatNet(nn.Module):
         self.output = nn.Linear(n_units, 1).to(self.device)
 
     def forward(self, x_in):
-        """
-        Forward pass through the network.
+        """Forward pass through the network.
 
         Parameters
         ----------

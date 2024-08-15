@@ -7,8 +7,7 @@ from sklearn.utils import check_random_state
 
 class MIEstimatorBase(BaseEstimator, ClassifierMixin):
     def __init__(self, n_classes, n_features, random_state):
-        """
-        Base class for all Mutual Information estimators.
+        """Base class for all Mutual Information estimators.
 
         Parameters
         ----------
@@ -25,7 +24,6 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         ----------
         logger : logging.Logger
             Logger instance for logging information.
-
         """
         self.logger = logging.getLogger(name=MIEstimatorBase.__name__)
         self.n_features = n_features
@@ -33,8 +31,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         self.random_state = check_random_state(random_state)
 
     def fit(self, **kwd):
-        """
-        Fit the mutual information estimation model to the data.
+        """Fit the mutual information estimation model to the data.
 
         Parameters
         ----------
@@ -51,13 +48,12 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         -------
         self : object
             Fitted estimator.
-
         """
         raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Return the score based on the metric on the given test data and labels.
+        """Return the score based on the metric on the given test data and
+        labels.
 
         Parameters
         ----------
@@ -83,8 +79,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         raise NotImplementedError("The 'score' method must be implemented by the subclass.")
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for samples in X.
+        """Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -104,8 +99,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         raise NotImplementedError("The 'predict' method must be implemented by the subclass.")
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for samples in X.
+        """Predict class probabilities for samples in X.
 
         Parameters
         ----------
@@ -125,9 +119,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         raise NotImplementedError("The 'predict_proba' method must be implemented by the subclass.")
 
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples, sometimes conincciding with the probability scores in X.
-        The confidence score for a sample is proportional to the signed distance of that sample to the hyperplane.
+        """Predict confidence scores for samples, sometimes conincciding with
+        the probability scores in X. The confidence score for a sample is
+        proportional to the signed distance of that sample to the hyperplane.
 
         Parameters
         ----------
@@ -147,8 +141,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         raise NotImplementedError("The 'decision_function' method must be implemented by the subclass.")
 
     def get_params(self, deep=True):
-        """
-        Get parameters for this estimator.
+        """Get parameters for this estimator.
 
         Parameters
         ----------
@@ -171,8 +164,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         return out
 
     def set_params(self, **parameters):
-        """
-        Set the parameters of this estimator.
+        """Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
         (such as :class:`~sklearn.pipeline.Pipeline`). The latter have
@@ -194,8 +186,7 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         return self
 
     def estimate_mi(self, X, y, **kwargs):
-        """
-        Estimate Mutual Information using the specified method.
+        """Estimate Mutual Information using the specified method.
 
         Parameters
         ----------

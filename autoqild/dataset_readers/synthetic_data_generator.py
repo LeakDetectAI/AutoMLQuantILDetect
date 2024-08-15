@@ -1,5 +1,5 @@
-"""Generates synthetic datasets with introducing noise by flipping certain percentage of labels for testing and
-evaluating machine learning models."""
+"""Generates synthetic datasets with introducing noise by flipping certain
+percentage of labels for testing and evaluating machine learning models."""
 import logging
 from abc import ABCMeta
 
@@ -15,8 +15,8 @@ __all__ = ["SyntheticDatasetGenerator"]
 
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
-    """
-    Generator for synthetic datasets with a focus on generating data with varying class distances.
+    """Generator for synthetic datasets with a focus on generating data with
+    varying class distances.
 
     This class generates synthetic datasets by adjusting the distance between class distributions, allowing
     for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
@@ -165,8 +165,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         # print(self.flip_y_prob)
 
     def get_prob_dist_x_given_y(self, k_class):
-        """
-        Get the multivariate normal distribution for a given class.
+        """Get the multivariate normal distribution for a given class.
 
         Parameters
         ----------
@@ -182,8 +181,8 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                                    seed=self.seeds[k_class])
 
     def get_prob_fn_margx(self):
-        """
-        Get the marginal probability distribution function for the input data.
+        """Get the marginal probability distribution function for the input
+        data.
 
         Returns
         -------
@@ -195,8 +194,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return marg_x
 
     def get_prob_x_given_y(self, X, class_label):
-        """
-        Get the probability of X given a specific class label.
+        """Get the probability of X given a specific class label.
 
         Parameters
         ----------
@@ -216,8 +214,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return prob_x_given_y
 
     def get_prob_y_given_x(self, X, class_label):
-        """
-        Get the probability of a class label given the input data X.
+        """Get the probability of a class label given the input data X.
 
         Parameters
         ----------
@@ -239,8 +236,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return prob_y_given_x
 
     def get_prob_flip_y_given_x(self, X, class_label):
-        """
-        Get the probability of a flipped class label given the input data X.
+        """Get the probability of a flipped class label given the input data X.
 
         Parameters
         ----------
@@ -262,8 +258,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return prob_y_given_x
 
     def get_prob_x_given_flip_y(self, X, class_label):
-        """
-        Get the probability of the input data X given a flipped class label.
+        """Get the probability of the input data X given a flipped class label.
 
         Parameters
         ----------
@@ -285,8 +280,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return prob_x_given_flip_y
 
     def generate_samples_for_class(self, k_class):
-        """
-        Generate synthetic samples for a specific class.
+        """Generate synthetic samples for a specific class.
 
         Parameters
         ----------
@@ -308,8 +302,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return data, labels
 
     def generate_dataset(self):
-        """
-        Generate the full synthetic dataset.
+        """Generate the full synthetic dataset.
 
         Returns
         -------
@@ -377,8 +370,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return X, y
 
     def entropy_y(self, y):
-        """
-        Calculate the entropy of the class distribution in the dataset.
+        """Calculate the entropy of the class distribution in the dataset.
 
         Parameters
         ----------
@@ -400,8 +392,8 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return mi_pp
 
     def calculate_mi(self):
-        """
-        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+        """Calculate the mutual information (MI) using the probability
+        distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -443,8 +435,8 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return mutual_information
 
     def bayes_predictor_mi(self):
-        """
-        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+        """Calculate the mutual information (MI) using the probability
+        distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -475,9 +467,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return mutual_information
 
     def bayes_predictor_pc_softmax_mi(self):
-        """
-        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given
-        the input data X, applying both the Softmax and PC-Softmax functions.
+        """Calculate the mutual information (MI) using class probabilities
+        derived from the PDF of a class label given the input data X, applying
+        both the Softmax and PC-Softmax functions.
 
         .. math::
 
@@ -512,7 +504,6 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
         pc_softmax_emi : float
             Estimated PC-softmax mutual information.
-
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
@@ -549,8 +540,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         return softmax_emi, pc_softmax_emi
 
     def get_bayes_mi(self, metric_name=MCMC_LOG_LOSS):
-        """
-        Get the estimated mutual information based on the specified metric.
+        """Get the estimated mutual information based on the specified metric.
 
         Parameters
         ----------

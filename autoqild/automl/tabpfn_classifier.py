@@ -1,5 +1,6 @@
-"""AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
-    Fully Bayesian Network) for classification tasks."""
+"""AutoTabPFNClassifier is an AutoML model wrapper designed to work with the
+TabPFN (Tabular Prior-based Fully Bayesian Network) for classification
+tasks."""
 import logging
 
 import numpy as np
@@ -13,9 +14,9 @@ from ..utilities import create_dimensionality_reduction_model
 
 
 class AutoTabPFNClassifier(AutomlClassifier):
-    """
-    AutoTabPFNClassifier is an AutoML model wrapper designed to work with the TabPFN (Tabular Prior-based
-    Fully Bayesian Network) for classification tasks.
+    """AutoTabPFNClassifier is an AutoML model wrapper designed to work with
+    the TabPFN (Tabular Prior-based Fully Bayesian Network) for classification
+    tasks.
 
     This class provides a high-level interface to automatically build, train, and evaluate a
     TabPFN model on tabular data. It supports various configurations and allows for dimensionality
@@ -128,9 +129,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.base_path = base_path
 
     def __transform__(self, X, y=None):
-        """
-        Transform and reduce the feature matrix with `n_features` features, using the specified reduction
-        technique to the feature matrix with `n_reduced` features.
+        """Transform and reduce the feature matrix with `n_features` features,
+        using the specified reduction technique to the feature matrix with
+        `n_reduced` features.
 
         Parameters
         ----------
@@ -170,8 +171,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return X
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the TabPFN model to the training data.
+        """Fit the TabPFN model to the training data.
 
         Parameters
         ----------
@@ -182,7 +182,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
             Target vector.
 
         **kwd : dict, optional
-            Additional keyword arguments."""
+            Additional keyword arguments.
+        """
         X = self.__transform__(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
@@ -194,8 +195,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.logger.info("Fitting Done")
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -208,15 +208,15 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Returns
         -------
         y_pred : array-like of shape (n_samples,)
-            Predicted class labels."""
+            Predicted class labels.
+        """
         p = self.predict_proba(X, verbose=0)
         y_pred = np.argmax(p, axis=-1)
         self.logger.info("Predict Done")
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the balanced accuracy score for the input samples.
+        """Compute the balanced accuracy score for the input samples.
 
         Parameters
         ----------
@@ -235,14 +235,14 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Returns
         -------
         acc : float
-            Balanced accuracy score."""
+            Balanced accuracy score.
+        """
         y_pred = self.predict(X)
         acc = balanced_accuracy_score(y, y_pred)
         return acc
 
     def predict_proba(self, X, batch_size=32, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -258,7 +258,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Returns
         -------
         y_pred : array-like of shape (n_samples, n_classes)
-            Predicted class probabilities."""
+            Predicted class probabilities.
+        """
         self.logger.info("Predicting Probabilities")
         n_samples = X.shape[0]
         X = self.__transform__(X)
@@ -281,8 +282,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return y_pred
 
     def decision_function(self, X, verbose=0):
-        """
-        Compute the decision function in form of class probabilities for the input samples.
+        """Compute the decision function in form of class probabilities for the
+        input samples.
 
         Parameters
         ----------
@@ -295,7 +296,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Returns
         -------
         decision : array-like of shape (n_samples,)
-            Decision function values."""
+            Decision function values.
+        """
         return self.predict_proba(X, verbose)
 
     @staticmethod

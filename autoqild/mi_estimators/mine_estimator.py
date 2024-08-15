@@ -1,5 +1,5 @@
-"""Mutual Information Neural Estimator (MINE) that uses multiple deep learning architectures to estimate MI for
-classification tasks."""
+"""Mutual Information Neural Estimator (MINE) that uses multiple deep learning
+architectures to estimate MI for classification tasks."""
 import logging
 from itertools import product
 
@@ -15,9 +15,9 @@ from ..utilities import softmax
 
 
 class MineMIEstimator(MIEstimatorBase):
-    """
-    MineMIEstimator class implementing the Mutual Information Neural Estimator (MINE) approach to estimate the
-    mutual information using an ensemble of deep neural networks.
+    """MineMIEstimator class implementing the Mutual Information Neural
+    Estimator (MINE) approach to estimate the mutual information using an
+    ensemble of deep neural networks.
 
     This class trains multiple neural networks with varying architectures to estimate the mutual information (MI)
     between input features and class labels. By aggregating predictions across an ensemble of models, the estimator
@@ -130,8 +130,8 @@ class MineMIEstimator(MIEstimatorBase):
         self.n_models = 0
 
     def __pytorch_tensor_dataset__(self, X, y, i=2):
-        """
-        Create PyTorch tensor datasets for the input features and target labels.
+        """Create PyTorch tensor datasets for the input features and target
+        labels.
 
         Parameters
         ----------
@@ -169,8 +169,8 @@ class MineMIEstimator(MIEstimatorBase):
         return tensor_xy, tensor_xy_tilde
 
     def fit(self, X, y, epochs=100000, verbose=0, **kwd):
-        """
-        Fit the ensemble of MINE neural networks with different architectures and estimate mutual information.
+        """Fit the ensemble of MINE neural networks with different
+        architectures and estimate mutual information.
 
         The ensemble method trains multiple neural networks with varying configurations (e.g., number of hidden layers
         and units) and aggregates their mutual information estimates. This aggregation produces a more stable and
@@ -258,8 +258,7 @@ class MineMIEstimator(MIEstimatorBase):
         return self
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -279,8 +278,7 @@ class MineMIEstimator(MIEstimatorBase):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the score of the ensemble MINE model.
+        """Compute the score of the ensemble MINE model.
 
         The score is based on the mutual information estimated by aggregating results from multiple trained models.
 
@@ -310,8 +308,7 @@ class MineMIEstimator(MIEstimatorBase):
         return mutual_information
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -331,8 +328,7 @@ class MineMIEstimator(MIEstimatorBase):
         return p_pred
 
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples.
+        """Predict confidence scores for samples.
 
         This method aggregates the confidence scores across all models in the ensemble.
 
@@ -365,9 +361,8 @@ class MineMIEstimator(MIEstimatorBase):
         return final_scores
 
     def estimate_mi(self, X, y, verbose=0, MON_ITER=1000, **kwargs):
-        """
-        Estimate mutual information by taking a mean of estimates obtained from multiple MINE learned models with
-        different architectures.
+        """Estimate mutual information by taking a mean of estimates obtained
+        from multiple MINE learned models with different architectures.
 
         Parameters
         ----------

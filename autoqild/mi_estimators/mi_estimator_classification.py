@@ -1,4 +1,5 @@
-"""Base class for classification-based MI estimators, providing a framework for estimating MI in supervised learning."""
+"""Base class for classification-based MI estimators, providing a framework for
+estimating MI in supervised learning."""
 import logging
 
 import numpy as np
@@ -13,8 +14,7 @@ from autoqild.utilities import *
 
 
 class ClassficationMIEstimator(MIEstimatorBase):
-    """
-    Class to estimate Mutual Information (MI) using a classification model.
+    """Class to estimate Mutual Information (MI) using a classification model.
 
     This class leverages a classification model, such as `RandomForestClassifier`, to estimate the Mutual Information
     between input features and class labels using various metrics, including log-loss and softmax probabilities.
@@ -74,8 +74,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the classification model to the data.
+        """Fit the classification model to the data.
 
         Parameters
         ----------
@@ -96,8 +95,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         self.base_learner.fit(X, y)
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for samples in X.
+        """Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -116,8 +114,8 @@ class ClassficationMIEstimator(MIEstimatorBase):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Return the accuracy score of the model on the given test data and labels.
+        """Return the accuracy score of the model on the given test data and
+        labels.
 
         Parameters
         ----------
@@ -141,8 +139,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         return self.base_learner.score(X, y, sample_weight=sample_weight)
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for samples in X.
+        """Predict class probabilities for samples in X.
 
         Parameters
         ----------
@@ -161,8 +158,8 @@ class ClassficationMIEstimator(MIEstimatorBase):
         return p_pred
 
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples, which may coincide with the probability scores in X.
+        """Predict confidence scores for samples, which may coincide with the
+        probability scores in X.
 
         Parameters
         ----------
@@ -181,8 +178,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         return scores
 
     def estimate_mi(self, X, y, method=LOG_LOSS_MI_ESTIMATION, **kwargs):
-        """
-        Estimate Mutual Information using the specified method.
+        """Estimate Mutual Information using the specified method.
 
         Parameters
         ----------

@@ -1,4 +1,5 @@
-"""Uses the TabPFN model to detect information leakage, particularly in small tabular datasets."""
+"""Uses the TabPFN model to detect information leakage, particularly in small
+tabular datasets."""
 import os
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
@@ -9,8 +10,8 @@ __all__ = ["TabPFNLeakageDetector"]
 
 
 class TabPFNLeakageDetector(SklearnLeakageDetector):
-    """
-    TabPFNLeakageDetector class for detecting information leakage using the TabPFN model.
+    """TabPFNLeakageDetector class for detecting information leakage using the
+    TabPFN model.
 
     This class extends `SklearnLeakageDetector` to perform information leakage detection using the TabPFN model, which is particularly
     effective for small tabular datasets. The class incorporates hyperparameter optimization, dataset reduction, and cross-validation,
@@ -89,8 +90,8 @@ class TabPFNLeakageDetector(SklearnLeakageDetector):
                                 p_pred=p_pred, model=model, n_model=n_model)
 
     def detect(self):
-        """
-        Executes the detection process to identify potential information leakage using statistical tests.
+        """Executes the detection process to identify potential information
+        leakage using statistical tests.
 
         The method applies various statistical techniques, such as paired t-tests and Fisher’s exact test, to detect
         significant differences in model performance that may indicate information leakage. The decision is made based

@@ -1,4 +1,5 @@
-"""Modified MINE estimator that minimizes mean squared error (MSE) to provide more robust MI estimates."""
+"""Modified MINE estimator that minimizes mean squared error (MSE) to provide
+more robust MI estimates."""
 import logging
 
 import numpy as np
@@ -14,10 +15,10 @@ from ..utilities import softmax
 
 
 class MineMIEstimatorMSE(MIEstimatorBase):
-    """
-    MineMIEstimatorMSE class implements a Mutual Information Neural Estimator (MINE) using Mean Squared Error (MSE)
-    as the primary objective function. The class optimizes neural network architecture through hyperparameter tuning
-    with the goal of minimizing MSE during estimation.
+    """MineMIEstimatorMSE class implements a Mutual Information Neural
+    Estimator (MINE) using Mean Squared Error (MSE) as the primary objective
+    function. The class optimizes neural network architecture through
+    hyperparameter tuning with the goal of minimizing MSE during estimation.
 
     This class leverages MINE techniques and is specifically tailored for hyperparameter optimization, enabling
     the selection of the best neural network architecture for estimating mutual information.
@@ -125,8 +126,8 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         self.mi_val = 0
 
     def __pytorch_tensor_dataset__(self, X, y, batch_size=64, i=2):
-        """
-        Create PyTorch tensor datasets for the input features and target labels.
+        """Create PyTorch tensor datasets for the input features and target
+        labels.
 
         Parameters
         ----------
@@ -170,8 +171,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         return tensor_xy, tensor_xy_tilde
 
     def fit(self, X, y, epochs=10000, batch_size=128, verbose=0, **kwd):
-        """
-        Fit the MINE model and estimate mutual information.
+        """Fit the MINE model and estimate mutual information.
 
         Parameters
         ----------
@@ -245,8 +245,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         return self
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -266,8 +265,8 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the score of the MINE model using the mean squared error between the original and permuted samples.
+        """Compute the score of the MINE model using the mean squared error
+        between the original and permuted samples.
 
         Parameters
         ----------
@@ -298,8 +297,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         return mse
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -331,8 +329,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         return scores
 
     def estimate_mi(self, X, y, verbose=0, MON_ITER=100, **kwargs):
-        """
-        Estimate mutual information using the MINE model.
+        """Estimate mutual information using the MINE model.
 
         Parameters
         ----------

@@ -1,5 +1,6 @@
-"""Classes implementing classifiers which predicts a constant function which predict label only using the outputs of the
-dataset, which are used as baselines for detecting information leakage."""
+"""Classes implementing classifiers which predicts a constant function which
+predict label only using the outputs of the dataset, which are used as
+baselines for detecting information leakage."""
 import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.utils import check_random_state
@@ -8,8 +9,8 @@ __all__ = ["RandomClassifier", "MajorityVoting", "PriorClassifier"]
 
 
 class RandomClassifier(DummyClassifier):
-    """
-    A classifier that predicts classes randomly according to a uniform distribution.
+    """A classifier that predicts classes randomly according to a uniform
+    distribution.
 
     Parameters
     ----------
@@ -21,8 +22,7 @@ class RandomClassifier(DummyClassifier):
 
 
 class MajorityVoting(DummyClassifier):
-    """
-    A classifier that always predicts the most frequent class.
+    """A classifier that always predicts the most frequent class.
 
     Parameters
     ----------
@@ -34,10 +34,10 @@ class MajorityVoting(DummyClassifier):
 
 
 class PriorClassifier(DummyClassifier):
-    """
-    PriorClassifier is a simple classifier that predicts class labels based on the prior distribution
-    of the classes in the training data. This classifier is essentially a wrapper around the
-    `DummyClassifier` from scikit-learn with a strategy set to `prior`.
+    """PriorClassifier is a simple classifier that predicts class labels based
+    on the prior distribution of the classes in the training data. This
+    classifier is essentially a wrapper around the `DummyClassifier` from
+    scikit-learn with a strategy set to `prior`.
 
     Parameters
     ----------
@@ -69,8 +69,7 @@ class PriorClassifier(DummyClassifier):
         self.random_state = check_random_state(random_state)
 
     def fit(self, X, y, sample_weight=None):
-        """
-        Fit the classifier according to the given training data.
+        """Fit the classifier according to the given training data.
 
         Parameters
         ----------
@@ -96,8 +95,7 @@ class PriorClassifier(DummyClassifier):
             self.class_probabilities[i] = len(y[y == i]) / len(y)
 
     def predict(self, X):
-        """
-        Perform classification on samples in X.
+        """Perform classification on samples in X.
 
         Parameters
         ----------

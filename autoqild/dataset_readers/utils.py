@@ -1,4 +1,5 @@
-"""Provides utility functions for dataset handling, operations, and preprocessing."""
+"""Provides utility functions for dataset handling, operations, and
+preprocessing."""
 import logging
 
 import numpy as np
@@ -15,19 +16,14 @@ GEN_TYPES = ["single", "multiple"]
 """
 
 FACTOR = 1.5
-"""
-    A constant factor used for scaling or other operations.
-"""
+"""A constant factor used for scaling or other operations."""
 
 LABEL_COL = "label"
-"""
-    Default label column name used in datasets.
-"""
+"""Default label column name used in datasets."""
 
 
 def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type="single", logger=None, verbose=1):
-    """
-    Generate the number of samples per class with a specified imbalance.
+    """Generate the number of samples per class with a specified imbalance.
 
     This function calculates the number of samples for each class based on the provided imbalance ratio and the generation type.
     It supports both binary and multi-class scenarios, allowing the user to specify whether the imbalance should be distributed
@@ -104,8 +100,7 @@ def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type
 
 
 def clean_class_label(string):
-    """
-    Clean and format a class label string.
+    """Clean and format a class label string.
 
     This function processes a string by replacing underscores with spaces, capitalizing each word,
     and removing any extra spaces to make the label more readable and formatted consistently.
@@ -136,8 +131,8 @@ def clean_class_label(string):
 
 
 def pdf(dist, x):
-    """
-    Compute the probability density function (PDF) for the given distribution and input data.
+    """Compute the probability density function (PDF) for the given
+    distribution and input data.
 
     Parameters
     ----------

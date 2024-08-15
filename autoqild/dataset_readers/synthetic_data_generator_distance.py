@@ -1,5 +1,6 @@
-"""Generates synthetic datasets by instroducing noise with reducing the distance between gaussians of each class,
-simulating different distributions."""
+"""Generates synthetic datasets by instroducing noise with reducing the
+distance between gaussians of each class, simulating different
+distributions."""
 import logging
 from abc import ABCMeta
 
@@ -15,8 +16,8 @@ __all__ = ["SyntheticDatasetGeneratorDistance"]
 
 
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
-    """
-    Generator for synthetic datasets with a focus on generating data with varying class distances.
+    """Generator for synthetic datasets with a focus on generating data with
+    varying class distances.
 
     This class generates synthetic datasets by adjusting the distance between class distributions, allowing
     for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
@@ -155,8 +156,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         # print(self.flip_y_prob)
 
     def get_prob_dist_x_given_y(self, k_class):
-        """
-        Get the multivariate normal distribution for a given class.
+        """Get the multivariate normal distribution for a given class.
 
         Parameters
         ----------
@@ -172,8 +172,8 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
                                    seed=self.seeds[k_class])
 
     def get_prob_fn_margx(self):
-        """
-        Get the marginal probability distribution function for the input data.
+        """Get the marginal probability distribution function for the input
+        data.
 
         Returns
         -------
@@ -185,29 +185,27 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return marg_x
 
     def get_prob_x_given_y(self, X, class_label):
-        """
-       Get the probability of X given a specific class label.
+        """Get the probability of X given a specific class label.
 
-       Parameters
-       ----------
-       X : array-like of shape (n_samples, n_features)
-           Input data.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
 
-       class_label : int
-           The class label for which to compute the probability.
+        class_label : int
+            The class label for which to compute the probability.
 
-       Returns
-       -------
-       prob_x_given_y: array-like
-           The probability of X given the class label.
+        Returns
+        -------
+        prob_x_given_y: array-like
+            The probability of X given the class label.
         """
         dist = self.get_prob_dist_x_given_y(class_label)
         prob_x_given_y = pdf(dist, X)
         return prob_x_given_y
 
     def get_prob_y_given_x(self, X, class_label):
-        """
-        Get the probability of a flipped class label given the input data X.
+        """Get the probability of a flipped class label given the input data X.
 
         Parameters
         ----------
@@ -229,8 +227,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return prob_y_given_x
 
     def generate_samples_for_class(self, k_class):
-        """
-        Generate synthetic samples for a specific class.
+        """Generate synthetic samples for a specific class.
 
         Parameters
         ----------
@@ -252,15 +249,14 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return data, labels
 
     def generate_dataset(self):
-        """
-       Generate the full synthetic dataset.
+        """Generate the full synthetic dataset.
 
-       Returns
-       -------
-       X : array-like of shape (n_samples, n_features)
-            Feature matrix after applying sampling to create imbalance.
-       y : array-like of shape (n_samples,)
-            Target vector after applying sampling to create imbalance.
+        Returns
+        -------
+        X : array-like of shape (n_samples, n_features)
+             Feature matrix after applying sampling to create imbalance.
+        y : array-like of shape (n_samples,)
+             Target vector after applying sampling to create imbalance.
         """
         X = []
         y = []
@@ -275,8 +271,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return X, y
 
     def entropy_y(self, y):
-        """
-        Calculate the entropy of the class distribution in the dataset.
+        """Calculate the entropy of the class distribution in the dataset.
 
         Parameters
         ----------
@@ -298,8 +293,8 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return entropy_output
 
     def calculate_mi(self):
-        """
-        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+        """Calculate the mutual information (MI) using the probability
+        distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(X) - H(X|Y)
@@ -332,8 +327,8 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return mi
 
     def bayes_predictor_mi(self):
-        """
-        Calculate the mutual information (MI) using the probability distribution function using the formulae below.
+        """Calculate the mutual information (MI) using the probability
+        distribution function using the formulae below.
 
         .. math::
             I(X;Y) = H(Y) - H(Y|X)
@@ -359,9 +354,9 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return mi
 
     def bayes_predictor_pc_softmax_mi(self):
-        """
-        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given
-        the input data X, applying both the Softmax and PC-Softmax functions.
+        """Calculate the mutual information (MI) using class probabilities
+        derived from the PDF of a class label given the input data X, applying
+        both the Softmax and PC-Softmax functions.
 
         .. math::
 
@@ -396,7 +391,6 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
 
         pc_softmax_emi : float
             Estimated PC-softmax mutual information.
-
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))
@@ -431,8 +425,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         return softmax_emi, pc_softmax_emi
 
     def get_bayes_mi(self, metric_name):
-        """
-        Get the estimated mutual information based on the specified metric.
+        """Get the estimated mutual information based on the specified metric.
 
         Parameters
         ----------

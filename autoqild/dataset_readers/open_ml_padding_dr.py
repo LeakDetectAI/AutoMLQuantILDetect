@@ -1,4 +1,5 @@
-"""Reader for OpenML datasets applying padding strategies to analyze data leakage."""
+"""Reader for OpenML datasets applying padding strategies to analyze data
+leakage."""
 import logging
 import openml
 from .open_ml_timming_dr import OpenMLTimingDatasetReader
@@ -6,8 +7,8 @@ from .utils import *
 
 
 class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
-    """
-    Reader for OpenML datasets related to leakages with respect to the error codes for each padding manipulation.
+    """Reader for OpenML datasets related to leakages with respect to the error
+    codes for each padding manipulation.
 
     This class extends `OpenMLTimingDatasetReader` and is tailored for datasets extracted from network traces
     exploiting error codes in the network traces to perform side-channel attacks, such as the Bleichenbacher
@@ -107,8 +108,7 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         super().__clean_up_dataset__()
 
     def get_data(self, class_label=1):
-        """
-        Retrieves data for a specific class label.
+        """Retrieves data for a specific class label.
 
         Parameters
         ----------
@@ -126,8 +126,7 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         super().get_data(class_label=class_label)
 
     def get_sampled_imbalanced_data(self, X, y):
-        """
-        Creates an imbalanced dataset by sampling from the data.
+        """Creates an imbalanced dataset by sampling from the data.
 
         Parameters
         ----------

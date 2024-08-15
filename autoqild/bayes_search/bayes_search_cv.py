@@ -1,5 +1,6 @@
-"""Implements the main `BayesSearchCV` class, which orchestrates the Bayesian optimization process extending the
-functionality of `BayesSearchCV` from the `scikit-optimize` library."""
+"""Implements the main `BayesSearchCV` class, which orchestrates the Bayesian
+optimization process extending the functionality of `BayesSearchCV` from the
+`scikit-optimize` library."""
 import logging
 
 import dill
@@ -14,10 +15,10 @@ __all__ = ["BayesSearchCV"]
 
 
 class BayesSearchCV(BayesSearchCVSK):
-    """
-    BayesSearchCV is a custom implementation of Bayesian optimization-based hyperparameter tuning,
-    extending the functionality of `BayesSearchCV` from the `scikit-optimize` library. This class
-    facilitates efficient exploration of hyperparameter spaces to identify the best-performing model
+    """BayesSearchCV is a custom implementation of Bayesian optimization-based
+    hyperparameter tuning, extending the functionality of `BayesSearchCV` from
+    the `scikit-optimize` library. This class facilitates efficient exploration
+    of hyperparameter spaces to identify the best-performing model
     configurations.
 
     This implementation provides additional functionality for logging, handling optimizer states,
@@ -137,8 +138,7 @@ class BayesSearchCV(BayesSearchCVSK):
         self.logger = logging.getLogger(BayesSearchCV.__name__)
 
     def _step(self, search_space, optimizer, evaluate_candidates, n_points=1):
-        """
-        Generate n_jobs parameters and evaluate them in parallel.
+        """Generate n_jobs parameters and evaluate them in parallel.
 
         Parameters
         ----------
@@ -158,7 +158,7 @@ class BayesSearchCV(BayesSearchCVSK):
         -------
         optimizer : skopt.optimizer.Optimizer
             The updated optimizer instance.
-            """
+        """
         # get parameter values to evaluate
         params = optimizer.ask(n_points=n_points)
 
@@ -181,8 +181,7 @@ class BayesSearchCV(BayesSearchCVSK):
         return optimizer.tell(params, [-score for score in local_results])
 
     def _run_search(self, evaluate_candidates):
-        """
-        Run the search for the best parameters.
+        """Run the search for the best parameters.
 
         Parameters
         ----------

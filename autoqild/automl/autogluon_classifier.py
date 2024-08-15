@@ -14,8 +14,8 @@ from ..utilities.utils import log_exception_error
 
 
 class AutoGluonClassifier(AutomlClassifier):
-    """
-    AutoGluonClassifier is a wrapper for building, training, and evaluating an AutoML model using AutoGluon.
+    """AutoGluonClassifier is a wrapper for building, training, and evaluating
+    an AutoML model using AutoGluon.
 
     This class facilitates the use of AutoGluon for automatic machine learning (AutoML) tasks,
     specifically focusing on classification problems. It handles various aspects of model training,
@@ -133,8 +133,7 @@ class AutoGluonClassifier(AutomlClassifier):
 
     @property
     def _is_fitted_(self) -> bool:
-        """
-        Check if the model is already fitted.
+        """Check if the model is already fitted.
 
         Returns
         -------
@@ -185,8 +184,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return self.model is not None
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the AutoGluon model to the training data.
+        """Fit the AutoGluon model to the training data.
 
         Parameters
         ----------
@@ -219,8 +217,7 @@ class AutoGluonClassifier(AutomlClassifier):
             self.model.save_space()
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -240,8 +237,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return y_pred.values
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the balanced accuracy score for the input samples.
+        """Compute the balanced accuracy score for the input samples.
 
         Parameters
         ----------
@@ -267,8 +263,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return score
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -288,8 +283,8 @@ class AutoGluonClassifier(AutomlClassifier):
         return y_pred.values
 
     def decision_function(self, X, verbose=0):
-        """
-        Compute the decision function in form of class probabilities for the input samples.
+        """Compute the decision function in form of class probabilities for the
+        input samples.
 
         Parameters
         ----------
@@ -309,8 +304,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return y_pred.values
 
     def convert_to_dataframe(self, X, y=None):
-        """
-        Convert the input data to a DataFrame.
+        """Convert the input data to a DataFrame.
 
         Parameters
         ----------
@@ -346,8 +340,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return df_data
 
     def get_k_rank_model(self, k):
-        """
-        Get the k-th ranked model from the leaderboard.
+        """Get the k-th ranked model from the leaderboard.
 
         Parameters
         ----------
@@ -365,8 +358,7 @@ class AutoGluonClassifier(AutomlClassifier):
         return model
 
     def get_model(self, model_name):
-        """
-        Get a model by its name from the leaderboard.
+        """Get a model by its name from the leaderboard.
 
         Parameters
         ----------

@@ -1,4 +1,5 @@
-"""Gaussian Mixture Model-based MI estimator for evaluating mutual information using probabilistic clustering."""
+"""Gaussian Mixture Model-based MI estimator for evaluating mutual information
+using probabilistic clustering."""
 import copy
 import logging
 
@@ -11,9 +12,9 @@ from ..utilities import create_dimensionality_reduction_model, log_exception_err
 
 
 class GMMMIEstimator(MIEstimatorBase):
-    """
-    GMMMIEstimator class for estimating Mutual Information (MI) using Gaussian Mixture Models (GMMs)
-    and performing classification using Logistic Regression.
+    """GMMMIEstimator class for estimating Mutual Information (MI) using
+    Gaussian Mixture Models (GMMs) and performing classification using Logistic
+    Regression.
 
     This class leverages GMMs to estimate mutual information and uses feature reduction techniques
     to create a robust classification model. It evaluates different GMMs based on goodness-of-fit measures
@@ -165,9 +166,8 @@ class GMMMIEstimator(MIEstimatorBase):
         self.logger = logging.getLogger(GMMMIEstimator.__name__)
 
     def __get_goodnessof_fit__(self, gmm, X, y):
-        """
-        Calculate goodness of fit for the GMM model(s) used for estimating the Mutual Information (MI)
-        using Gaussian Mixture Models (GMMs).
+        """Calculate goodness of fit for the GMM model(s) used for estimating
+        the Mutual Information (MI) using Gaussian Mixture Models (GMMs).
 
         Parameters
         ----------
@@ -219,9 +219,9 @@ class GMMMIEstimator(MIEstimatorBase):
         return aic_fit, bic_fit, likelihood, n_components
 
     def __transform__(self, X, y=None):
-        """
-        Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
-        technique to the feature matrix with 'n_reduced' features.
+        """Transform and reduce the feature matrix with 'n_features' features,
+        using the specified reduction technique to the feature matrix with
+        'n_reduced' features.
 
         Parameters
         ----------
@@ -261,8 +261,7 @@ class GMMMIEstimator(MIEstimatorBase):
         return X
 
     def fit(self, X, y, verbose=0, **kwd):
-        """
-        Fit the GMM model and estimate mutual information.
+        """Fit the GMM model and estimate mutual information.
 
         Parameters
         ----------
@@ -323,8 +322,8 @@ class GMMMIEstimator(MIEstimatorBase):
         return self
 
     def create_classification_model(self, X, y, **kwd):
-        """
-        Create the logistic regression classification model on reduced feature space with n_reduced features.
+        """Create the logistic regression classification model on reduced
+        feature space with n_reduced features.
 
         Parameters
         ----------
@@ -356,9 +355,8 @@ class GMMMIEstimator(MIEstimatorBase):
             self.cls_model.fit(X, y)
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples with reduced features of n_reduced using the fitted logistic
-        regression classification model.
+        """Predict class labels for the input samples with reduced features of
+        n_reduced using the fitted logistic regression classification model.
 
         Parameters
         ----------
@@ -379,8 +377,7 @@ class GMMMIEstimator(MIEstimatorBase):
         return self.cls_model.predict(X=X)
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the likelihood score of the GMM model.
+        """Compute the likelihood score of the GMM model.
 
         Parameters
         ----------
@@ -417,9 +414,8 @@ class GMMMIEstimator(MIEstimatorBase):
         return score
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class labels for the input samples with reduced features of n_reduced using the fitted logistic
-        regression classification model.
+        """Predict class labels for the input samples with reduced features of
+        n_reduced using the fitted logistic regression classification model.
 
         Parameters
         ----------
@@ -441,9 +437,8 @@ class GMMMIEstimator(MIEstimatorBase):
         return y_pred
 
     def decision_function(self, X, verbose=0):
-        """
-         Predict confidence scores for samples, which is proportional to the signed distance of that sample to the
-         hyperplane.
+        """Predict confidence scores for samples, which is proportional to the
+        signed distance of that sample to the hyperplane.
 
         Parameters
         ----------
@@ -464,8 +459,7 @@ class GMMMIEstimator(MIEstimatorBase):
         return self.cls_model.decision_function(X=X)
 
     def estimate_mi(self, X, y, verbose=0, **kwd):
-        """
-        Estimate mutual information using the best fitted GMM model.
+        """Estimate mutual information using the best fitted GMM model.
 
         Parameters
         ----------

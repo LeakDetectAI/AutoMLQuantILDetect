@@ -1,4 +1,5 @@
-"""A leakage detector that utilizes RandomForest models for robust and interpretable detection."""
+"""A leakage detector that utilizes RandomForest models for robust and
+interpretable detection."""
 from sklearn.ensemble import RandomForestClassifier
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
@@ -7,8 +8,8 @@ __all__ = ["RandomForestLeakageDetector"]
 
 
 class RandomForestLeakageDetector(SklearnLeakageDetector):
-    """
-    RandomForestLeakageDetector class for detecting information leakage using a Random Forest model.
+    """RandomForestLeakageDetector class for detecting information leakage
+    using a Random Forest model.
 
     This class extends `SklearnLeakageDetector` to detect information leakage using a Random Forest classifier as the base model.
     The Random Forest model is well-suited for leakage detection due to its ability to handle complex feature interactions and its
@@ -70,8 +71,8 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         self.base_detector = RandomForestClassifier
 
     def hyperparameter_optimization(self, X, y):
-        """
-        Performs Bayesian hyperparameter optimization to identify the best model parameters.
+        """Performs Bayesian hyperparameter optimization to identify the best
+        model parameters.
 
         This method uses a Bayesian search strategy to explore a predefined hyperparameter search space and selects the optimal
         configuration based on the specified validation loss. The method performs cross-validation within the search to ensure
@@ -98,8 +99,8 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         return super().hyperparameter_optimization(X, y)
 
     def fit(self, X, y):
-        """
-        Fits the model using cross-validation and performs hyperparameter optimization.
+        """Fits the model using cross-validation and performs hyperparameter
+        optimization.
 
         This method first checks if the model has already been fitted. If not, it runs the hyperparameter optimization process
         followed by cross-validation on the specified number of hypotheses. The model is trained using a stratified split of the
@@ -120,8 +121,8 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         super().fit(X, y)
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
-        """
-        Evaluate and store model performance metrics for the detection process.
+        """Evaluate and store model performance metrics for the detection
+        process.
 
         This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model`s
         predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling.
@@ -157,8 +158,8 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
                                 p_pred=p_pred, model=model, n_model=n_model)
 
     def detect(self):
-        """
-        Executes the detection process to identify potential information leakage using statistical tests.
+        """Executes the detection process to identify potential information
+        leakage using statistical tests.
 
         The method applies various statistical techniques, such as paired t-tests and Fisher’s exact test, to detect
         significant differences in model performance that may indicate information leakage. The decision is made based

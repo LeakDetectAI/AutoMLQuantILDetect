@@ -1,13 +1,13 @@
-"""MI estimator integrating the TabPFN model, optimized for small tabular datasets with efficient MI estimation."""
+"""MI estimator integrating the TabPFN model, optimized for small tabular
+datasets with efficient MI estimation."""
 from autoqild.automl import AutoTabPFNClassifier
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
 
 
 class TabPFNMIEstimator(ClassficationMIEstimator):
-    """
-    TabPFNMIEstimator integrates the TabPFN framework into the Mutual Information (MI) estimation process for
-    classification tasks.
+    """TabPFNMIEstimator integrates the TabPFN framework into the Mutual
+    Information (MI) estimation process for classification tasks.
 
     This class extends the `ClassficationMIEstimator` by using TabPFN as the base estimator. TabPFN is a powerful and
     efficient AutoML tool for small tabular datasets, capable of providing rapid predictions with pre-trained
@@ -60,7 +60,6 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
 
     base_learner : AutoTabPFNClassifier
         Instance of the TabPFN classifier used for learning.
-
     """
 
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique="select_from_model_rf",
@@ -73,8 +72,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the TabPFN classification model to the data.
+        """Fit the TabPFN classification model to the data.
 
         This method trains the TabPFN model using the provided dataset. It leverages the hyperparameters
         and reduction techniques specified during initialization.
@@ -98,8 +96,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         super().fit(X, y, **kwd)
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for samples in X using the TabPFN model.
+        """Predict class labels for samples in X using the TabPFN model.
 
         Parameters
         ----------
@@ -117,8 +114,8 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         return super().predict(X, verbose=verbose)
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Return the accuracy score of the TabPFN model on the given test data and labels.
+        """Return the accuracy score of the TabPFN model on the given test data
+        and labels.
 
         Parameters
         ----------
@@ -142,8 +139,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         return super().score(X, y, sample_weight=sample_weight, verbose=verbose)
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for samples in X using the TabPFN model.
+        """Predict class probabilities for samples in X using the TabPFN model.
 
         Parameters
         ----------
@@ -161,8 +157,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         return super().predict_proba(X, verbose=verbose)
 
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples using the TabPFN model.
+        """Predict confidence scores for samples using the TabPFN model.
 
         Parameters
         ----------
@@ -181,8 +176,8 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         return scores
 
     def estimate_mi(self, X, y, method=LOG_LOSS_MI_ESTIMATION, **kwargs):
-        """
-        Estimate Mutual Information using the specified method with the TabPFN model.
+        """Estimate Mutual Information using the specified method with the
+        TabPFN model.
 
         Parameters
         ----------

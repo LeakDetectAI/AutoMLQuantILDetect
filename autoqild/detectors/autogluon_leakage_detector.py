@@ -1,4 +1,5 @@
-"""A leakage detection class leveraging AutoGluon for hyperparameter optimization and model evaluation."""
+"""A leakage detection class leveraging AutoGluon for hyperparameter
+optimization and model evaluation."""
 import logging
 import os.path
 
@@ -11,11 +12,12 @@ __all__ = ["AutoGluonLeakageDetector"]
 
 
 class AutoGluonLeakageDetector(InformationLeakageDetector):
-    """
-    AutoGluonLeakageDetector leverages the AutoGluon framework for detecting information leakage in machine learning
-    models. This class extends the `InformationLeakageDetector` base class and uses AutoGluon for hyperparameter
-    optimization and model training. It evaluates potential information leakage using various metrics across different
-    cross-validation splits.
+    """AutoGluonLeakageDetector leverages the AutoGluon framework for detecting
+    information leakage in machine learning models. This class extends the
+    `InformationLeakageDetector` base class and uses AutoGluon for
+    hyperparameter optimization and model training. It evaluates potential
+    information leakage using various metrics across different cross-validation
+    splits.
 
     Parameters
     ----------
@@ -77,8 +79,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         self.logger = logging.getLogger(AutoGluonLeakageDetector.__name__)
 
     def hyperparameter_optimization(self, X, y):
-        """
-        Performs hyperparameter optimization using AutoGluon to find the best models for leakage detection.
+        """Performs hyperparameter optimization using AutoGluon to find the
+        best models for leakage detection.
 
         This method runs a Bayesian optimization process to identify the best models according to the specified evaluation metric.
         The optimized models are then stored for subsequent evaluation.
@@ -107,8 +109,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         return train_size
 
     def fit(self, X, y, **kwargs):
-        """
-        Fits the models using cross-validation and evaluates them for information leakage.
+        """Fits the models using cross-validation and evaluates them for
+        information leakage.
 
         This method performs cross-validation, training the AutoGluon models across different data splits.
         The models are then evaluated for potential leakage using metrics such as accuracy and log-loss.
@@ -156,8 +158,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             self.__store_results__()
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
-        """
-        Evaluates and stores model performance metrics for the detection process.
+        """Evaluates and stores model performance metrics for the detection
+        process.
 
         This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the
         model`s predictions. The results are stored and logged for further analysis.
@@ -192,8 +194,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                                 p_pred=p_pred, model=model, n_model=n_model)
 
     def detect(self):
-        """
-        Executes the detection process to identify potential information leakage using the specified method.
+        """Executes the detection process to identify potential information
+        leakage using the specified method.
 
         Returns
         -------

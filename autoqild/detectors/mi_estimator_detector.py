@@ -1,4 +1,5 @@
-"""Detects leakage by estimating mutual information using GMM or MINE estimators."""
+"""Detects leakage by estimating mutual information using GMM or MINE
+estimators."""
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..mi_estimators import GMMMIEstimator, MineMIEstimatorMSE
 from ..utilities import *
@@ -7,8 +8,8 @@ __all__ = ["MIEstimationLeakageDetector"]
 
 
 class MIEstimationLeakageDetector(SklearnLeakageDetector):
-    """
-    MIEstimationLeakageDetector class for detecting information leakage using mutual information (MI) estimation techniques.
+    """MIEstimationLeakageDetector class for detecting information leakage
+    using mutual information (MI) estimation techniques.
 
     This class extends `SklearnLeakageDetector` to detect information leakage in machine learning experiments using mutual information
     estimation techniques. The class supports two primary MI estimation methods: MINE (Mutual Information Neural Estimator) and GMM
@@ -94,8 +95,7 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
                 "Only the one-sample t-test based detection method is compatible with mutual information estimation.")
 
     def __initialize_objects__(self):
-        """
-        Initializes the results dictionary for storing metric results.
+        """Initializes the results dictionary for storing metric results.
 
         This method sets up the internal results dictionary, organizing it by hypothesis models and metrics.
         Each model’s metric scores are prepared for storage, along with the majority voting and random classifier
@@ -110,8 +110,8 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
             self.results[f"model_{i}"][ESTIMATED_MUTUAL_INFORMATION] = []
 
     def hyperparameter_optimization(self, X, y):
-        """
-        Performs Bayesian hyperparameter optimization to identify the best model parameters.
+        """Performs Bayesian hyperparameter optimization to identify the best
+        model parameters.
 
         This method uses a Bayesian search strategy to explore a predefined hyperparameter search space and selects the
         optimal configuration based on the specified validation loss. The method performs cross-validation within the
@@ -138,8 +138,8 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         return super().hyperparameter_optimization(X, y)
 
     def fit(self, X, y):
-        """
-        Fits the model using cross-validation and performs hyperparameter optimization.
+        """Fits the model using cross-validation and performs hyperparameter
+        optimization.
 
         This method first checks if the model has already been fitted. If not, it runs the hyperparameter optimization process
         followed by cross-validation on the specified number of hypotheses. The model is trained using a stratified split of the
@@ -179,8 +179,8 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
             self.__store_results__()
 
     def detect(self):
-        """
-        Executes the detection process to identify potential information leakage using statistical tests.
+        """Executes the detection process to identify potential information
+        leakage using statistical tests.
 
         The method applies various statistical techniques, such as paired t-tests and Fisher’s exact test, to detect
         significant differences in model performance that may indicate information leakage. The decision is made based

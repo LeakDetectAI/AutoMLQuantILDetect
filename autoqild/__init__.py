@@ -1,4 +1,5 @@
-"""Documentation of the API for public objects and functions in `autoqild` package"""
+"""Documentation of the API for public objects and functions in `autoqild`
+package."""
 from .automl import *
 from .bayes_search import *
 from .classifiers import *

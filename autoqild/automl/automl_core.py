@@ -5,8 +5,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 
 class AutomlClassifier(BaseEstimator, ClassifierMixin):
-    """
-    Abstract base class for AutoML classifiers.
+    """Abstract base class for AutoML classifiers.
 
     This class serves as a base for implementing various AutoML classifiers.
     It inherits from `sklearn.base.BaseEstimator` and `sklearn.base.ClassifierMixin`,
@@ -57,13 +56,11 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
     >>> clf.fit(X_train, y_train)
     >>> predictions = clf.predict(X_test)
     >>> accuracy = clf.score(X_test, y_test)
-
     """
 
     @abstractmethod
     def fit(self, X, y, **kwd):
-        """"
-        Fit the AutoML classifier on the provided dataset.
+        """" Fit the AutoML classifier on the provided dataset.
 
         Parameters
         ----------
@@ -96,8 +93,8 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
     @abstractmethod
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Return the score based on the metric on the given test data and labels.
+        """Return the score based on the metric on the given test data and
+        labels.
 
         Parameters
         ----------
@@ -127,8 +124,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
     @abstractmethod
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for samples in X.
+        """Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -152,8 +148,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
     @abstractmethod
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for samples in X.
+        """Predict class probabilities for samples in X.
 
         Parameters
         ----------
@@ -177,9 +172,9 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
     @abstractmethod
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples, sometimes coinciding with the probability scores in X.
-        The confidence score for a sample is proportional to the signed distance of that sample to the hyperplane.
+        """Predict confidence scores for samples, sometimes coinciding with the
+        probability scores in X. The confidence score for a sample is
+        proportional to the signed distance of that sample to the hyperplane.
 
         Parameters
         ----------
@@ -202,8 +197,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         raise NotImplementedError("The 'decision_function' method must be implemented by the subclass.")
 
     def get_params(self, deep=True):
-        """
-        Get parameters for this estimator.
+        """Get parameters for this estimator.
 
         Parameters
         ----------
@@ -214,7 +208,8 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         params : dict
-            Parameter names mapped to their values."""
+            Parameter names mapped to their values.
+        """
         out = dict()
         for key in self._get_param_names():
             value = getattr(self, key)
@@ -225,8 +220,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         return out
 
     def set_params(self, **parameters):
-        """
-        Set the parameters of this estimator.
+        """Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
         (such as `sklearn.pipeline.Pipeline`). The latter have
@@ -241,7 +235,8 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         self : estimator instance
-            Estimator instance."""
+            Estimator instance.
+        """
         for parameter, value in parameters.items():
             setattr(self, parameter, value)
         return self

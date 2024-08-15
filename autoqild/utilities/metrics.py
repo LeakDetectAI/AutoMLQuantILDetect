@@ -1,6 +1,7 @@
-"""This Python module provides functions for calculating various metrics related to mutual information and
-classification performance, including binary cross-entropy, upper and lower bounds of mutual information,
-AUC score, and more."""
+"""This Python module provides functions for calculating various metrics
+related to mutual information and classification performance, including binary
+cross-entropy, upper and lower bounds of mutual information, AUC score, and
+more."""
 import logging
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
@@ -14,8 +15,7 @@ logger = logging.getLogger("Metrics")
 
 
 def bin_ce(p_e):
-    """
-    Computes the binary cross-entropy for a given probability `p_e`.
+    """Computes the binary cross-entropy for a given probability `p_e`.
 
     Parameters
     ----------
@@ -44,8 +44,7 @@ bce_f = np.vectorize(bin_ce)
 
 
 def helmann_raviv_function(n_classes, pe):
-    """
-    Computes the Hellman-Raviv function for a given error probability `pe`.
+    """Computes the Hellman-Raviv function for a given error probability `pe`.
 
     The Hellman-Raviv function is used to estimate the upper bound of mutual information based on classification error rates.
 
@@ -97,8 +96,8 @@ def helmann_raviv_function(n_classes, pe):
 
 
 def helmann_raviv_upper_bound(y_true, y_pred):
-    """
-    Computes the Hellman-Raviv upper bound for mutual information based on classification performance.
+    """Computes the Hellman-Raviv upper bound for mutual information based on
+    classification performance.
 
     Parameters
     ----------
@@ -126,8 +125,7 @@ def helmann_raviv_upper_bound(y_true, y_pred):
 
 
 def santhi_vardi_upper_bound(y_true, y_pred):
-    """
-    Computes the Santhi-Vardi upper bound for mutual information.
+    """Computes the Santhi-Vardi upper bound for mutual information.
 
     Parameters
     ----------
@@ -156,8 +154,7 @@ def santhi_vardi_upper_bound(y_true, y_pred):
 
 
 def fanos_lower_bound(y_true, y_pred):
-    """
-    Computes Fano"s lower bound for mutual information.
+    """Computes Fano"s lower bound for mutual information.
 
     Parameters
     ----------
@@ -185,8 +182,7 @@ def fanos_lower_bound(y_true, y_pred):
 
 
 def fanos_adjusted_lower_bound(y_true, y_pred):
-    """
-    Computes the adjusted Fano"s lower bound for mutual information.
+    """Computes the adjusted Fano"s lower bound for mutual information.
 
     Parameters
     ----------
@@ -213,8 +209,8 @@ def fanos_adjusted_lower_bound(y_true, y_pred):
 
 
 def mid_point_mi(y_true, y_pred):
-    """
-    Computes the midpoint mutual information estimate by averaging the upper and lower bounds.
+    """Computes the midpoint mutual information estimate by averaging the upper
+    and lower bounds.
 
     Parameters
     ----------
@@ -240,8 +236,8 @@ def mid_point_mi(y_true, y_pred):
 
 
 def auc_score(y_true, p_pred):
-    """
-    Computes the AUC score for the given true labels and predicted probabilities.
+    """Computes the AUC score for the given true labels and predicted
+    probabilities.
 
     Parameters
     ----------
@@ -281,8 +277,7 @@ def auc_score(y_true, p_pred):
 
 
 def false_positive_rate(y_true, y_pred):
-    """
-    Computes the false positive rate (FPR).
+    """Computes the false positive rate (FPR).
 
     Parameters
     ----------
@@ -307,8 +302,7 @@ def false_positive_rate(y_true, y_pred):
 
 
 def false_negative_rate(y_true, y_pred):
-    """
-    Computes the false negative rate (FNR).
+    """Computes the false negative rate (FNR).
 
     Parameters
     ----------
@@ -333,8 +327,8 @@ def false_negative_rate(y_true, y_pred):
 
 
 def remove_nan_values(y_pred, y_true=None):
-    """
-    Removes rows containing NaN values from the predicted probabilities and true labels.
+    """Removes rows containing NaN values from the predicted probabilities and
+    true labels.
 
     Parameters
     ----------
@@ -392,8 +386,8 @@ def get_entropy_y(y_true):
 
 
 def pc_softmax_estimation(y_true, p_pred):
-    """
-    Estimates the mutual information using predicted probabilities in the softmax and PC-Softmax functions.
+    """Estimates the mutual information using predicted probabilities in the
+    softmax and PC-Softmax functions.
 
     The mutual information I(X; Y) is estimated using the formula:
 
@@ -458,8 +452,8 @@ def pc_softmax_estimation(y_true, p_pred):
 
 
 def log_loss_estimation(y_true, y_pred):
-    """
-    Estimates mutual information by evaluating the log-loss of the predicted probabilities and entropy of outputs.
+    """Estimates mutual information by evaluating the log-loss of the predicted
+    probabilities and entropy of outputs.
 
     Parameters
     ----------

@@ -1,16 +1,17 @@
-"""AutoGluon-based MI estimator that leverages automated machine learning (AutoML) to estimate MI with optimized
-hyperparameters."""
+"""AutoGluon-based MI estimator that leverages automated machine learning
+(AutoML) to estimate MI with optimized hyperparameters."""
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
 from autoqild.automl import AutoGluonClassifier
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
 
 
 class AutoMIGluonEstimator(ClassficationMIEstimator):
-    """
-    AutoMIGluonEstimator integrates the AutoGluon framework into the Mutual Information (MI) estimation process for
-    classification tasks.
-    This class extends the `ClassficationMIEstimator` by using AutoGluon as the base estimator to perform MI estimation.
-    It allows for various configurations and model tuning, making it flexible for different classification scenarios.
+    """AutoMIGluonEstimator integrates the AutoGluon framework into the Mutual
+    Information (MI) estimation process for classification tasks. This class
+    extends the `ClassficationMIEstimator` by using AutoGluon as the base
+    estimator to perform MI estimation. It allows for various configurations
+    and model tuning, making it flexible for different classification
+    scenarios.
 
     Parameters
     ----------
@@ -76,8 +77,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):
-        """
-        Fit the classification model to the data.
+        """Fit the classification model to the data.
 
         Parameters
         ----------
@@ -97,8 +97,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         return self
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for samples in X.
+        """Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -115,8 +114,8 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         return super().predict(X, verbose=verbose)
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Return the accuracy score of the model on the given test data and labels.
+        """Return the accuracy score of the model on the given test data and
+        labels.
 
         Parameters
         ----------
@@ -137,8 +136,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         return super().score(X, y, sample_weight=sample_weight, verbose=verbose)
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for samples in X.
+        """Predict class probabilities for samples in X.
 
         Parameters
         ----------
@@ -155,8 +153,8 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         return super().predict_proba(X, verbose=verbose)
 
     def decision_function(self, X, verbose=0):
-        """
-        Predict confidence scores for samples, which may coincide with the probability scores in X.
+        """Predict confidence scores for samples, which may coincide with the
+        probability scores in X.
 
         Parameters
         ----------
@@ -173,8 +171,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         return super().decision_function(X, verbose=verbose)
 
     def estimate_mi(self, X, y, method=LOG_LOSS_MI_ESTIMATION, **kwargs):
-        """
-        Estimate Mutual Information using the specified method.
+        """Estimate Mutual Information using the specified method.
 
         Parameters
         ----------

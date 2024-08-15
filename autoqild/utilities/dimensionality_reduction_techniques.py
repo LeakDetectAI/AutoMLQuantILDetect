@@ -1,5 +1,6 @@
-"""This Python module provides a function to create a dimensionality reduction model using various techniques from
-scikit-learn, such as PCA, LDA, t-SNE, and feature selection methods."""
+"""This Python module provides a function to create a dimensionality reduction
+model using various techniques from scikit-learn, such as PCA, LDA, t-SNE, and
+feature selection methods."""
 from sklearn.decomposition import PCA, NMF
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
@@ -9,8 +10,8 @@ from sklearn.manifold import TSNE
 
 # Create a dictionary to store the techniques and their options
 def create_dimensionality_reduction_model(reduction_technique, n_reduced=20):
-    """
-    Creates a dimensionality reduction model based on the specified technique.
+    """Creates a dimensionality reduction model based on the specified
+    technique.
 
     Parameters
     ----------

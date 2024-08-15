@@ -1,4 +1,5 @@
-"""Implementation of paired t-test and wilcoxon_signed_rank_test used to detect leakage using blind classifiers"""
+"""Implementation of paired t-test and wilcoxon_signed_rank_test used to detect
+leakage using blind classifiers."""
 import logging
 
 import numpy as np
@@ -8,8 +9,7 @@ __all__ = ["wilcoxon_signed_rank_test", "paired_ttest"]
 
 
 def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", verbose=False):
-    """
-    Performs the Wilcoxon signed-rank test on two sets of accuracies.
+    """Performs the Wilcoxon signed-rank test on two sets of accuracies.
 
     Parameters
     ----------
@@ -39,8 +39,8 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
 
 
 def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False):
-    """
-    Performs a paired t-test on two sets of values with and without correction
+    """Performs a paired t-test on two sets of values with and without
+    correction.
 
     Parameters
     ----------

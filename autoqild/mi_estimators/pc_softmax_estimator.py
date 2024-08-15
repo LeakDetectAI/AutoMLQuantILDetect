@@ -1,5 +1,5 @@
-"""MI estimator that uses probability-corrected softmax functions to assess the information content in
-classification scenarios."""
+"""MI estimator that uses probability-corrected softmax functions to assess the
+information content in classification scenarios."""
 import logging
 import math
 
@@ -14,9 +14,8 @@ from .pytorch_utils import get_optimizer_and_parameters, init, own_softmax
 
 
 class PCSoftmaxMIEstimator(MIEstimatorBase):
-    """
-    PCSoftmaxMIEstimator estimates Mutual Information (MI) using a neural network trained with a modified softmax
-    function.
+    """PCSoftmaxMIEstimator estimates Mutual Information (MI) using a neural
+    network trained with a modified softmax function.
 
     This class uses a neural network to estimate the MI between input features and class labels. The neural network is
     trained using a custom softmax function that accounts for label proportions, which can help in handling imbalanced
@@ -99,8 +98,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.mi_val = 0
 
     def __pytorch_tensor_dataset__(self, X, y, batch_size=32):
-        """
-        Create a PyTorch dataset and data loader from the input data.
+        """Create a PyTorch dataset and data loader from the input data.
 
         Parameters
         ----------
@@ -129,8 +127,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return dataset_prop, tra_dataloader
 
     def fit(self, X, y, epochs=50, verbose=0, **kwd):
-        """
-        Fit the neural network to the data.
+        """Fit the neural network to the data.
 
         Parameters
         ----------
@@ -184,8 +181,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return self
 
     def predict(self, X, verbose=0):
-        """
-        Predict class labels for the input samples.
+        """Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -210,8 +206,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """
-        Compute the score of the neural network.
+        """Compute the score of the neural network.
 
         Parameters
         ----------
@@ -247,8 +242,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return -val_loss
 
     def predict_proba(self, X, verbose=0):
-        """
-        Predict class probabilities for the input samples.
+        """Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -271,8 +265,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return p_pred
 
     def decision_function(self, X, verbose=0):
-        """
-        Compute the decision function in form of class probabilities for the input samples.
+        """Compute the decision function in form of class probabilities for the
+        input samples.
 
         Parameters
         ----------
@@ -300,8 +294,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         return scores
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
-        """
-        Estimate Mutual Information using the trained neural network using the Softmax and PC-Softmax loss functions.
+        """Estimate Mutual Information using the trained neural network using
+        the Softmax and PC-Softmax loss functions.
 
         .. math::
 

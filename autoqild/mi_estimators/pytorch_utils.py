@@ -1,4 +1,5 @@
-"""Utilities for running the PC-softmax and Mine MI estimator, like loss functions and optimizers."""
+"""Utilities for running the PC-softmax and Mine MI estimator, like loss
+functions and optimizers."""
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -19,8 +20,8 @@ optimizer_parameters = {"RMSprop": {"lr": 0.01, "alpha": 0.99, "eps": 1e-08, "we
 
 
 def get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength):
-    """
-    Get the optimizer and its configuration parameters based on the specified optimizer string.
+    """Get the optimizer and its configuration parameters based on the
+    specified optimizer string.
 
     Parameters
     ----------
@@ -64,8 +65,7 @@ def get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength):
 
 
 def init(m):
-    """
-    Initialize the weights and biases of a neural network layer.
+    """Initialize the weights and biases of a neural network layer.
 
     Parameters
     ----------
@@ -83,8 +83,7 @@ def init(m):
 
 
 def log_mean_exp(inputs, dim=None, keepdim=False):
-    """
-    Compute the log of the mean of the exponentials of input elements.
+    """Compute the log of the mean of the exponentials of input elements.
 
     Parameters
     ----------
@@ -113,8 +112,7 @@ def log_mean_exp(inputs, dim=None, keepdim=False):
 
 
 def get_mine_loss(preds_xy, preds_xy_tilde, metric):
-    """
-    Calculate the MINE loss based on the specified metric.
+    """Calculate the MINE loss based on the specified metric.
 
     Parameters
     ----------
@@ -161,8 +159,8 @@ def get_mine_loss(preds_xy, preds_xy_tilde, metric):
 
 
 def own_softmax(x, label_proportions, device):
-    """
-    Custom softmax function that incorporates label proportions to handle imbalanced data.
+    """Custom softmax function that incorporates label proportions to handle
+    imbalanced data.
 
     This function computes a modified softmax, where the exponentiated logits are weighted by the proportions of each
     class label. This can help in cases where class imbalance is significant, ensuring that the model accounts for the

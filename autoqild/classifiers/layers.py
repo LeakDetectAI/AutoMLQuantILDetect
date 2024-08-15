@@ -1,10 +1,11 @@
-"""A custom dense layer with batch normalization and optional pre-activation normalization."""
+"""A custom dense layer with batch normalization and optional pre-activation
+normalization."""
 from keras.layers import Layer, Dense, Activation, BatchNormalization
 
 
 class NormalizedDense(Layer):
-    """
-    A custom dense layer with batch normalization and optional pre-activation normalization.
+    """A custom dense layer with batch normalization and optional pre-
+    activation normalization.
 
     Parameters
     ----------
@@ -42,8 +43,7 @@ class NormalizedDense(Layer):
         return batch_norm
 
     def get_weights(self):
-        """
-        Returns the weights of the batch normalization and dense layers.
+        """Returns the weights of the batch normalization and dense layers.
 
         Returns
         -------
@@ -57,8 +57,7 @@ class NormalizedDense(Layer):
         return w_b, w_d
 
     def set_weights(self, weights):
-        """
-        Sets the weights of the batch normalization and dense layers.
+        """Sets the weights of the batch normalization and dense layers.
 
         Parameters
         ----------

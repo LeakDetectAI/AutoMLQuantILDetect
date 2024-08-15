@@ -1,4 +1,5 @@
-"""Reader for OpenML datasets focusing on timing features for data leakage analysis."""
+"""Reader for OpenML datasets focusing on timing features for data leakage
+analysis."""
 import logging
 from abc import ABCMeta
 
@@ -14,8 +15,8 @@ __all__ = ["OpenMLTimingDatasetReader"]
 
 
 class OpenMLTimingDatasetReader(metaclass=ABCMeta):
-    """
-    Reader for OpenML datasets that are specifically designed for timing-based attacks.
+    """Reader for OpenML datasets that are specifically designed for timing-
+    based attacks.
 
     This class is designed to process datasets that involve side-channel attacks based on timing, such as the
     Bleichenbacher timing attack. It reads, cleans, and processes the dataset, and provides methods to create
@@ -154,8 +155,7 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
                 self.dataset_dictionary[label] = self.get_data(class_label=j)
 
     def get_data(self, class_label=1):
-        """
-        Retrieves data for a specific class label.
+        """Retrieves data for a specific class label.
 
         Parameters
         ----------
@@ -179,8 +179,7 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         return X, y
 
     def get_sampled_imbalanced_data(self, X, y):
-        """
-        Creates an imbalanced dataset by sampling from the data.
+        """Creates an imbalanced dataset by sampling from the data.
 
         Parameters
         ----------

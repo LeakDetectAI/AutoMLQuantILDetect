@@ -1,5 +1,5 @@
-"""Provides utility functions to support the hyperparameter tuning process, including callback mechanisms,
-parameter extraction, and scoring functions."""
+"""Provides utility functions to support the hyperparameter tuning process,
+including callback mechanisms, parameter extraction, and scoring functions."""
 import logging
 
 import numpy as np
@@ -21,8 +21,7 @@ logger = logging.getLogger("BayesSearchUtils")
 
 
 def convert_value(value):
-    """
-    Convert a value to its appropriate type.
+    """Convert a value to its appropriate type.
 
     Parameters
     ----------
@@ -49,8 +48,7 @@ def convert_value(value):
 
 
 def get_parameters_at_k(optimizers, search_keys, k):
-    """
-    Get the parameters and loss at the k-th position.
+    """Get the parameters and loss at the k-th position.
 
     Parameters
     ----------
@@ -85,8 +83,8 @@ def get_parameters_at_k(optimizers, search_keys, k):
 
 
 def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
-    """
-    Update the learner parameters with the best parameters at the k-th position.
+    """Update the learner parameters with the best parameters at the k-th
+    position.
 
     Parameters
     ----------
@@ -122,8 +120,8 @@ def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
 
 
 def log_callback(parameters):
-    """
-    Callback function for logging parameters and scores during Bayesian optimization.
+    """Callback function for logging parameters and scores during Bayesian
+    optimization.
 
     Parameters
     ----------
@@ -136,7 +134,8 @@ def log_callback(parameters):
         The callback function.
     """
     def on_step(opt_result):
-        """Callback to view scores after each iteration while performing Bayesian Optimization in Skopt."""
+        """Callback to view scores after each iteration while performing
+        Bayesian Optimization in Skopt."""
         points = opt_result.x_iters
         scores = -opt_result.func_vals
         params = dict(zip(parameters, points[-1]))
@@ -147,8 +146,7 @@ def log_callback(parameters):
 
 
 def get_scores(X, estimator):
-    """
-    Get the predicted probabilities and labels for the input samples.
+    """Get the predicted probabilities and labels for the input samples.
 
     Parameters
     ----------
@@ -194,8 +192,7 @@ def get_scores(X, estimator):
 
 
 def probability_calibration(X_train, y_train, X_test, classifier, calibrator):
-    """
-    Calibrate the predicted probabilities.
+    """Calibrate the predicted probabilities.
 
     Parameters
     ----------
