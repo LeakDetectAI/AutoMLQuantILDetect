@@ -1,0 +1,12 @@
+autoqild.detectors.mi\_estimator\_detector
+==========================================
+
+.. automodule:: autoqild.detectors.mi_estimator_detector
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MIEstimationLeakageDetector
+   
