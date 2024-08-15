@@ -24,7 +24,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
     output_folder : str, optional
         Directory where the trained model and related files will be saved. Default is None.
 
-    eval_metric : str, optional, default='accuracy'
+    eval_metric : str, optional, default=`accuracy`
         Evaluation metric used to assess the performance of the model.
 
     use_hyperparameters : bool, optional, default=True
@@ -60,7 +60,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         Instance of the AutoGluon classifier used for learning.
     """
 
-    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric='accuracy',
+    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric=`accuracy`,
                  use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
                  remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs)
@@ -182,17 +182,17 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         y : array-like of shape (n_samples,)
             Target labels.
 
-        method : str, optional, default='LogLossMI'
+        method : str, optional, default=`LogLossMI`
             The method to use for mutual information estimation.
             Options include:
 
-            - 'LogLossMI': Estimate MI using Log-Loss method.
-            - 'LogLossMIIsotonicRegression': Estimate MI using Log-Loss method with Isotonic Regression.
-            - 'LogLossMIPlattScaling': Estimate MI using Log-Loss method with Platt Scaling.
-            - 'LogLossMIBetaCalibration': Estimate MI using Log-Loss method with Beta Calibration.
-            - 'LogLossMITemperatureScaling': Estimate MI using Log-Loss method with Temperature Scaling.
-            - 'LogLossMIHistogramBinning': Estimate MI using Log-Loss method with Histogram Binning.
-            - 'PCSoftmaxMI': Estimate MI using Softmax probabilities.
+            - `LogLossMI`: Estimate MI using Log-Loss method.
+            - `LogLossMIIsotonicRegression`: Estimate MI using Log-Loss method with Isotonic Regression.
+            - `LogLossMIPlattScaling`: Estimate MI using Log-Loss method with Platt Scaling.
+            - `LogLossMIBetaCalibration`: Estimate MI using Log-Loss method with Beta Calibration.
+            - `LogLossMITemperatureScaling`: Estimate MI using Log-Loss method with Temperature Scaling.
+            - `LogLossMIHistogramBinning`: Estimate MI using Log-Loss method with Histogram Binning.
+            - `PCSoftmaxMI`: Estimate MI using Softmax probabilities.
 
         **kwargs : dict, optional
             Additional keyword arguments passed to the estimation methods.

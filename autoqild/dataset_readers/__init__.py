@@ -1,4 +1,5 @@
-"""It offers utilities for reading and generating datasets, including OpenML datasets and synthetic data for testing and evaluation purposes."""
+"""The `dataset_readers` package provides utilities for reading OpenML datasets, generating synthetic data, both
+distance-based and traditional, for testing and evaluation purposes."""
 from .open_ml_timming_dr import *
 from .open_ml_padding_dr import *
 from .synthetic_data_generator import *

@@ -1,3 +1,5 @@
+"""Provides utility functions to support the hyperparameter tuning process, including callback mechanisms,
+parameter extraction, and scoring functions."""
 import logging
 
 import numpy as np
@@ -110,11 +112,11 @@ def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
     """
     loss, best_params = get_parameters_at_k(optimizers=bayes_search.optimizers_, search_keys=search_keys, k=k)
     if version.parse(sklearn.__version__) < version.parse("0.25.0"):
-        if 'criterion' in best_params.keys():
-            if best_params['criterion'] == 'squared_error':
-                best_params['criterion'] = 'mse'
+        if `criterion` in best_params.keys():
+            if best_params[`criterion`] == `squared_error`:
+                best_params[`criterion`] = `mse`
     learner_params.update(best_params)
-    params_str = print_dictionary(learner_params, sep='\t')
+    params_str = print_dictionary(learner_params, sep=`\t`)
     logger.info(f"Parameters at position k:{k} are {params_str} with objective of: {-loss}\n")
     return loss, learner_params
 
@@ -138,7 +140,7 @@ def log_callback(parameters):
         points = opt_result.x_iters
         scores = -opt_result.func_vals
         params = dict(zip(parameters, points[-1]))
-        params_str = print_dictionary(params, sep=' : ')
+        params_str = print_dictionary(params, sep=` : `)
         logger.info(f"For Parameters: {params_str}, Objective: {scores[-1]}")
 
     return on_step

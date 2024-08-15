@@ -1,3 +1,4 @@
+"""Abstract base class for AutoML classifiers."""
 from abc import abstractmethod
 
 from sklearn.base import BaseEstimator, ClassifierMixin
@@ -26,7 +27,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
     >>>     def fit(self, X, y, **kwd):
     >>>         # Implement your fitting logic here
     >>>         # For instance, you might train a model using the training data X and labels y
-    >>>         self.model_ = Pipeline([('scaler', StandardScaler()), ('custom_classifier', CustomClassifier())])
+    >>>         self.model_ = Pipeline([(`scaler`, StandardScaler()), (`custom_classifier`, CustomClassifier())])
     >>>         return self
     >>>
     >>>     def predict(self, X, verbose=0):
@@ -91,7 +92,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         for training the classifier on the dataset provided in `X` and `y`.
         """
 
-        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
+        raise NotImplementedError("The `fit` method must be implemented by the subclass.")
 
     @abstractmethod
     def score(self, X, y, sample_weight=None, verbose=0):
@@ -122,7 +123,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'score' method must be implemented by the subclass.")
+        raise NotImplementedError("The `score` method must be implemented by the subclass.")
 
     @abstractmethod
     def predict(self, X, verbose=0):
@@ -147,7 +148,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'predict' method must be implemented by the subclass.")
+        raise NotImplementedError("The `predict` method must be implemented by the subclass.")
 
     @abstractmethod
     def predict_proba(self, X, verbose=0):
@@ -172,7 +173,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'predict_proba' method must be implemented by the subclass.")
+        raise NotImplementedError("The `predict_proba` method must be implemented by the subclass.")
 
     @abstractmethod
     def decision_function(self, X, verbose=0):
@@ -198,7 +199,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'decision_function' method must be implemented by the subclass.")
+        raise NotImplementedError("The `decision_function` method must be implemented by the subclass.")
 
     def get_params(self, deep=True):
         """
@@ -229,7 +230,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
         The method works on simple estimators as well as on nested objects
         (such as `sklearn.pipeline.Pipeline`). The latter have
-        parameters of the form `<component>__<parameter>` so that it's
+        parameters of the form `<component>__<parameter>` so that it`s
         possible to update each component of a nested object.
 
         Parameters

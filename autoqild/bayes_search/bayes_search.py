@@ -1,3 +1,5 @@
+"""Implements the main `BayesSearchCV` class, which orchestrates the Bayesian optimization process extending the
+functionality of `BayesSearchCV` from the `scikit-optimize` library."""
 import logging
 
 import dill
@@ -68,19 +70,19 @@ class BayesSearchCV(BayesSearchCVSK):
     verbose : int, default=0
         Controls the verbosity.
 
-    pre_dispatch : int or string, default='2*n_jobs'
+    pre_dispatch : int or string, default=`2*n_jobs`
         Controls the number of jobs that get dispatched during parallel execution.
 
     random_state : int, RandomState instance or None, optional
         Controls the randomness of the estimator.
 
-    error_score : 'raise' or numeric, default='raise'
+    error_score : `raise` or numeric, default=`raise`
         Value to assign to the score if an error occurs.
 
     return_train_score : boolean, default=False
         If False, the cv_results_ attribute will not include training scores.
 
-    optimizers_file_path : string, default='results.pkl'
+    optimizers_file_path : string, default=`results.pkl`
         Path to save the optimizer states.
 
     Private Methods
@@ -195,7 +197,7 @@ class BayesSearchCV(BayesSearchCVSK):
         callbacks = self._callbacks
 
         random_state = check_random_state(self.random_state)
-        self.optimizer_kwargs_['random_state'] = random_state
+        self.optimizer_kwargs_[`random_state`] = random_state
 
         # Instantiate optimizers for all the search spaces.
         try:

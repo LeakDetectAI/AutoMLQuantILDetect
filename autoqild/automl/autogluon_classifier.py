@@ -1,3 +1,4 @@
+"AutoGluonClassifier is a wrapper for building, training, and evaluating an AutoML model using AutoGluon."
 import logging
 import os.path
 import shutil
@@ -33,7 +34,7 @@ class AutoGluonClassifier(AutomlClassifier):
     output_folder : str, optional
         Path to the directory where the trained model and related files will be saved. Default is None.
     eval_metric : str, optional
-        Evaluation metric used to assess the performance of the model. Default is 'accuracy'.
+        Evaluation metric used to assess the performance of the model. Default is `accuracy`.
     use_hyperparameters : bool, optional
         Flag indicating whether to use predefined hyperparameters for model training. Default is True.
     delete_tmp_folder_after_terminate : bool, optional
@@ -76,7 +77,7 @@ class AutoGluonClassifier(AutomlClassifier):
     n_classes : int
         Number of classes in the classification problem.
     sample_weight : str
-        Method for determining sample weights during training, default is 'auto_weight'.
+        Method for determining sample weights during training, default is `auto_weight`.
     time_limit : int
         Time limit for training the model, in seconds.
     model : autogluon.tabular.TabularPredictor or None
@@ -101,7 +102,7 @@ class AutoGluonClassifier(AutomlClassifier):
         self.random_state = check_random_state(random_state)
         self.output_folder = output_folder
         self.delete_tmp_folder_after_terminate = delete_tmp_folder_after_terminate
-        self.hyperparameter_tune_kwargs = {'scheduler': 'local', 'searcher': 'auto'}
+        self.hyperparameter_tune_kwargs = {`scheduler`: `local`, `searcher`: `auto`}
         self.eval_metric = eval_metric
         self.use_hyperparameters = use_hyperparameters
         self.verbosity = verbosity
@@ -113,21 +114,21 @@ class AutoGluonClassifier(AutomlClassifier):
         else:
             self.hyperparameters = None
         if remove_boosting_models:
-            self.exclude_model_types = ['GBM', 'CAT', 'XGB', 'LGB', 'KNN', 'NN_TORCH', "AG_AUTOMM", 'LR']
+            self.exclude_model_types = [`GBM`, `CAT`, `XGB`, `LGB`, `KNN`, `NN_TORCH`, "AG_AUTOMM", `LR`]
         else:
-            self.exclude_model_types = ["AG_AUTOMM", 'LR']
+            self.exclude_model_types = ["AG_AUTOMM", `LR`]
         self.auto_stack = auto_stack
         self.n_features = n_features
         self.n_classes = n_classes
         self.sample_weight = "auto_weight"
         self.time_limit = time_limit
         self.model = None
-        self.class_label = 'class'
-        self.columns = [f'feature_{i}' for i in range(self.n_features)] + [self.class_label]
+        self.class_label = `class`
+        self.columns = [f`feature_{i}` for i in range(self.n_features)] + [self.class_label]
         if self.n_classes > 2:
-            self.problem_type = 'multiclass'
+            self.problem_type = `multiclass`
         if self.n_classes == 2:
-            self.problem_type = 'binary'
+            self.problem_type = `binary`
         self.leaderboard = None
 
     @property
@@ -153,7 +154,7 @@ class AutoGluonClassifier(AutomlClassifier):
 
         if self.model is not None:
             self.leaderboard = self.model.leaderboard(extra_info=True)
-            time_taken = self.leaderboard['fit_time'].sum() + self.leaderboard['pred_time_val'].sum() + 20
+            time_taken = self.leaderboard[`fit_time`].sum() + self.leaderboard[`pred_time_val`].sum() + 20
             difference = self.time_limit - time_taken
             if 200 <= self.time_limit < 300:
                 limit = 150
@@ -162,7 +163,7 @@ class AutoGluonClassifier(AutomlClassifier):
             else:
                 limit = 200
             self.logger.info(f"Fitting time of the model {time_taken} and remaining {difference}, limit {limit}")
-            num_models = len(self.leaderboard['fit_time'])
+            num_models = len(self.leaderboard[`fit_time`])
             self.logger.info(f"Number of models trained is {num_models} ")
             if num_models < 1200:
                 if num_models <= 50:
@@ -176,7 +177,7 @@ class AutoGluonClassifier(AutomlClassifier):
         if self.model is None:
             try:
                 shutil.rmtree(self.output_folder)
-                self.logger.error(f"Since the model is not completely fitted, the folder '{basename}' "
+                self.logger.error(f"Since the model is not completely fitted, the folder `{basename}` "
                                   f"and its contents are deleted successfully.")
             except OSError as error:
                 log_exception_error(self.logger, error)
@@ -214,7 +215,7 @@ class AutoGluonClassifier(AutomlClassifier):
                 self.logger.error("Fit function did not work, checking the saved models")
         self.leaderboard = self.model.leaderboard(extra_info=True)
         if self.delete_tmp_folder_after_terminate:
-            self.model.delete_models(models_to_keep='best', dry_run=False)
+            self.model.delete_models(models_to_keep=`best`, dry_run=False)
             self.model.save_space()
 
     def predict(self, X, verbose=0):
@@ -262,7 +263,7 @@ class AutoGluonClassifier(AutomlClassifier):
             Balanced accuracy score.
         """
         test_data = self.convert_to_dataframe(X, y)
-        score = self.model.evaluate(test_data)['balanced_accuracy']
+        score = self.model.evaluate(test_data)[`balanced_accuracy`]
         return score
 
     def predict_proba(self, X, verbose=0):
@@ -358,8 +359,8 @@ class AutoGluonClassifier(AutomlClassifier):
         model : autogluon.tabular.TabularPredictor
             The k-th ranked model.
         """
-        self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
-        model_name = self.leaderboard.iloc[k - 1]['model']
+        self.leaderboard.sort_values([`score_val`], ascending=False, inplace=True)
+        model_name = self.leaderboard.iloc[k - 1][`model`]
         model = self.model._trainer.load_model(model_name)
         return model
 
@@ -377,6 +378,6 @@ class AutoGluonClassifier(AutomlClassifier):
         model : autogluon.tabular.TabularPredictor
             The specified model.
         """
-        self.leaderboard.sort_values(['score_val'], ascending=False, inplace=True)
+        self.leaderboard.sort_values([`score_val`], ascending=False, inplace=True)
         model = self.model._trainer.load_model(model_name)
         return model

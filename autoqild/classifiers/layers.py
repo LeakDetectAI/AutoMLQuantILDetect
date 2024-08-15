@@ -1,3 +1,4 @@
+"""A custom dense layer with batch normalization and optional pre-activation normalization."""
 from keras.layers import Layer, Dense, Activation, BatchNormalization
 
 
@@ -10,7 +11,7 @@ class NormalizedDense(Layer):
     units : int
         Positive integer, dimensionality of the output space.
     activation : str, optional
-        Activation function to use (default is 'relu').
+        Activation function to use (default is `relu`).
         If not specified, no activation is applied (i.e., "linear").
     normalize_before_activation : bool, optional
         If True, normalizes the inputs before applying the activation function.

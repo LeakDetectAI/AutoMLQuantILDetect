@@ -1,3 +1,4 @@
+"""A Bayes-optimal classifier leveraging the underlying probability distribution of the dataset for predictions."""
 import logging
 
 import numpy as np

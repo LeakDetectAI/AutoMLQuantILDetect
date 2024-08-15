@@ -1,3 +1,4 @@
+"""A leakage detection class leveraging AutoGluon for hyperparameter optimization and model evaluation."""
 import logging
 import os.path
 
@@ -6,7 +7,7 @@ from ..bayes_search.bayes_search_utils import get_scores
 from .ild_base_class import InformationLeakageDetector
 from ..utilities import *
 
-__all__ = ['AutoGluonLeakageDetector']
+__all__ = [`AutoGluonLeakageDetector`]
 
 
 class AutoGluonLeakageDetector(InformationLeakageDetector):
@@ -69,10 +70,10 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         self.learner = None
         output_folder = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value, f"{self.padding_code}_autogluon")
         create_directory_safely(output_folder)
-        self.learner_params['output_folder'] = output_folder
-        self.learner_params['eval_metric'] = validation_loss
-        self.learner_params['delete_tmp_folder_after_terminate'] = False
-        self.learner_params['remove_boosting_models'] = True
+        self.learner_params[`output_folder`] = output_folder
+        self.learner_params[`eval_metric`] = validation_loss
+        self.learner_params[`delete_tmp_folder_after_terminate`] = False
+        self.learner_params[`remove_boosting_models`] = True
         self.logger = logging.getLogger(AutoGluonLeakageDetector.__name__)
 
     def hyperparameter_optimization(self, X, y):
@@ -140,8 +141,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                             self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
                         train_data = self.learner.convert_to_dataframe(X_train, y_train)
                         test_data = self.learner.convert_to_dataframe(X_test, None)
-                        X_t = train_data.drop(columns=['class'])
-                        y_t = train_data['class']
+                        X_t = train_data.drop(columns=[`class`])
+                        y_t = train_data[`class`]
                         model._n_repeats_finished = 0
                         n_repeat_start = 0
                         model.fit(X=X_t, y=y_t, n_repeat_start=n_repeat_start)
@@ -159,7 +160,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         Evaluates and stores model performance metrics for the detection process.
 
         This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the
-        model's predictions. The results are stored and logged for further analysis.
+        model`s predictions. The results are stored and logged for further analysis.
 
         Parameters
         ----------
