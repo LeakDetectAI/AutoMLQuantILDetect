@@ -1,0 +1,14 @@
+﻿autoqild.bayes\_search
+======================
+
+.. automodule:: autoqild.bayes_search
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   bayes_search_cv
+   bayes_search_utils
