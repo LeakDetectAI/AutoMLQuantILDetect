@@ -1,3 +1,4 @@
+"""Utilities for running the PC-softmax and Mine MI estimator, like loss functions and optimizers."""
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -15,6 +16,7 @@ optimizer_parameters = {"RMSprop": {"lr": 0.01, "alpha": 0.99, "eps": 1e-08, "we
                                     "eps": 1e-10},
                         "Adamax": {"lr": 0.002, "betas": (0.9, 0.999), "eps": 1e-08, "weight_decay": 0},
                         "Adadelta": {"lr": 1.0, "rho": 0.9, "eps": 1e-06, "weight_decay": 0}}
+
 
 def get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength):
     """
@@ -156,3 +158,42 @@ def get_mine_loss(preds_xy, preds_xy_tilde, metric):
     else:
         err_msg = f"unrecognized metric {metric}"
         raise ValueError(err_msg)
+
+
+def own_softmax(x, label_proportions, device):
+    """
+    Custom softmax function that incorporates label proportions to handle imbalanced data.
+
+    This function computes a modified softmax, where the exponentiated logits are weighted by the proportions of each
+    class label. This can help in cases where class imbalance is significant, ensuring that the model accounts for the
+    distribution of labels during prediction.
+
+    Parameters
+    ----------
+    x : torch.Tensor
+        The input tensor (logits) of shape `(n_samples, n_classes)`.
+    label_proportions : list, numpy.ndarray, or torch.Tensor
+        The proportions of each class in the dataset. This should be a list or tensor of shape `(n_classes,)`
+        representing the proportion of each class in the dataset.
+    device : torch.device
+        The device on which to perform the computation (e.g., `cpu` or `cuda`).
+
+    Returns
+    -------
+    torch.Tensor
+        The resulting tensor after applying the weighted softmax operation, of shape `(n_samples, n_classes)`.
+
+    Notes
+    -----
+    This function first exponentiates the logits (`x`) and then multiplies them by the corresponding class proportions
+    (`label_proportions`). The resulting tensor is normalized by the sum of the weighted exponentiated logits to produce
+    a probability distribution across classes.
+    """
+    if not isinstance(label_proportions, torch.Tensor):
+        label_proportions = torch.tensor(label_proportions).to(device)
+
+    x_exp = torch.exp(x)
+    weighted_x_exp = x_exp * label_proportions
+    x_exp_sum = torch.sum(weighted_x_exp, 1, keepdim=True)
+
+    return x_exp / x_exp_sum

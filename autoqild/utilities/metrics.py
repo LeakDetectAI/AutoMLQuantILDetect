@@ -4,7 +4,7 @@ AUC score, and more."""
 import logging
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
-from .utils import normalize
+from ._utils import normalize
 
 __all__ = ["bin_ce", "helmann_raviv_function", "helmann_raviv_upper_bound", "santhi_vardi_upper_bound",
            "fanos_lower_bound", "fanos_adjusted_lower_bound", "auc_score", "pc_softmax_estimation",
@@ -409,7 +409,7 @@ def pc_softmax_estimation(y_true, p_pred):
 
         S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
 
-    PC-Softmax (Probability-Corrected Softmax) Function:
+    PC-Softmax Function:
 
     .. math::
 

@@ -476,8 +476,8 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def bayes_predictor_pc_softmax_mi(self):
         """
-        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given the
-        input data X, applying both the Softmax and PC-Softmax functions.
+        Calculate the mutual information (MI) using class probabilities derived from the PDF of a class label given
+        the input data X, applying both the Softmax and PC-Softmax functions.
 
         .. math::
 
@@ -490,18 +490,20 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
 
         where:
+
             - \( z_k \) is the logit or raw score for class \( k \).
             - \( K \) is the total number of classes.
 
-        PC-Softmax (Probability-Corrected Softmax) Function:
+         PC-Softmax Function:
 
         .. math::
 
             S_{pc}(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j} \\cdot p_j}
 
         where:
+
             - \( z_k \) is the logit or raw score for class \( k \).
-            - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
+            - \( p_j = \\frac{\\text{counts}_j}{\\text{total samples}} \) is the prior probability of class \( j \)
 
         Returns
         -------
@@ -510,6 +512,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
         pc_softmax_emi : float
             Estimated PC-softmax mutual information.
+
         """
         X, y = self.generate_dataset()
         y_pred = np.zeros((X.shape[0], self.n_classes))

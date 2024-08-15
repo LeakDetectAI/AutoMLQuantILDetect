@@ -80,7 +80,7 @@ class BayesSearchCV(BayesSearchCVSK):
         Value to assign to the score if an error occurs.
 
     return_train_score : boolean, default=False
-        If False, the cv_results_ attribute will not include training scores.
+        If False, the results attribute will not include training scores.
 
     optimizers_file_path : string, default=`results.pkl`
         Path to save the optimizer states.

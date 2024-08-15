@@ -2,5 +2,5 @@
 This package extends functionality provided by `scikit-optimize`, offering additional features such as logging,
 state-saving for optimizer progress, and enhanced callback functions for tracking and resuming the optimization
 process."""
-from .bayes_search import BayesSearchCV
 from .bayes_search_utils import *
+from .bayes_search_cv import BayesSearchCV

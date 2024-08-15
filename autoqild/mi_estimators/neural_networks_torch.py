@@ -1,45 +1,9 @@
+"""Neural Nwtowkr implementations for running the PC-softmax and Mine MI estimator."""
 import torch
 import torch.nn.functional as F
 from torch import nn
 
-
-def own_softmax(x, label_proportions, device):
-    """
-    Custom softmax function that incorporates label proportions to handle imbalanced data.
-
-    This function computes a modified softmax, where the exponentiated logits are weighted by the proportions of each
-    class label. This can help in cases where class imbalance is significant, ensuring that the model accounts for the
-    distribution of labels during prediction.
-
-    Parameters
-    ----------
-    x : torch.Tensor
-        The input tensor (logits) of shape `(n_samples, n_classes)`.
-    label_proportions : list, numpy.ndarray, or torch.Tensor
-        The proportions of each class in the dataset. This should be a list or tensor of shape `(n_classes,)`
-        representing the proportion of each class in the dataset.
-    device : torch.device
-        The device on which to perform the computation (e.g., `cpu` or `cuda`).
-
-    Returns
-    -------
-    torch.Tensor
-        The resulting tensor after applying the weighted softmax operation, of shape `(n_samples, n_classes)`.
-
-    Notes
-    -----
-    This function first exponentiates the logits (`x`) and then multiplies them by the corresponding class proportions
-    (`label_proportions`). The resulting tensor is normalized by the sum of the weighted exponentiated logits to produce
-    a probability distribution across classes.
-    """
-    if not isinstance(label_proportions, torch.Tensor):
-        label_proportions = torch.tensor(label_proportions).to(device)
-
-    x_exp = torch.exp(x)
-    weighted_x_exp = x_exp * label_proportions
-    x_exp_sum = torch.sum(weighted_x_exp, 1, keepdim=True)
-
-    return x_exp / x_exp_sum
+from autoqild.mi_estimators.pytorch_utils import own_softmax
 
 
 class ClassNet(nn.Module):

@@ -9,8 +9,8 @@ from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 
 from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
-from .neural_networks_torch import ClassNet, own_softmax
-from .pytorch_utils import get_optimizer_and_parameters, init
+from .neural_networks_torch import ClassNet
+from .pytorch_utils import get_optimizer_and_parameters, init, own_softmax
 
 
 class PCSoftmaxMIEstimator(MIEstimatorBase):
@@ -301,7 +301,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
         """
-        Estimate Mutual Information using the trained neural network using PC-softmax and softmax loss function.
+        Estimate Mutual Information using the trained neural network using the Softmax and PC-Softmax loss functions.
+
         .. math::
 
             I(X;Y) = H(Y) - H(Y|X)
@@ -313,18 +314,20 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
 
         where:
+
             - \( z_k \) is the logit or raw score for class \( k \).
             - \( K \) is the total number of classes.
 
-        PC-Softmax (Probability-Corrected Softmax) Function:
+         PC-Softmax Function:
 
         .. math::
 
             S_{pc}(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j} \\cdot p_j}
 
         where:
+
             - \( z_k \) is the logit or raw score for class \( k \).
-            - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
+            - \( p_j = \\frac{\\text{counts}_j}{\\text{total samples}} \) is the prior probability of class \( j \)
 
         Parameters
         ----------

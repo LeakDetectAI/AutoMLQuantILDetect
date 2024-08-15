@@ -12,10 +12,10 @@ from sklearn.svm import LinearSVC
 from .. import AutoGluonClassifier
 from ..automl.tabpfn_classifier import AutoTabPFNClassifier
 from ..utilities import print_dictionary, sigmoid
-
-__all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback", "get_scores"]
-
 from ..utilities.metrics import remove_nan_values
+
+__all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback", "get_scores",
+           "probability_calibration"]
 
 logger = logging.getLogger("BayesSearchUtils")
 

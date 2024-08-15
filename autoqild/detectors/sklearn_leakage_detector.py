@@ -89,23 +89,6 @@ class SklearnLeakageDetector(InformationLeakageDetector):
 
     logger : logging.Logger
         Logger instance for recording the process of leakage detection.
-
-    Methods
-    -------
-    hyperparameter_optimization(X, y)
-        Performs Bayesian hyperparameter optimization to identify the best model parameters.
-
-    fit(X, y)
-        Fits the model using cross-validation, applying hyperparameter optimization if necessary.
-
-    reduce_dataset(X, y)
-        Reduces the dataset size if the number of instances exceeds a threshold, optimizing for lightweight models.
-
-    evaluate_scores(X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model)
-        Evaluates the performance of the model using various metrics and stores the results.
-
-    detect()
-        Executes the detection process to identify potential information leakage using statistical tests.
     """
 
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,

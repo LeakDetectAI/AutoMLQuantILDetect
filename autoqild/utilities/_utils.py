@@ -1,5 +1,4 @@
-"""This Python module provides utility functions and a class for common operations such as dimensionality scaling,
-array normalization, logging exceptions, managing HDF5 files, and creating directories safely."""
+"""Implements several utility functions forarray normalization, logging exceptions, managing HDF5 files, and  creating directories safely."""
 import os
 import sys
 import traceback
@@ -107,6 +106,7 @@ def progress_bar(count, total, status=""):
         Total count for completion.
     status : str, optional
         A status message to display along with the progress bar.
+
     """
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
@@ -117,7 +117,7 @@ def progress_bar(count, total, status=""):
     sys.stdout.flush()
 
 
-def print_dictionary(dictionary, sep="\n", n_keys=None):
+def print_dictionary(dictionary, sep='\n', n_keys=None):
     """
     Print a dictionary with keys and values formatted with a separator.
 
@@ -126,7 +126,7 @@ def print_dictionary(dictionary, sep="\n", n_keys=None):
     dictionary : dict
         The dictionary to print.
     sep : str, optional
-        Separator between key-value pairs (default is "\n").
+        Separator between key-value pairs. Default is '\n'.
     n_keys : int, optional
         Number of key-value pairs to print. If None, prints all.
 
@@ -139,11 +139,10 @@ def print_dictionary(dictionary, sep="\n", n_keys=None):
     if n_keys is None:
         n_keys = len(dictionary)
     for i, (key, value) in enumerate(dictionary.items()):
+        output += f"{str(key)} => {str(value)}"
         if i < n_keys - 1:
-            output = output + str(key) + " => " + str(value) + sep
+            output += sep
         else:
-            output = output + str(key) + " => " + str(value)
-        if i == n_keys - 1:
             break
     return output
 
