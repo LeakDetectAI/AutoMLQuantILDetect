@@ -114,7 +114,7 @@ def progress_bar(count, total, status=""):
 
 
 def print_dictionary(dictionary, sep='\n', n_keys=None):
-    """Prints a dictionary with keys and values formatted with a separator.
+    """Prints a formatted dictionary.
 
     Parameters
     ----------
