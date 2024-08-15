@@ -35,8 +35,18 @@ class AutoTabPFNClassifier(AutomlClassifier):
     n_reduced : int, default=20
         The number of features to reduce to if `n_features` exceeds 50.
 
-    reduction_technique : str, default='select_from_model_rf'
-        The technique used for feature reduction, chosen from a set of options including PCA, LDA, and t-SNE.
+    reduction_technique : str, optional, default='select_from_model_rf'
+        Technique to use for feature reduction, provided by scikit-learn.
+        Must be one of:
+
+        - 'recursive_feature_elimination_et': Uses ExtraTreesClassifier to recursively remove features and build a model.
+        - 'recursive_feature_elimination_rf': Uses RandomForestClassifier to recursively remove features and build a model.
+        - 'select_from_model_et': Meta-transformer for selecting features based on importance weights using ExtraTreesClassifier.
+        - 'select_from_model_rf': Meta-transformer for selecting features based on importance weights using RandomForestClassifier.
+        - 'pca': Principal Component Analysis for dimensionality reduction.
+        - 'lda': Linear Discriminant Analysis for separating classes.
+        - 'tsne': t-Distributed Stochastic Neighbor Embedding for visualization purposes.
+        - 'nmf': Non-Negative Matrix Factorization for dimensionality reduction.
 
     base_path : str or None, default=None
         The path where the trained model and other outputs are saved. If None, no model is saved.

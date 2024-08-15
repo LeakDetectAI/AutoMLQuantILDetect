@@ -15,17 +15,17 @@ logger = logging.getLogger("Metrics")
 # logger.info(f"Nan Rows Train {nan_rows}")
 def bin_ce(p_e):
     """
-        Computes the binary cross-entropy for a given probability `p_e`.
+    Computes the binary cross-entropy for a given probability `p_e`.
 
-        Parameters
-        ----------
-        p_e : float
-            Probability value for which binary cross-entropy is computed.
+    Parameters
+    ----------
+    p_e : float
+        Probability value for which binary cross-entropy is computed.
 
-        Returns
-        -------
-        binary_cross_entropy : float
-            The binary cross-entropy value.
+    Returns
+    -------
+    binary_cross_entropy : float
+        The binary cross-entropy value.
     """
     if p_e == 0:
         p_e = p_e + np.finfo(np.float32).eps
@@ -40,19 +40,19 @@ bce_f = np.vectorize(bin_ce)
 
 def helmann_raviv_function(n_classes, pe):
     """
-        Computes the Hellman-Raviv function for a given error probability `pe`.
+    Computes the Hellman-Raviv function for a given error probability `pe`.
 
-        Parameters
-        ----------
-        n_classes : int
-            The number of classes.
-        pe : ndarray
-            The error probability values.
+    Parameters
+    ----------
+    n_classes : int
+        The number of classes.
+    pe : ndarray
+        The error probability values.
 
-        Returns
-        -------
-        hrf_values : ndarray
-            The computed Hellman-Raviv function values.
+    Returns
+    -------
+    hrf_values : ndarray
+        The computed Hellman-Raviv function values.
     """
     hrf_values = []
     indicies = []
@@ -90,19 +90,19 @@ def helmann_raviv_function(n_classes, pe):
 
 def helmann_raviv_upper_bound(y_true, y_pred):
     """
-        Computes the Hellman-Raviv upper bound for mutual information.
+    Computes the Hellman-Raviv upper bound for mutual information.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted class labels.
 
-        Returns
-        -------
-        hr_u : float
-            The Hellman-Raviv upper bound.
+    Returns
+    -------
+    hr_u : float
+        The Hellman-Raviv upper bound.
     """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
@@ -114,19 +114,19 @@ def helmann_raviv_upper_bound(y_true, y_pred):
 
 def santhi_vardi_upper_bound(y_true, y_pred):
     """
-        Computes the Santhi-Vardi upper bound for mutual information.
+    Computes the Santhi-Vardi upper bound for mutual information.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted class labels.
 
-        Returns
-        -------
-        sv_u: float
-            The Santhi-Vardi upper bound.
+    Returns
+    -------
+    sv_u: float
+        The Santhi-Vardi upper bound.
     """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
@@ -139,19 +139,19 @@ def santhi_vardi_upper_bound(y_true, y_pred):
 
 def fanos_lower_bound(y_true, y_pred):
     """
-        Computes Fano's lower bound for mutual information.
+    Computes Fano's lower bound for mutual information.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted class labels.
 
-        Returns
-        -------
-        fanos_lb : float
-            Fano's lower bound.
+    Returns
+    -------
+    fanos_lb : float
+        Fano's lower bound.
     """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
@@ -163,19 +163,19 @@ def fanos_lower_bound(y_true, y_pred):
 
 def fanos_adjusted_lower_bound(y_true, y_pred):
     """
-        Computes the adjusted Fano's lower bound for mutual information.
+    Computes the adjusted Fano's lower bound for mutual information.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted class labels.
 
-        Returns
-        -------
-        fanos_adjusted_lb : float
-            Adjusted Fano's lower bound.
+    Returns
+    -------
+    fanos_adjusted_lb : float
+        Adjusted Fano's lower bound.
     """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
@@ -186,19 +186,19 @@ def fanos_adjusted_lower_bound(y_true, y_pred):
 
 def mid_point_mi(y_true, y_pred):
     """
-        Computes the midpoint mutual information estimate.
+    Computes the midpoint mutual information estimate.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted class labels.
 
-        Returns
-        -------
-        mid_point : float
-            Midpoint mutual information estimate.
+    Returns
+    -------
+    mid_point : float
+        Midpoint mutual information estimate.
     """
     mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(y_true, y_pred)
     mid_point = mid_point / 2.0
@@ -208,19 +208,19 @@ def mid_point_mi(y_true, y_pred):
 
 def auc_score(y_true, p_pred):
     """
-        Computes the AUC score for the given true labels and predicted probabilities.
+    Computes the AUC score for the given true labels and predicted probabilities.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        p_pred : ndarray
-            Predicted probabilities.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    p_pred : ndarray
+        Predicted probabilities.
 
-        Returns
-        -------
-        auc_roc : float
-            AUC score.
+    Returns
+    -------
+    auc_roc : float
+        AUC score.
     """
     logger = logging.getLogger("AUC")
     n_classes = len(np.unique(y_true))
@@ -244,19 +244,19 @@ def auc_score(y_true, p_pred):
 
 def false_positive_rate(y_true, y_pred):
     """
-        Computes the false positive rate.
+    Computes the false positive rate.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True binary labels.
-        y_pred : ndarray
-            Predicted binary labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True binary labels.
+    y_pred : ndarray
+        Predicted binary labels.
 
-        Returns
-        -------
-        fpr : float
-            False positive rate.
+    Returns
+    -------
+    fpr : float
+        False positive rate.
     """
     tn = np.logical_and(np.logical_not(y_true), np.logical_not(y_pred)).sum()
     fp = np.logical_and(np.logical_not(y_true), y_pred).sum()
@@ -266,19 +266,19 @@ def false_positive_rate(y_true, y_pred):
 
 def false_negative_rate(y_true, y_pred):
     """
-        Computes the false positive rate.
+    Computes the false positive rate.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True binary labels.
-        y_pred : ndarray
-            Predicted binary labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True binary labels.
+    y_pred : ndarray
+        Predicted binary labels.
 
-        Returns
-        -------
-        fnr : float
-            False negative rate.
+    Returns
+    -------
+    fnr : float
+        False negative rate.
     """
     tp = np.logical_and(y_true, y_pred).sum()
     fn = np.logical_and(y_true, np.logical_not(y_pred)).sum()
@@ -288,21 +288,21 @@ def false_negative_rate(y_true, y_pred):
 
 def remove_nan_values(y_pred, y_true=None):
     """
-        Removes rows containing NaN values from the predicted probabilities and true labels.
+    Removes rows containing NaN values from the predicted probabilities and true labels.
 
-        Parameters
-        ----------
-        y_pred : ndarray
-            Predicted probabilities.
-        y_true : ndarray, optional
-            True labels corresponding to the predicted probabilities (default is None).
+    Parameters
+    ----------
+    y_pred : ndarray
+        Predicted probabilities.
+    y_true : ndarray, optional
+        True labels corresponding to the predicted probabilities (default is None).
 
-        Returns
-        -------
-        y_pred : ndarray
-            Cleaned Predicted probabilities.
-        y_true : ndarray, optional
-            Corresponsindg remaining True labels corresponding to the non-NaN predicted probabilities.
+    Returns
+    -------
+    y_pred : ndarray
+        Cleaned Predicted probabilities.
+    y_true : ndarray, optional
+        Corresponsindg remaining True labels corresponding to the non-NaN predicted probabilities.
 
     """
     # logger.info(f"y_pred shape {y_pred.shape}")
@@ -318,17 +318,17 @@ def remove_nan_values(y_pred, y_true=None):
 
 def get_entropy_y(y_true):
     """
-        Computes the entropy of the true labels.
+    Computes the entropy of the true labels.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
 
-        Returns
-        -------
-        mi_pp : float
-            Entropy of the true labels.
+    Returns
+    -------
+    mi_pp : float
+        Entropy of the true labels.
     """
     classes, counts = np.unique(y_true, return_counts=True)
     pys = counts / np.sum(counts)
@@ -340,19 +340,42 @@ def get_entropy_y(y_true):
 
 def pc_softmax_estimation(y_true, p_pred):
     """
-        Estimates the mutual information using softmax of predicted probabilities.
+    Estimates the mutual information using predicted probabilities in the softmax and PC-Softmax functions.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        p_pred : ndarray
-            Predicted probabilities.
+    .. math::
 
-        Returns
-        -------
-        estimated_mi : float
-            Estimated mutual information.
+        I(X;Y) = H(Y) - H(Y|X)
+
+    Softmax Function:
+
+    .. math::
+
+        S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
+
+    where:
+        - \( z_k \) is the logit or raw score for class \( k \).
+        - \( K \) is the total number of classes.
+
+    PC-Softmax (Probability-Corrected Softmax) Function:
+
+    .. math::
+
+        S_{pc}(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j} \\cdot p_j}
+
+    where:
+        - \( z_k \) is the logit or raw score for class \( k \).
+        - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    p_pred : ndarray
+        Predicted probabilities.
+
+    Returns
+    -------
+    estimated_mi : float
+        Estimated mutual information.
     """
     p_pred[p_pred == 0] = np.finfo(float).eps
     p_pred[p_pred == 1] = 1 - np.finfo(float).eps
@@ -381,20 +404,20 @@ def pc_softmax_estimation(y_true, p_pred):
 
 def log_loss_estimation(y_true, y_pred):
     """
-        Estimates mutual information by evaluating the log-loss of the predicted probabilities and entropy of outputs
-        using the class labels.
+    Estimates mutual information by evaluating the log-loss of the predicted probabilities and entropy of outputs
+    using the class labels.
 
-        Parameters
-        ----------
-        y_true : ndarray
-            True class labels.
-        y_pred : ndarray
-            Predicted probabilities.
+    Parameters
+    ----------
+    y_true : ndarray
+        True class labels.
+    y_pred : ndarray
+        Predicted probabilities.
 
-        Returns
-        -------
-        estimated_mi : float
-            Estimated mutual information.
+    Returns
+    -------
+    estimated_mi : float
+        Estimated mutual information.
     """
     y_pred[y_pred == 0] = np.finfo(float).eps
     y_pred[y_pred == 1] = 1 - np.finfo(float).eps

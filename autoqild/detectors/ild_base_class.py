@@ -26,7 +26,8 @@ class InformationLeakageDetector(metaclass=ABCMeta):
     The `InformationLeakageDetector` class is designed to identify and diagnose information leakage in machine learning models.
     Information leakage occurs when a model inadvertently gains access to information that should not be available during training, leading to overly optimistic performance estimates.
 
-    This class facilitates the detection of such leakage by employing various statistical and machine learning-based methods. It supports multiple detection techniques and is capable of managing the entire process, from cross-validation setup to result storage and evaluation.
+    This class facilitates the detection of such leakage by employing various statistical and machine learning-based methods.
+    It supports multiple detection techniques and is capable of managing the entire process, from cross-validation setup to result storage and evaluation.
 
     The class is built with flexibility in mind, allowing users to easily extend or customize detection techniques. It includes robust mechanisms for handling result files and backups, ensuring that detection results are safely stored and can be restored if necessary.
 
@@ -71,6 +72,9 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     random_state : int or RandomState instance
         Controls the randomness for reproducibility, ensuring consistent results across different runs.
+
+    **kwargs : dict, optional
+        Additional keyword arguments passed to customize the detector.
 
     Attributes
     ----------
@@ -181,6 +185,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
     __calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
         Calculates and logs the accuracy of a random classifier.
     """
+
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
                  base_directory, detection_method, random_state, **kwargs):
 
@@ -204,6 +209,12 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.__initialize_objects__()
 
     def __initialize_objects__(self):
+        """
+        Initializes the results dictionary for storing metric results.
+
+        The results dictionary is organized by hypothesis models and metrics. It initializes storage for each model's
+        metric scores, as well as for the majority voting and random classifier baselines.
+        """
         for i in range(self.n_hypothesis):
             self.results[f'model_{i}'] = {}
             for metric_name, evaluation_metric in mi_estimation_metrics.items():
@@ -214,6 +225,12 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.results[RANDOM_CLASSIFIER][ACCURACY] = []
 
     def __init_results_files__(self):
+        """
+        Initializes the results and backup files and restores results from backup if necessary.
+
+        This method checks the validity of the specified detection method and prepares the file paths for storing
+        results and backups. If backups exist, it attempts to restore results to ensure continuity.
+        """
         if self.detection_method not in leakage_detection_methods.keys():
             raise ValueError(f"Invalid Detection Method {self.detection_method}")
         hv_dm = leakage_detection_names[self.detection_method]
@@ -227,8 +244,18 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     @property
     def _is_fitted_(self) -> bool:
-        self.logger.info(f"++++++++++++++++++++++++++++++++ _is_fitted_ function ++++++++++++++++++++++++++++++++")
+        """
+        Checks if the detector has already been fitted by verifying the existence of results files.
 
+        The method assesses if the required result files and their content are complete and consistent. If results
+        are incomplete or corrupted, they are removed to ensure fresh simulations can be run.
+
+        Returns
+        -------
+        bool
+            True if the results file is valid and complete, otherwise False.
+        """
+        self.logger.info(f"++++++++++++++++++++++++++++++++ _is_fitted_ function ++++++++++++++++++++++++++++++++")
         self.logger.info(f"Checking main file {self.rf_name} for results for padding {self.padding_name}")
         check_and_delete_corrupt_h5_file(self.results_file, self.logger)
         conditions = {"os.path.exists(self.results_file)": os.path.exists(self.results_file)}
@@ -243,7 +270,6 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                     conditions[f"{model_name} in {padding_name_group}"] = model_name in padding_name_group
                     if model_name in padding_name_group:
                         model_group = padding_name_group.get(model_name)
-                        self.logger.info(f"Predictions done for model {model_name}")
                         for metric_name, results in metric_results.items():
                             conditions[f"{metric_name} in {model_group}"] = metric_name in model_group
                             self.logger.info(f"Results exists for metric {metric_name}: {metric_name in model_group}")
@@ -269,6 +295,12 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         return np.all(conditions_vals)
 
     def __create_results_from_backup__(self):
+        """
+        Creates results files from backup if the main results file is missing or incomplete.
+
+        The method locks the backup file, copies the necessary data, and unlocks the file to ensure safe restoration
+        of results in case the main file is not valid.
+        """
         check_and_delete_corrupt_h5_file(self.results_file_backup, self.logger)
         dir_path = os.path.dirname(os.path.realpath(self.results_file_backup))
 
@@ -291,42 +323,57 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             self.logger.info(f"Backup results file does not exists {self.rf_backup_name}")
 
     def __update_backup_file__(self):
+        """
+        Updates the backup results file with the latest results from the main results file.
+
+        If the backup file exists, the method deletes outdated results, copies the relevant group data from the main
+        file, and ensures the backup is updated.
+        """
         if os.path.exists(self.results_file):
             if os.path.isfile(self.results_file_backup):
                 dest_h5 = h5py.File(self.results_file_backup, 'a')
                 if self.padding_code in dest_h5:
                     del dest_h5[self.padding_code]
-                    self.logger.info(f"Deleting old results for the padding from backup file {self.padding_name}")
                 dest_h5.close()
             source_h5 = h5py.File(self.results_file, 'r')
             destination_h5 = h5py.File(self.results_file_backup, 'a')
             if self.padding_code in source_h5:
                 source_group = source_h5[self.padding_code]
                 destination_h5.copy(source_group, destination_h5, name=self.padding_code)
-                self.logger.info(f"Group '{self.padding_code}' copied to backup result file "
-                                 f"{self.rf_backup_name} for padding {self.padding_name}")
-            else:
-                self.logger.info(f"Group '{self.padding_code}' does not exist in the results file "
-                                 f"{self.rf_name} for padding {self.padding_name}")
-            # Close the HDF5 files
             source_h5.close()
             destination_h5.close()
             self.__close_file__()
             self.__close_backup_file__()
-        else:
-            self.logger.info(f"Result File does not exists {self.rf_name}")
 
     def __format_name__(self, padding_name):
+        """
+        Formats the padding name and generates a corresponding hash code.
+
+        The method processes the padding name by removing spaces, converting it to lowercase, and generating a hash.
+
+        Parameters
+        ----------
+        padding_name : str
+            The name of the padding method used.
+
+        Returns
+        -------
+        tuple
+            Formatted padding name and its corresponding hash code.
+        """
         padding_name = '_'.join(padding_name.split(' ')).lower()
         padding_name = padding_name.replace(" ", "")
         hash_object = hashlib.sha1()
         hash_object.update(padding_name.encode())
         hex_dig = str(hash_object.hexdigest())[:16]
-        # self.logger.info(   "Job_id {} Hash_string {}".format(job.get("job_id", None), str(hex_dig)))
-        self.logger.info(f"For padding name {padding_name} the hex value is {hex_dig}")
         return padding_name, hex_dig
 
     def __close_file__(self):
+        """
+        Safely closes the main results file if it is open.
+
+        The method verifies if the file is still open and closes it if necessary, handling potential exceptions.
+        """
         try:
             file = h5py.File(self.results_file, 'r')
             is_open = file.id.valid
@@ -340,6 +387,11 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             self.logger.error("Cannot open the result file since it does not exist")
 
     def __close_backup_file__(self):
+        """
+        Safely closes the backup results file if it is open.
+
+        The method checks if the backup file is open and closes it, handling exceptions appropriately.
+        """
         try:
             file = h5py.File(self.results_file_backup, 'r')
             is_open = file.id.valid
@@ -353,6 +405,17 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             self.logger.error("Cannot open the backup file since it does not exist")
 
     def __read_majority_accuracies__(self):
+        """
+        Reads and returns the accuracy scores from the majority voting classifier.
+
+        This method retrieves accuracy scores stored in the results file, focusing on the majority voting classifier's
+        performance metrics.
+
+        Returns
+        -------
+        accuracies : numpy.ndarray
+            Array of accuracy scores.
+        """
         if os.path.exists(self.results_file):
             file = h5py.File(self.results_file, 'r')
             # self.logger.error(self.allkeys(file))
@@ -361,7 +424,6 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             try:
                 model_group = padding_name_group[MAJORITY_VOTING]
                 accuracies = np.array(model_group[ACCURACY])
-
             except KeyError as e:
                 log_exception_error(self.logger, e)
                 self.logger.error(f"Error while getting the metric {ACCURACY} for the"
@@ -373,11 +435,20 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             raise ValueError(f"The results are not found at the path {self.rf_name}")
 
     def __read_random_accuracies__(self):
+        """
+        Reads and returns the accuracy scores from the random classifier.
+
+        This method retrieves accuracy scores stored in the results file, focusing on the random classifier's
+        performance metrics.
+
+        Returns
+        -------
+        accuracies : numpy.ndarray
+            Array of accuracy scores.
+        """
         if os.path.exists(self.results_file):
             file = h5py.File(self.results_file, 'r')
-            # self.logger.error(self.allkeys(file))
             padding_name_group = file[self.padding_code]
-            # self.logger.error(self.allkeys(padding_name_group))
             try:
                 model_group = padding_name_group[RANDOM_CLASSIFIER]
                 accuracies = np.array(model_group[ACCURACY])
@@ -392,6 +463,26 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             raise ValueError(f"The results are not found at the path {self.rf_name}")
 
     def __get_training_dataset__(self, X, y):
+        """
+        Splits the data into training and test sets using cross-validation.
+
+        This method uses StratifiedKFold and StratifiedShuffleSplit to generate train-test splits, ensuring that
+        class distributions are preserved.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input features.
+
+        y : array-like of shape (n_samples,)
+            The target labels.
+
+        Returns
+        -------
+        X_train: ()
+        y_train
+             and training target labels.
+        """
         lengths = []
         for i, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
             lengths.append(len(train_index))
@@ -402,13 +493,18 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         return X[train_index], y[train_index]
 
     def __store_results__(self):
-        self.logger.info(f"Result file {self.rf_name}")
+        """
+        Stores the evaluation results into the main results file and updates the backup.
+
+        The method saves model performance metrics into the HDF5 results file, ensuring that results are consistently
+        stored. It then updates the backup file to maintain data integrity.
+        """
+        self.logger.info(f"__store_results__ Result file {self.rf_name}")
         if os.path.exists(self.results_file):
             file = h5py.File(self.results_file, 'r+')
         else:
             file = h5py.File(self.results_file, 'w')
         try:
-            self.logger.info(f"{self.padding_code} in {file}: {self.padding_code in file}")
             if self.padding_code not in file:
                 padding_name_group = file.create_group(self.padding_code)
             else:
@@ -435,7 +531,22 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.__update_backup_file__()
 
     def __allkeys__(self, obj):
-        "Recursively find all keys in an h5py.Group."
+        """
+        Recursively finds all keys in an h5py.Group object.
+
+        This method traverses through all nested groups in an HDF5 file, gathering the names of all datasets and
+        groups.
+
+        Parameters
+        ----------
+        obj : h5py.Group
+            The group object to recursively inspect.
+
+        Returns
+        -------
+        tuple
+            A tuple of all key names found within the group.
+        """
         keys = (obj.name,)
         if isinstance(obj, h5py.Group):
             for key, value in obj.items():
@@ -446,12 +557,27 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         return keys
 
     def __read_results_file__(self, detection_method):
+        """
+        Reads and returns the results for the specified detection method.
+
+        The method retrieves model results based on the selected detection method, ensuring compatibility with the
+        configured base detector.
+
+        Parameters
+        ----------
+        detection_method : str
+            The method used to detect information leakage.
+
+        Returns
+        -------
+        dict
+            A dictionary mapping model names to their corresponding metric results.
+        """
         metric_name = leakage_detection_methods[detection_method]
         self.logger.info(f"For the detection method {detection_method}, metric {metric_name}")
         model_results = {}
         if os.path.exists(self.results_file):
             file = h5py.File(self.results_file, 'r')
-            # self.logger.error(self.allkeys(file))
             padding_name_group = file[self.padding_code]
             # self.logger.error(self.allkeys(padding_name_group))
             for model_name in self.results.keys():
@@ -475,6 +601,25 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             raise ValueError(f"The results are not found at the path {self.results_file}")
 
     def __calculate_majority_voting_accuracy__(self, X_train, y_train, X_test, y_test):
+        """
+        Calculates and logs the accuracy of a majority voting classifier.
+
+        The method fits a majority voting classifier and computes its accuracy on the test set.
+
+        Parameters
+        ----------
+        X_train : array-like of shape (n_samples, n_features)
+            Training feature matrix.
+
+        y_train : array-like of shape (n_samples,)
+            Training target labels.
+
+        X_test : array-like of shape (n_samples, n_features)
+            Test feature matrix.
+
+        y_test : array-like of shape (n_samples,)
+            Test target labels.
+        """
         estimator = MajorityVoting()
         estimator.fit(X_train, y_train)
         p_pred, y_pred = get_scores(X_test, estimator)
@@ -482,7 +627,27 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.results[MAJORITY_VOTING][ACCURACY].append(accuracy)
         self.logger.info(f"Majority Voting Performance Metric {ACCURACY}: Value {accuracy}")
 
+
     def __calculate_random_classifier_accuracy__(self, X_train, y_train, X_test, y_test):
+        """
+        Calculates and logs the accuracy of a random classifier.
+
+        The method fits a random classifier and computes its accuracy on the test set.
+
+        Parameters
+        ----------
+        X_train : array-like of shape (n_samples, n_features)
+            Training feature matrix.
+
+        y_train : array-like of shape (n_samples,)
+            Training target labels.
+
+        X_test : array-like of shape (n_samples, n_features)
+            Test feature matrix.
+
+        y_test : array-like of shape (n_samples,)
+            Test target labels.
+        """
         estimator = RandomClassifier()
         estimator.fit(X_train, y_train)
         p_pred, y_pred = get_scores(X_test, estimator)
@@ -490,7 +655,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.results[RANDOM_CLASSIFIER][ACCURACY].append(accuracy)
         self.logger.info(f"Random Classifier Performance Metric {ACCURACY}: Value {accuracy}")
 
-    def perform_hyperparameter_optimization(self, X, y):
+    def hyperparameter_optimization(self, X, y):
         """
         Performs hyperparameter optimization using Bayesian search to identify the best model parameters.
 
@@ -506,8 +671,13 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         -------
         int
             The size of the training dataset after the reduction (if applicable).
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
         """
-        raise NotImplemented
+        raise NotImplementedError("The 'hyperparameter_optimization' method must be implemented by the subclass.")
 
     def fit(self, X, y):
         """
@@ -521,8 +691,13 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
         y : array-like, shape (n_samples,)
             The target values (class labels) corresponding to X.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
         """
-        raise NotImplemented
+        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """
@@ -640,4 +815,6 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             model_p_values[model_name] = p_value
             self.logger.info(f"Model {model_name} p-value {p_value}")
         p_vals, pvals_corrected, rejected = holm_bonferroni(list(model_p_values.values()))
-        return np.any(rejected), np.sum(rejected)
+        detection_decision = np.any(rejected)
+        hypothesis_rejected = np.sum(rejected)
+        return detection_decision, hypothesis_rejected

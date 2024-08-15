@@ -14,11 +14,13 @@ from ..utilities import softmax
 
 class MineMIEstimator(MIEstimatorBase):
     """
-    MineMIEstimator class implementing Mutual Information Neural Estimator (MINE) approach to estimate the
-    mutual information using ensemble of multiple neural networks
+    MineMIEstimator class implementing the Mutual Information Neural Estimator (MINE) approach to estimate the
+    mutual information using an ensemble of deep neural networks.
 
-    This class uses a deep neural network to estimate the mutual information (MI) between input features and class labels.
-    The estimation process is based on the Donsker-Varadhan representation of the KL divergence and other metrics.
+    This class trains multiple neural networks with varying architectures to estimate the mutual information (MI)
+    between input features and class labels. By aggregating predictions across an ensemble of models, the estimator
+    achieves a more stable and accurate MI estimate. The model is particularly useful when there is a need for
+    robust MI estimates in high-dimensional data with complex relationships.
 
     Parameters
     ----------
@@ -83,10 +85,25 @@ class MineMIEstimator(MIEstimatorBase):
     mi_validation_final : float
         The final average mutual information validation score.
 
+    Notes
+    -----
+    The MineMIEstimator trains multiple models with varying configurations (e.g., different hidden layers and units).
+    This ensemble approach allows the estimator to aggregate results from multiple models to produce a more robust
+    estimate of mutual information. The method is particularly effective in cases where the relationships between
+    features and labels are complex or non-linear, as the aggregation process helps to smooth out inconsistencies
+    across individual model predictions.
+
     Private Methods
     ---------------
     __pytorch_tensor_dataset__:
         Create PyTorch tensor datasets for the input features and target labels.
+
+    Example
+    -------
+    >>> estimator = MineMIEstimator(n_classes=3, n_features=10)
+    >>> estimator.fit(X_train, y_train)
+    >>> mi_estimate = estimator.estimate_mi(X_test, y_test)
+    >>> print(mi_estimate)
     """
 
     def __init__(self, n_classes, n_features, loss_function='donsker_varadhan_softplus', optimizer_str='adam',
@@ -151,7 +168,11 @@ class MineMIEstimator(MIEstimatorBase):
 
     def fit(self, X, y, epochs=100000, verbose=0, **kwd):
         """
-        Fit the multiple MINE neural networks with different architectures and estimate mutual information.
+        Fit the ensemble of MINE neural networks with different architectures and estimate mutual information.
+
+        The ensemble method trains multiple neural networks with varying configurations (e.g., number of hidden layers
+        and units) and aggregates their mutual information estimates. This aggregation produces a more stable and
+        robust estimate by reducing the variance associated with individual models.
 
         Parameters
         ----------
@@ -257,7 +278,9 @@ class MineMIEstimator(MIEstimatorBase):
 
     def score(self, X, y, sample_weight=None, verbose=0):
         """
-        Compute the score of the MINE model.
+        Compute the score of the ensemble MINE model.
+
+        The score is based on the mutual information estimated by aggregating results from multiple trained models.
 
         Parameters
         ----------
@@ -278,11 +301,11 @@ class MineMIEstimator(MIEstimatorBase):
         score : float
             The score of the model based on the final estimated mutual information.
         """
-        mi = self.mi_validation_final
+        mutual_information = self.mi_validation_final
         self.logger.info(f"Loss {self.final_loss} MI Val: {self.mi_validation_final}")
-        if np.isnan(mi) or np.isinf(mi):
-            mi = 0.0
-        return mi
+        if np.isnan(mutual_information) or np.isinf(mutual_information):
+            mutual_information = 0.0
+        return mutual_information
 
     def predict_proba(self, X, verbose=0):
         """
@@ -309,6 +332,8 @@ class MineMIEstimator(MIEstimatorBase):
         """
         Predict confidence scores for samples.
 
+        This method aggregates the confidence scores across all models in the ensemble.
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
@@ -319,7 +344,7 @@ class MineMIEstimator(MIEstimatorBase):
 
         Returns
         -------
-        p_pred : array-like of shape (n_samples, n_classes)
+        final_scores : array-like of shape (n_samples, n_classes)
             Predicted confidence scores.
         """
         scores = None
@@ -386,6 +411,6 @@ class MineMIEstimator(MIEstimatorBase):
             self.logger.info(f'Estimated MIs: {mi_hats[-10:]} Mean {mi_estimated}')
             mi_estimated = np.max([mi_estimated, 0.0])
             final_mis.append(mi_estimated)
-        final_mi = np.nanmedian(final_mis)
-        final_mi = np.nanmax([final_mi, 0.0])
-        return final_mi
+        mi_estimated = np.nanmedian(final_mis)
+        mi_estimated = np.nanmax([mi_estimated, 0.0])
+        return mi_estimated

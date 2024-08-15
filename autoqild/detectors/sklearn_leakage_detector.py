@@ -31,7 +31,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         self.logger = logging.getLogger(SklearnLeakageDetector.__name__)
         self.n_jobs = 10
 
-    def perform_hyperparameter_optimization(self, X, y):
+    def hyperparameter_optimization(self, X, y):
         X_train, y_train = self.__get_training_dataset__(X, y)
         learner = self.base_detector(**self.learner_params)
         bayes_search_params = dict(estimator=learner, search_spaces=self.search_space, n_iter=self.hp_iters,
@@ -66,7 +66,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         if self._is_fitted_:
             self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
-            train_size = self.perform_hyperparameter_optimization(X, y)
+            train_size = self.hyperparameter_optimization(X, y)
             for i in range(self.n_hypothesis):
                 loss, learner_params = self.estimators[i]
                 self.logger.info(f"**********  Model {i + 1} with loss {loss} **********")

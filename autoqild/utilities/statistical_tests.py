@@ -8,23 +8,23 @@ __all__ = ["wilcoxon_signed_rank_test", "paired_ttest"]
 
 def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", verbose=False):
     """
-        Performs the Wilcoxon signed-rank test on two sets of accuracies.
+    Performs the Wilcoxon signed-rank test on two sets of accuracies.
 
-        Parameters
-        ----------
-        accuracies : ndarray
-            First set of accuracy values.
-        accuracies2 : ndarray
-            Second set of accuracy values.
-        alternative : str, optional
-            Defines the alternative hypothesis (default is "two-sided").
-        verbose : bool, optional
-            If True, outputs additional logging information (default is False).
+    Parameters
+    ----------
+    accuracies : ndarray
+        First set of accuracy values.
+    accuracies2 : ndarray
+        Second set of accuracy values.
+    alternative : str, optional
+        Defines the alternative hypothesis (default is "two-sided").
+    verbose : bool, optional
+        If True, outputs additional logging information (default is False).
 
-        Returns
-        -------
-        p_value : float
-            The p-value from the Wilcoxon signed-rank test.
+    Returns
+    -------
+    p_value : float
+        The p-value from the Wilcoxon signed-rank test.
     """
     logger = logging.getLogger('Wilcoxon-Signed_Rank')
 
@@ -39,29 +39,29 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
 
 def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False):
     """
-        Performs a paired t-test on two sets of values.
+    Performs a paired t-test on two sets of values with and without correction for overalp.
 
-        Parameters
-        ----------
-        x1 : ndarray
-            First set of values.
-        x2 : ndarray
-            Second set of values.
-        n_training_folds : int
-            Number of training folds.
-        n_test_folds : int
-            Number of test folds.
-        correction : bool, optional
-            If True, applies a correction to the variance (default is True).
-        alternative : str, optional
-            Defines the alternative hypothesis (default is "two-sided").
-        verbose : bool, optional
-            If True, outputs additional logging information (default is False).
+    Parameters
+    ----------
+    x1 : ndarray
+        First set of values.
+    x2 : ndarray
+        Second set of values.
+    n_training_folds : int
+        Number of training folds.
+    n_test_folds : int
+        Number of test folds.
+    correction : bool, optional
+        If True, applies a correction to the variance (default is True).
+    alternative : str, optional
+        Defines the alternative hypothesis (default is "two-sided").
+    verbose : bool, optional
+        If True, outputs additional logging information (default is False).
 
-        Returns
-        -------
-        p_value : float
-            The p-value from the paired t-test.
+    Returns
+    -------
+    p_value : float
+        The p-value from the paired t-test.
     """
     logger = logging.getLogger('Paired T-Test')
     n = len(x1)

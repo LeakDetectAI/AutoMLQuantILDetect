@@ -194,7 +194,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
 
         Returns
         -------
-        predicted : array-like of shape (n_samples,)
+        y_pred : array-like of shape (n_samples,)
             Predicted class labels.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
@@ -204,7 +204,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             a_label = a_label.to(self.device).squeeze()
             test_ = self.class_net(a_data, dataset_prop)
             _, predicted = torch.max(test_, 1)
-        return predicted.detach().numpy()
+        y_pred = predicted.detach().numpy()
+        return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
         """
@@ -264,7 +265,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
-        return test_.detach().numpy()
+        p_pred = test_.detach().numpy()
+        return p_pred
 
     def decision_function(self, X, verbose=0):
         """
@@ -279,7 +281,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
 
         Returns
         -------
-        decision : array-like of shape (n_samples, n_classes)
+        scores : array-like of shape (n_samples, n_classes)
             Decision function values.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
@@ -287,7 +289,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
-        return test_.detach().numpy()
+        scores = test_.detach().numpy()
+        return scores
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
         """

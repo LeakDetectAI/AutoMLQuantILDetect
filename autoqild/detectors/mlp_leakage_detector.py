@@ -15,8 +15,8 @@ class MLPLeakageDetector(SklearnLeakageDetector):
         self.n_jobs = 1
         self.base_detector = MultiLayerPerceptron
 
-    def perform_hyperparameter_optimization(self, X, y):
-        return super().perform_hyperparameter_optimization(X, y)
+    def hyperparameter_optimization(self, X, y):
+        return super().hyperparameter_optimization(X, y)
 
     def fit(self, X, y):
         super().fit(X, y)

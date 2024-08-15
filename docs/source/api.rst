@@ -13,3 +13,4 @@ Documentation of the API for public objects and functions in ``autoqild``.
     autoqild.classifiers
     autoqild.dataset_readers
     autoqild.mi_estimators
+    autoqild.detectors

@@ -25,7 +25,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         self.learner_params['remove_boosting_models'] = True
         self.logger = logging.getLogger(AutoGluonLeakageDetector.__name__)
 
-    def perform_hyperparameter_optimization(self, X, y):
+    def hyperparameter_optimization(self, X, y):
         X_train, y_train = self.__get_training_dataset__(X, y)
         self.learner = self.base_detector(**self.learner_params)
         self.learner.fit(X_train, y_train)
@@ -40,7 +40,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         if self._is_fitted_:
             self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
-            train_size = self.perform_hyperparameter_optimization(X, y)
+            train_size = self.hyperparameter_optimization(X, y)
             n_hypothesis = 0
             for i, model in enumerate(self.estimators):
                 if n_hypothesis == self.n_hypothesis:

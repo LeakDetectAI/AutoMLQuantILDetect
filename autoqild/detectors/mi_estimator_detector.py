@@ -26,14 +26,14 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
             self.results[f'model_{i}'] = {}
             self.results[f'model_{i}'][ESTIMATED_MUTUAL_INFORMATION] = []
 
-    def perform_hyperparameter_optimization(self, X, y):
-        return super().perform_hyperparameter_optimization(X, y)
+    def hyperparameter_optimization(self, X, y):
+        return super().hyperparameter_optimization(X, y)
 
     def fit(self, X, y):
         if self._is_fitted_:
             self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
-            train_size = self.perform_hyperparameter_optimization(X, y)
+            train_size = self.hyperparameter_optimization(X, y)
             for i in range(self.n_hypothesis):
                 loss, learner_params = self.estimators[i]
                 self.logger.info(f"**********  Model {i + 1} with loss {loss} **********")

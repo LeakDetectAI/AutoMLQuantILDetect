@@ -46,9 +46,9 @@ class GMMMIEstimator(MIEstimatorBase):
     n_reduced : int, optional, default=20
         Number of features to reduce to in case n_features > 100.
 
-    reduction_technique : {'recursive_feature_elimination_et', 'recursive_feature_elimination_rf',
-                           'select_from_model_et', 'select_from_model_rf', 'pca', 'lda', 'tsne', 'nmf'}, default='select_from_model_rf'
-        Technique to use for feature reduction, provided by scikit-learn. Must be one of:
+    reduction_technique : str, optional, default='select_from_model_rf'
+        Technique to use for feature reduction, provided by scikit-learn.
+        Must be one of:
 
         - 'recursive_feature_elimination_et': Uses ExtraTreesClassifier to recursively remove features and build a model.
         - 'recursive_feature_elimination_rf': Uses RandomForestClassifier to recursively remove features and build a model.

@@ -21,8 +21,8 @@ class TabPFNLeakageDetector(SklearnLeakageDetector):
             self.learner_params['base_path'] = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value,
                                                             self.padding_code)
 
-    def perform_hyperparameter_optimization(self, X, y):
-        train_size = super().perform_hyperparameter_optimization(X, y)
+    def hyperparameter_optimization(self, X, y):
+        train_size = super().hyperparameter_optimization(X, y)
         directory_path = self.learner_params['base_path']
         try:
             os.rmdir(directory_path)
