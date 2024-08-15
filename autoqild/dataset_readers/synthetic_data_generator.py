@@ -11,7 +11,7 @@ from sklearn.utils import check_random_state, shuffle
 from .utils import FACTOR, pdf
 from ..utilities import *
 
-__all__ = [`SyntheticDatasetGenerator`]
+__all__ = ["SyntheticDatasetGenerator"]
 
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
@@ -115,7 +115,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
     """
 
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type=`single`, **kwargs):
+                 imbalance=0.0, gen_type="single", **kwargs):
 
         self.n_classes = n_classes
         self.n_features = n_features
@@ -304,7 +304,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         mvn = self.get_prob_dist_x_given_y(k_class)
         n_samples = self.samples_per_class[k_class]
         data = mvn.rvs(n_samples, random_state=seed)
-        labels = np.zeros(n_samples, dtype=`int64`) + k_class
+        labels = np.zeros(n_samples, dtype="int64") + k_class
         return data, labels
 
     def generate_dataset(self):

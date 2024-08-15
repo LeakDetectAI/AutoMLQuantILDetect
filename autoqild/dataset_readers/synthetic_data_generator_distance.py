@@ -11,7 +11,7 @@ from sklearn.utils import check_random_state
 from .utils import FACTOR, pdf
 from ..utilities import *
 
-__all__ = [`SyntheticDatasetGeneratorDistance`]
+__all__ = ["SyntheticDatasetGeneratorDistance"]
 
 
 class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
@@ -109,7 +109,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         It then calculates the mean vector for each class.
     """
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type=`single`, **kwargs):
+                 imbalance=0.0, gen_type="single", **kwargs):
         self.n_classes = n_classes
         self.n_features = n_features
         self.random_state = check_random_state(random_state)

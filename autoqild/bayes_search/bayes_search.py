@@ -197,7 +197,7 @@ class BayesSearchCV(BayesSearchCVSK):
         callbacks = self._callbacks
 
         random_state = check_random_state(self.random_state)
-        self.optimizer_kwargs_[`random_state`] = random_state
+        self.optimizer_kwargs_["random_state"] = random_state
 
         # Instantiate optimizers for all the search spaces.
         try:

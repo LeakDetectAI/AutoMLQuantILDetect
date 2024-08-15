@@ -224,7 +224,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     if i == 0:
                         self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
                         self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
-                    directory_path = learner_params.get(`base_path`, None)
+                    directory_path = learner_params.get("base_path", None)
                     if directory_path is not None:
                         try:
                             os.rmdir(directory_path)

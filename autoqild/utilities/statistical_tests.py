@@ -1,3 +1,4 @@
+"""Implementation of paired t-test and wilcoxon_signed_rank_test used to detect leakage using blind classifiers"""
 import logging
 
 import numpy as np
@@ -26,13 +27,13 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
     p_value : float
         The p-value from the Wilcoxon signed-rank test.
     """
-    logger = logging.getLogger('Wilcoxon-Signed_Rank')
+    logger = logging.getLogger("Wilcoxon-Signed_Rank")
 
     try:
         _, p_value = wilcoxon(accuracies, accuracies2, correction=True, alternative=alternative)
     except Exception as e:
         if verbose:
-            logger.info('Accuracies are exactly same {}'.format(str(e)))
+            logger.info("Accuracies are exactly same {}".format(str(e)))
         p_value = 1.0
     return p_value
 
@@ -63,7 +64,7 @@ def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, altern
     p_value : float
         The p-value from the paired t-test.
     """
-    logger = logging.getLogger('Paired T-Test')
+    logger = logging.getLogger("Paired T-Test")
     n = len(x1)
     df = n - 1
     diff = [(x1[i] - x2[i]) for i in range(n)]
@@ -89,15 +90,15 @@ def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, altern
         sigma2 = sigma2 / n
 
     # compute the t_static
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         t_static = np.divide(d_bar, np.sqrt(sigma2))
 
     # Compute p-value and plot the results
-    if alternative == 'less':
+    if alternative == "less":
         p_value = t.cdf(t_static, df)
-    elif alternative == 'greater':
+    elif alternative == "greater":
         p_value = t.sf(t_static, df)
-    elif alternative == 'two-sided':
+    elif alternative == "two-sided":
         p_value = 2 * t.sf(np.abs(t_static), df)
     if verbose:
         logger.info("Final Variance {} Sigma {} t_static {} p {}".format(sigma2, np.sqrt(sigma2), t_static, p_value))

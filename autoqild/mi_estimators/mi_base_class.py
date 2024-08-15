@@ -1,3 +1,4 @@
+"""Base class for all Mutual Information estimators."""
 import logging
 
 from sklearn.base import BaseEstimator, ClassifierMixin

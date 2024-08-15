@@ -1,3 +1,4 @@
+"""Base class for classification-based MI estimators, providing a framework for estimating MI in supervised learning."""
 import logging
 
 import numpy as np

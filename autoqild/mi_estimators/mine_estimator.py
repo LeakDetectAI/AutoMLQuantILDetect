@@ -1,3 +1,5 @@
+"""Mutual Information Neural Estimator (MINE) that uses multiple deep learning architectures to estimate MI for
+classification tasks."""
 import logging
 from itertools import product
 
@@ -106,7 +108,7 @@ class MineMIEstimator(MIEstimatorBase):
     >>> print(mi_estimate)
     """
 
-    def __init__(self, n_classes, n_features, loss_function=`donsker_varadhan_softplus`, optimizer_str=`adam`,
+    def __init__(self, n_classes, n_features, loss_function="donsker_varadhan_softplus", optimizer_str="adam",
                  learning_rate=1e-4, reg_strength=0, encode_classes=True, random_state=42):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(MineMIEstimator.__name__)
@@ -117,7 +119,7 @@ class MineMIEstimator(MIEstimatorBase):
                                                                                   reg_strength)
         self.encode_classes = encode_classes
         self.loss_function = loss_function
-        self.device = torch.device(`cuda` if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.logger.info(f"device {self.device} cuda {torch.cuda.is_available()} device {torch.cuda.device_count()}")
         self.optimizer = None
         self.dataset_properties = None
@@ -217,7 +219,7 @@ class MineMIEstimator(MIEstimatorBase):
             optimizer = self.optimizer_cls(stat_net.parameters(), **self._optimizer_config)
             all_estimates = []
             sum_loss = 0
-            for iter_ in tqdm(range(epochs), total=epochs, desc=`iteration`):
+            for iter_ in tqdm(range(epochs), total=epochs, desc="iteration"):
                 stat_net.zero_grad()
                 xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                 preds_xy = stat_net(xy)
@@ -238,8 +240,8 @@ class MineMIEstimator(MIEstimatorBase):
                             mi_hats.append(eval_div.cpu().numpy())
                         mi_hat = np.mean(mi_hats)
                         if verbose:
-                            print(f`iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}`)
-                        self.logger.info(f`iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}`)
+                            print(f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}")
+                        self.logger.info(f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}")
                         all_estimates.append(mi_hat)
             final_loss = sum_loss.detach().numpy()[0]
             mis = np.array(all_estimates)
@@ -399,16 +401,16 @@ class MineMIEstimator(MIEstimatorBase):
                 eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
                 mi_hat = eval_div.detach().numpy().flatten()[0]
                 if verbose:
-                    print(f`iter: {iter_}, MI hat: {mi_hat}`)
+                    print(f"iter: {iter_}, MI hat: {mi_hat}")
                 mi_hats.append(mi_hat)
             mi_hats = np.array(mi_hats)
             n = int(MON_ITER / 2)
             mi_hats = mi_hats[np.argpartition(mi_hats, -n)[-n:]]
             mi_estimated = np.nanmean(mi_hats)
             if np.isnan(mi_estimated) or np.isinf(mi_estimated):
-                self.logger.error(f`Setting MI to 0`)
+                self.logger.error("Setting MI to 0")
                 mi_estimated = 0
-            self.logger.info(f`Estimated MIs: {mi_hats[-10:]} Mean {mi_estimated}`)
+            self.logger.info(f"Estimated MIs: {mi_hats[-10:]} Mean {mi_estimated}")
             mi_estimated = np.max([mi_estimated, 0.0])
             final_mis.append(mi_estimated)
         mi_estimated = np.nanmedian(final_mis)

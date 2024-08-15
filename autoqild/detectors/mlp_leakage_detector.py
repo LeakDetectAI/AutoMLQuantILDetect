@@ -2,7 +2,7 @@
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..classifiers import MultiLayerPerceptron
 
-__all__ = [`MLPLeakageDetector`]
+__all__ = ["MLPLeakageDetector"]
 
 
 class MLPLeakageDetector(SklearnLeakageDetector):

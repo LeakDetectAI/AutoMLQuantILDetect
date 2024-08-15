@@ -19,7 +19,7 @@ from autoqild.classifiers import MajorityVoting, RandomClassifier
 from autoqild.detectors._utils import *
 from autoqild.utilities import *
 
-__all__ = [`InformationLeakageDetector`]
+__all__ = ["InformationLeakageDetector"]
 
 
 class InformationLeakageDetector(metaclass=ABCMeta):
@@ -63,8 +63,8 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         The method to use for detecting information leakage. Options include:
         - `paired-t-test`: Uses paired t-test to compare the accuracy of models against the majority voting baseline.
         - `paired-t-test-random`: Uses paired t-test to compare the accuracy of models against a random classifier.
-        - `fishers-exact-mean`: Applies Fisher`s Exact Test on the confusion matrix and computes the mean p-value.
-        - `fishers-exact-median`: Applies Fisher`s Exact Test on the confusion matrix and computes the median p-value.
+        - `fishers-exact-mean`: Applies Fisher's Exact Test on the confusion matrix and computes the mean p-value.
+        - `fishers-exact-median`: Applies Fisher's Exact Test on the confusion matrix and computes the median p-value.
         - `estimated_mutual_information`: Estimates mutual information to detect leakage.
         - `mid_point_mi`: Detects leakage using the midpoint mutual information estimation.
         - `log_loss_mi`: Detects leakage using log loss mutual information estimation.
@@ -221,9 +221,9 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         metric scores, as well as for the majority voting and random classifier baselines.
         """
         for i in range(self.n_hypothesis):
-            self.results[f`model_{i}`] = {}
+            self.results[f'model_{i}'] = {}
             for metric_name, evaluation_metric in mi_estimation_metrics.items():
-                self.results[f`model_{i}`][metric_name] = []
+                self.results[f'model_{i}'][metric_name] = []
         self.results[MAJORITY_VOTING] = {}
         self.results[MAJORITY_VOTING][ACCURACY] = []
         self.results[RANDOM_CLASSIFIER] = {}
@@ -265,7 +265,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         check_and_delete_corrupt_h5_file(self.results_file, self.logger)
         conditions = {"os.path.exists(self.results_file)": os.path.exists(self.results_file)}
         if os.path.exists(self.results_file):
-            file = h5py.File(self.results_file, `r`)
+            file = h5py.File(self.results_file, 'r')
             conditions[f"{self.padding_code} in file"] = self.padding_code in file
             if self.padding_code in file:
                 self.logger.info(f"Simulations done for padding label {self.padding_code}")
@@ -288,7 +288,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                          f"Coniditions: {print_dictionary(conditions)}")
         if os.path.exists(self.results_file) and not np.all(conditions_vals):
             if os.path.exists(self.results_file):
-                file = h5py.File(self.results_file, `w`)
+                file = h5py.File(self.results_file, 'w')
                 if self.padding_code in file:
                     del file[self.padding_code]
                     self.logger.info(f"Results for padding {self.padding_name} removed since it is incomplete "
@@ -311,7 +311,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
         if os.path.exists(self.results_file_backup):
             if not self._is_fitted_:
-                source = h5py.File(self.results_file_backup, `r`)
+                source = h5py.File(self.results_file_backup, 'r')
                 # Apply a shared lock on the source file
                 fcntl.flock(source.id.get_vfd_handle(), fcntl.LOCK_SH)
                 self.logger.info(f"Locked the backup file: {self.rf_backup_name}")
@@ -336,12 +336,12 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         """
         if os.path.exists(self.results_file):
             if os.path.isfile(self.results_file_backup):
-                dest_h5 = h5py.File(self.results_file_backup, `a`)
+                dest_h5 = h5py.File(self.results_file_backup, 'a')
                 if self.padding_code in dest_h5:
                     del dest_h5[self.padding_code]
                 dest_h5.close()
-            source_h5 = h5py.File(self.results_file, `r`)
-            destination_h5 = h5py.File(self.results_file_backup, `a`)
+            source_h5 = h5py.File(self.results_file, 'r')
+            destination_h5 = h5py.File(self.results_file_backup, 'a')
             if self.padding_code in source_h5:
                 source_group = source_h5[self.padding_code]
                 destination_h5.copy(source_group, destination_h5, name=self.padding_code)
@@ -366,7 +366,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         tuple
             Formatted padding name and its corresponding hash code.
         """
-        padding_name = `_`.join(padding_name.split(` `)).lower()
+        padding_name = '_'.join(padding_name.split(' ')).lower()
         padding_name = padding_name.replace(" ", "")
         hash_object = hashlib.sha1()
         hash_object.update(padding_name.encode())
@@ -380,7 +380,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         The method verifies if the file is still open and closes it if necessary, handling potential exceptions.
         """
         try:
-            file = h5py.File(self.results_file, `r`)
+            file = h5py.File(self.results_file, 'r')
             is_open = file.id.valid
             if is_open:
                 self.logger.info("The result file is open closing it")
@@ -398,7 +398,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         The method checks if the backup file is open and closes it, handling exceptions appropriately.
         """
         try:
-            file = h5py.File(self.results_file_backup, `r`)
+            file = h5py.File(self.results_file_backup, 'r')
             is_open = file.id.valid
             if is_open:
                 self.logger.info("The backup file is open closing it")
@@ -422,7 +422,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             Array of accuracy scores.
         """
         if os.path.exists(self.results_file):
-            file = h5py.File(self.results_file, `r`)
+            file = h5py.File(self.results_file, 'r')
             # self.logger.error(self.allkeys(file))
             padding_name_group = file[self.padding_code]
             # self.logger.error(self.allkeys(padding_name_group))
@@ -452,7 +452,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             Array of accuracy scores.
         """
         if os.path.exists(self.results_file):
-            file = h5py.File(self.results_file, `r`)
+            file = h5py.File(self.results_file, 'r')
             padding_name_group = file[self.padding_code]
             try:
                 model_group = padding_name_group[RANDOM_CLASSIFIER]
@@ -506,9 +506,9 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         """
         self.logger.info(f"__store_results__ Result file {self.rf_name}")
         if os.path.exists(self.results_file):
-            file = h5py.File(self.results_file, `r+`)
+            file = h5py.File(self.results_file, 'r+')
         else:
-            file = h5py.File(self.results_file, `w`)
+            file = h5py.File(self.results_file, 'w')
         try:
             if self.padding_code not in file:
                 padding_name_group = file.create_group(self.padding_code)
@@ -582,7 +582,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         self.logger.info(f"For the detection method {detection_method}, metric {metric_name}")
         model_results = {}
         if os.path.exists(self.results_file):
-            file = h5py.File(self.results_file, `r`)
+            file = h5py.File(self.results_file, 'r')
             padding_name_group = file[self.padding_code]
             # self.logger.error(self.allkeys(padding_name_group))
             for model_name in self.results.keys():
@@ -686,7 +686,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The `hyperparameter_optimization` method must be implemented by the subclass.")
+        raise NotImplementedError("The 'hyperparameter_optimization' method must be implemented by the subclass.")
 
     def fit(self, X, y):
         """
@@ -709,13 +709,13 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The `fit` method must be implemented by the subclass.")
+        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """
         Evaluate and store model performance metrics for the detection process.
 
-        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model`s
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model's
         predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling. The
         results are stored and logged for further analysis.
 
@@ -788,7 +788,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         """
         Detect potential information leakage using the configured detection method.
 
-        This method applies statistical tests, such as paired t-tests or Fisher`s exact tests, to determine if there is
+        This method applies statistical tests, such as paired t-tests or Fisher's exact tests, to determine if there is
         a significant difference in model performance that indicates information leakage. The results of these tests are
         used to decide whether leakage is present and, if so, how many models exhibit it.
 
@@ -805,7 +805,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         """
 
         def holm_bonferroni(p_values):
-            reject, pvals_corrected, _, alpha = multipletests(p_values, 0.01, method=`holm`, is_sorted=False)
+            reject, pvals_corrected, _, alpha = multipletests(p_values, 0.01, method="holm", is_sorted=False)
             reject = [False] * len(p_values) + list(reject)
             pvals_corrected = [1.0] * len(p_values) + list(pvals_corrected)
             return p_values, pvals_corrected, reject
@@ -831,7 +831,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                 p_value = paired_ttest(accuracies, metric_vals, n_training_folds, n_test_folds, correction=True)
                 self.logger.info("Paired T-Test for accuracy comparison with random")
             elif self.detection_method in [FISHER_EXACT_TEST_MEAN, FISHER_EXACT_TEST_MEDIAN]:
-                self.logger.info("Fisher`s Exact-Test for confusion matrix")
+                self.logger.info("Fisher's Exact-Test for confusion matrix")
                 metric_vals = [np.array([[tn, fp], [fn, tp]]) for [tn, fp, fn, tp] in metric_vals]
                 p_values = np.array([fisher_exact(cm)[1] for cm in metric_vals])
                 if self.detection_method == FISHER_EXACT_TEST_MEAN:

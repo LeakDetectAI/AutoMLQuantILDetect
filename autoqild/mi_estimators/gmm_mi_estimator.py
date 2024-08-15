@@ -1,3 +1,4 @@
+"""Gaussian Mixture Model-based MI estimator for evaluating mutual information using probabilistic clustering."""
 import copy
 import logging
 
@@ -136,8 +137,8 @@ class GMMMIEstimator(MIEstimatorBase):
         Transform and reduce the feature matrix with `n_features´ features, using the specified reduction
         technique to the feature matrix with `n_reduced´ features.
     """
-    def __init__(self, n_classes, n_features, y_cat=False, covariance_type=`full`, reg_covar=1e-06, val_size=0.30,
-                 n_reduced=20, reduction_technique=`select_from_model_rf`, random_state=42, **kwargs):
+    def __init__(self, n_classes, n_features, y_cat=False, covariance_type="full", reg_covar=1e-06, val_size=0.30,
+                 n_reduced=20, reduction_technique="select_from_model_rf", random_state=42, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.y_cat = y_cat
         self.num_comps = list(np.arange(2, 20, 2))
@@ -291,7 +292,7 @@ class GMMMIEstimator(MIEstimatorBase):
                 gmm = get_gmm(X, y, covariance_type=self.covariance_type, y_cat=self.y_cat, num_comps=self.num_comps,
                               reg_covar=self.reg_covar, val_size=self.val_size, random_state=seed + iter_)
                 self.logger.info(f"GMM Model {gmm}")
-                select = SelectVars(gmm, selection_mode=`backward`)
+                select = SelectVars(gmm, selection_mode="backward")
                 select.fit(X, y, verbose=verbose, eps=np.finfo(np.float32).eps)
                 mi_mean, _ = select.get_info().values[0][1], select.get_info().values[0][2]
                 mi = np.max([mi_mean, 0.0]) * np.log2(np.e)
@@ -339,7 +340,7 @@ class GMMMIEstimator(MIEstimatorBase):
         self.logger.debug(f"Best Model is not None out of {self.n_models} seed {self.best_seed}")
         X = self.__transform__(X, y)
         if self.best_model is not None:
-            idx = np.where(self.best_model.get_info()[`delta`].values < 0)
+            idx = np.where(self.best_model.get_info()["delta"].values < 0)
             try:
                 # self.logger.info(self.best_model.get_info())
                 # self.logger.info(f"Indices {idx[0]}")
@@ -490,24 +491,24 @@ class GMMMIEstimator(MIEstimatorBase):
         while True:
             try:
                 iter_ += 1
-                select = SelectVars(self.best_gmm_model, selection_mode=`backward`)
+                select = SelectVars(self.best_gmm_model, selection_mode="backward")
                 select.fit(X, y, verbose=verbose, eps=np.finfo(np.float32).eps)
                 mi_mean, _ = select.get_info().values[0][1], select.get_info().values[0][2]
                 mi_estimated = np.nanmax([mi_mean, 0.0]) * np.log2(np.e)
                 if verbose:
-                    print(f`Model Number: {iter_}, Estimated MI: {mi_estimated}`)
-                self.logger.info(f`Model Number: {iter_}, Estimated MI: {mi_estimated}`)
+                    print(f"Model Number: {iter_}, Estimated MI: {mi_estimated}")
+                self.logger.info(f"Model Number: {iter_}, Estimated MI: {mi_estimated}")
             except Exception as error:
                 log_exception_error(self.logger, error)
                 self.logger.error(f"Model {iter_} was not valid re-estimating it")
                 mi_estimated = np.nan
             if np.isnan(mi_estimated) or np.isinf(mi_estimated):
-                self.logger.error(f`Nan MI Re-estimating`)
+                self.logger.error(f"Nan MI Re-estimating")
             else:
                 break
             if iter_ > 100:
                 if np.isnan(mi_estimated) or np.isinf(mi_estimated):
-                    self.logger.error(f`Setting Mi to 0`)
+                    self.logger.error(f"Setting Mi to 0")
                     mi_estimated = 0.0
                 break
         return mi_estimated

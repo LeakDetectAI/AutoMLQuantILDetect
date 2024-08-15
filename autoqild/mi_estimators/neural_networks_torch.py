@@ -167,7 +167,7 @@ class StatNet(nn.Module):
         Output layer.
     """
 
-    def __init__(self, in_dim, cls_enc=1, n_units=100, n_hidden=1, device=`cpu`):
+    def __init__(self, in_dim, cls_enc=1, n_units=100, n_hidden=1, device="cpu"):
         super(StatNet, self).__init__()
         self.device = device
         self.input = nn.Linear(in_dim + cls_enc, n_units).to(self.device)

@@ -1,3 +1,5 @@
+"""AutoGluon-based MI estimator that leverages automated machine learning (AutoML) to estimate MI with optimized
+hyperparameters."""
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
 from autoqild.automl import AutoGluonClassifier
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
@@ -60,7 +62,7 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
         Instance of the AutoGluon classifier used for learning.
     """
 
-    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric=`accuracy`,
+    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric="accuracy",
                  use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
                  remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs)

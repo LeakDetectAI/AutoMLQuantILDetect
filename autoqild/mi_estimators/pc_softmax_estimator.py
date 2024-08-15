@@ -1,3 +1,5 @@
+"""MI estimator that uses probability-corrected softmax functions to assess the information content in
+classification scenarios."""
 import logging
 import math
 
@@ -77,7 +79,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
     """
 
     def __init__(self, n_classes, n_features, n_hidden=10, n_units=100, loss_function=nn.NLLLoss(),
-                 optimizer_str=`adam`, learning_rate=0.001, reg_strength=0.001, is_pc_softmax=False, random_state=42):
+                 optimizer_str="adam", learning_rate=0.001, reg_strength=0.001, is_pc_softmax=False, random_state=42):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(PCSoftmaxMIEstimator.__name__)
         self.optimizer_str = optimizer_str
@@ -89,7 +91,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.n_hidden = n_hidden
         self.n_units = n_units
         self.loss_function = loss_function
-        self.device = torch.device(`cuda` if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.optimizer = None
         self.class_net = None
         self.dataset_properties = None
@@ -175,8 +177,8 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
                 _, predicted = torch.max(preds_, 1)
                 correct += (predicted == tensor_y).sum().item()
                 accuracy = 100 * correct / tensor_y.size(0)
-                print(f`For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %`)
-                self.logger.error(f`For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %`)
+                print(f"For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %")
+                self.logger.error(f"For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %")
         self.mi_val = self.estimate_mi(X, y, verbose=0)
         self.logger.info(f"Fit Loss {self.final_loss} MI Val: {self.mi_val}")
         return self
@@ -216,7 +218,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         X : array-like of shape (n_samples, n_features)
             Feature matrix.
         y : array-like of shape (n_samples,)
-            True labels for `X`.
+            True labels for "X".
         sample_weight : array-like of shape (n_samples,), optional
             Sample weights.
         verbose : int, optional, default=0
@@ -285,11 +287,16 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Decision function values.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
+        test_ = None
         dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
-        scores = test_.detach().numpy()
+        if test_ is not None:
+            scores = test_.detach().numpy()
+        else:
+            n_samples, n_classes = X.shape[0], X.shape[1]
+            scores = np.zeros(n_samples) + 1/n_classes
         return scores
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):

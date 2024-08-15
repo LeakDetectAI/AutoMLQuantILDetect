@@ -3,16 +3,15 @@ import logging
 
 import numpy as np
 
-__all__ = [`GEN_TYPES`, `FACTOR`, `LABEL_COL`, `generate_samples_per_class`, `clean_class_label`, `pdf`]
+__all__ = ["GEN_TYPES", "FACTOR", "LABEL_COL", "generate_samples_per_class", "clean_class_label", "pdf"]
 
 
-GEN_TYPES = [`single`, `multiple`, `FACTOR`]
+GEN_TYPES = ["single", "multiple"]
 """
     List of supported generation types for class imbalance:
     
     - `single`: Imbalance is applied to one class.
     - `multiple`: Imbalance is distributed across multiple classes.
-    - `FACTOR`: A custom generation type (implementation not shown here).
 """
 
 FACTOR = 1.5
@@ -20,13 +19,13 @@ FACTOR = 1.5
     A constant factor used for scaling or other operations.
 """
 
-LABEL_COL = `label`
+LABEL_COL = "label"
 """
     Default label column name used in datasets.
 """
 
 
-def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type=`single`, logger=None, verbose=1):
+def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type="single", logger=None, verbose=1):
     """
     Generate the number of samples per class with a specified imbalance.
 
@@ -43,12 +42,12 @@ def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type
         The total number of samples across all classes.
 
     imbalance : float, default=0.05
-        The proportion of samples in the minority class (or classes if `gen_type` is `multiple`). The value must be less than or equal to 1/n_classes.
+        The proportion of samples in the minority class (or classes if `gen_type` is "multiple"). The value must be less than or equal to 1/n_classes.
 
-    gen_type : str, default=`single`
+    gen_type : str, default="single"
         The type of imbalance generation:
-        - `single`: Imbalance is applied to one class.
-        - `multiple`: Imbalance is distributed across multiple classes.
+        - "single": Imbalance is applied to one class.
+        - "multiple": Imbalance is distributed across multiple classes.
 
     logger : logging.Logger, optional
         Logger object for logging output. If None, a default logger is created.
@@ -75,10 +74,10 @@ def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type
             f"The imbalance {np.around(imbalance, 2)} for a class cannot be more than uniform {1 / n_classes}")
     if gen_type not in GEN_TYPES:
         raise ValueError(f"Generation type {gen_type} not defined {GEN_TYPES}")
-    assert (n_classes == 2) == (gen_type == `single`) or n_classes > 2
+    assert (n_classes == 2) == (gen_type == "single") or n_classes > 2
     samples_per_class = {}
     n_total_instances = samples * n_classes
-    if gen_type == `single`:
+    if gen_type == "single":
         for n_c in range((n_classes - 1)):
             imb = ((1 - imbalance) / (n_classes - 1))
             n_samples = imb * n_total_instances
@@ -89,7 +88,7 @@ def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type
         v = samples_per_class[str(n_classes - 1)] / n_total_instances
         if verbose:
             logger.info(f"Class {n_classes} calculated {np.around(v, 2)}")
-    if gen_type == `multiple`:
+    if gen_type == "multiple":
         for n_c in range((n_classes - 1)):
             n_samples = imbalance * n_total_instances
             samples_per_class[str(n_c)] = int(np.ceil(n_samples))
@@ -131,7 +130,7 @@ def clean_class_label(string):
     This function is useful for formatting class labels in a readable way, especially when they are
     generated automatically or retrieved from a source where they are not human-readable.
     """
-    string = ` `.join(string.split(`_`)).title()
+    string = ' '.join(string.split('_')).title()
     string = string.replace("  ", " ")
     return string
 

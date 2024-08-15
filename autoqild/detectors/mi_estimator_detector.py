@@ -3,7 +3,7 @@ from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..mi_estimators import GMMMIEstimator, MineMIEstimatorMSE
 from ..utilities import *
 
-__all__ = [`MIEstimationLeakageDetector`]
+__all__ = ["MIEstimationLeakageDetector"]
 
 
 class MIEstimationLeakageDetector(SklearnLeakageDetector):
@@ -97,24 +97,25 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         """
         Initializes the results dictionary for storing metric results.
 
-        This method sets up the internal results dictionary, organizing it by hypothesis models and metrics. Each model’s
-        metric scores are prepared for storage, along with the majority voting and random classifier baselines.
+        This method sets up the internal results dictionary, organizing it by hypothesis models and metrics.
+        Each model’s metric scores are prepared for storage, along with the majority voting and random classifier
+        baselines.
 
         Notes
         -----
         This method is intended for internal use only and is automatically called during initialization.
         """
         for i in range(self.n_hypothesis):
-            self.results[f`model_{i}`] = {}
-            self.results[f`model_{i}`][ESTIMATED_MUTUAL_INFORMATION] = []
+            self.results[f"model_{i}"] = {}
+            self.results[f"model_{i}"][ESTIMATED_MUTUAL_INFORMATION] = []
 
     def hyperparameter_optimization(self, X, y):
         """
         Performs Bayesian hyperparameter optimization to identify the best model parameters.
 
-        This method uses a Bayesian search strategy to explore a predefined hyperparameter search space and selects the optimal
-        configuration based on the specified validation loss. The method performs cross-validation within the search to ensure
-        that the selected hyperparameters generalize well.
+        This method uses a Bayesian search strategy to explore a predefined hyperparameter search space and selects the
+        optimal configuration based on the specified validation loss. The method performs cross-validation within the
+        search to ensure that the selected hyperparameters generalize well.
 
         Parameters
         ----------

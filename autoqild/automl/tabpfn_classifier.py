@@ -106,7 +106,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Transform and reduce the feature matrix with `n_features` features, using the specified reduction
         technique to the feature matrix with `n_reduced` features.
     """
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique=`select_from_model_rf`,
+    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique="select_from_model_rf",
                  base_path=None, random_state=None, **kwargs):
         self.n_features = n_features
         self.n_classes = n_classes
@@ -118,9 +118,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.__is_fitted__ = False
 
         if torch.cuda.is_available():
-            device = `cuda`
+            device = "cuda"
         else:
-            device = `cpu`
+            device = "cpu"
         self.device = device
         self.logger.info(f"Device {self.device}")
         self.n_ensembles = n_ensembles
@@ -186,7 +186,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         X = self.__transform__(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
-            params[`base_path`] = self.base_path
+            params["base_path"] = self.base_path
 
         self.model = TabPFNClassifier(**params)
         self.model.fit(X, y, overwrite_warning=True)

@@ -33,13 +33,13 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         Number of units per hidden layer.
     batch_normalization : bool, optional, default=True
         Whether to use batch normalization.
-    activation : str, optional, default=`relu`
+    activation : str, optional, default="relu"
         Activation function to use in the hidden layers.
-    loss_function : str, optional, default=`categorical_crossentropy`
+    loss_function : str, optional, default="categorical_crossentropy"
         Loss function to use for training.
-    metrics : list of str, optional, default=[`accuracy`]
+    metrics : list of str, optional, default=["accuracy"]
         List of metrics to be evaluated by the model during training and testing.
-    optimizer_str : {`adam`, `sgd`, ...}, default=`adam`
+    optimizer_str : {"adam", "sgd", ...}, default="adam"
         Optimizer to use for training. Must be one of the optimizers available in Keras.
     reg_strength : float, optional, default=1e-4
         Regularization strength for the L2 regularizer.
@@ -49,7 +49,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         Learning rate for the optimizer.
     early_stopping : bool, optional, default=False
         Whether to use early stopping during training.
-    model_save_path : str, optional, default=``
+    model_save_path : str, optional, default=""
         Path to save the trained model.
     random_state : int or None, optional, default=None
         Random state for reproducibility.
@@ -74,10 +74,10 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         Construct and compile the Keras models.
     """
 
-    def __init__(self, n_features, n_classes, n_hidden=10, n_units=100, batch_normalization=True, activation=`relu`,
-                 loss_function=`categorical_crossentropy`, metrics=[`accuracy`], optimizer_str=`adam`,
+    def __init__(self, n_features, n_classes, n_hidden=10, n_units=100, batch_normalization=True, activation="relu",
+                 loss_function="categorical_crossentropy", metrics=["accuracy"], optimizer_str="adam",
                  reg_strength=1e-4, kernel_initializer="lecun_normal", learning_rate=0.001,
-                 early_stopping=False, model_save_path=``, random_state=None, **kwargs):
+                 early_stopping=False, model_save_path="", random_state=None, **kwargs):
         self.logger = logging.getLogger(name=MultiLayerPerceptron.__name__)
         self.n_features = n_features
         self.n_classes = n_classes
@@ -86,14 +86,14 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self.n_hidden = n_hidden
         self.batch_normalization = batch_normalization
         if not self.batch_normalization:
-            self.activation = `selu`
+            self.activation = "selu"
         else:
             self.activation = activation
         self.loss_function = loss_function
         self.optimizer_str = optimizer_str
-        if optimizer_str == `adam`:
+        if optimizer_str == "adam":
             self.optimizer = optimizers.Adam()
-        elif optimizer_str == `sgd`:
+        elif optimizer_str == "sgd":
             self.optimizer = optimizers.SGD()
         else:
             self.optimizer = optimizers.get(optimizer_str)
@@ -115,7 +115,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self.output_node = Dense(
             1, activation="sigmoid", kernel_regularizer=self.kernel_regularizer
         )
-        self.input = Input(shape=self.n_features, dtype=`float32`)
+        self.input = Input(shape=self.n_features, dtype="float32")
         if self.batch_normalization:
             self.hidden_layers = [
                 NormalizedDense(self.n_units, name="hidden_{}".format(x), **kwargs) for x in range(self.n_hidden)
@@ -125,7 +125,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
                 Dense(self.n_units, name="hidden_{}".format(x), **kwargs) for x in range(self.n_hidden)
             ]
         self.score_layer = Dense(self.n_classes, activation=None, kernel_regularizer=self.kernel_regularizer)
-        self.output_node = Activation(`softmax`, name=`predictions`)
+        self.output_node = Activation("softmax", name="predictions")
         assert len(self.hidden_layers) == self.n_hidden
 
     def _construct_model_(self):
@@ -204,7 +204,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self : MultiLayerPerceptron
             Fitted estimator.
         """
-        class_weights = class_weight.compute_class_weight(`balanced`, classes=np.unique(y), y=y)
+        class_weights = class_weight.compute_class_weight("balanced", classes=np.unique(y), y=y)
         class_weights = dict(enumerate(class_weights))
         self._construct_layers(
             kernel_regularizer=self.kernel_regularizer,
@@ -336,8 +336,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
-        (such as :class:`~sklearn.pipeline.Pipeline`). The latter have
-        parameters of the form ``<component>__<parameter>`` so that it`s
+        (such as :class:"~sklearn.pipeline.Pipeline"). The latter have
+        parameters of the form ""<component>__<parameter>"" so that it"s
         possible to update each component of a nested object.
 
         Parameters

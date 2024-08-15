@@ -1,11 +1,14 @@
+"""This Python module provides functions for calculating various metrics related to mutual information and
+classification performance, including binary cross-entropy, upper and lower bounds of mutual information,
+AUC score, and more."""
 import logging
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
 from .utils import normalize
 
-__all__ = ['bin_ce', 'helmann_raviv_function', 'helmann_raviv_upper_bound', 'santhi_vardi_upper_bound',
-           'fanos_lower_bound', 'fanos_adjusted_lower_bound', 'auc_score', 'pc_softmax_estimation',
-           'log_loss_estimation', 'mid_point_mi', 'false_positive_rate', 'false_negative_rate']
+__all__ = ["bin_ce", "helmann_raviv_function", "helmann_raviv_upper_bound", "santhi_vardi_upper_bound",
+           "fanos_lower_bound", "fanos_adjusted_lower_bound", "auc_score", "pc_softmax_estimation",
+           "log_loss_estimation", "mid_point_mi", "false_positive_rate", "false_negative_rate"]
 
 logger = logging.getLogger("Metrics")
 
@@ -154,7 +157,7 @@ def santhi_vardi_upper_bound(y_true, y_pred):
 
 def fanos_lower_bound(y_true, y_pred):
     """
-    Computes Fano's lower bound for mutual information.
+    Computes Fano"s lower bound for mutual information.
 
     Parameters
     ----------
@@ -166,11 +169,11 @@ def fanos_lower_bound(y_true, y_pred):
     Returns
     -------
     fanos_lb : float
-        Fano's lower bound.
+        Fano"s lower bound.
 
     Notes
     -----
-    - Fano's bound gives a lower estimate of mutual information by considering the classification error
+    - Fano"s bound gives a lower estimate of mutual information by considering the classification error
       and the complexity of the classification task (in terms of the number of classes).
     """
     n_classes = len(np.unique(y_true))
@@ -183,7 +186,7 @@ def fanos_lower_bound(y_true, y_pred):
 
 def fanos_adjusted_lower_bound(y_true, y_pred):
     """
-    Computes the adjusted Fano's lower bound for mutual information.
+    Computes the adjusted Fano"s lower bound for mutual information.
 
     Parameters
     ----------
@@ -195,12 +198,12 @@ def fanos_adjusted_lower_bound(y_true, y_pred):
     Returns
     -------
     fanos_adjusted_lb : float
-        Adjusted Fano's lower bound.
+        Adjusted Fano"s lower bound.
 
     Notes
     -----
     - This adjusted bound accounts for binary cross-entropy and provides a refined lower bound estimate
-      compared to the standard Fano's bound.
+      compared to the standard Fano"s bound.
     """
     n_classes = len(np.unique(y_true))
     acc = accuracy_score(y_true, y_pred)
@@ -227,7 +230,7 @@ def mid_point_mi(y_true, y_pred):
 
     Notes
     -----
-    - This estimate is computed as the average of the Hellman-Raviv upper bound and Fano's lower bound.
+    - This estimate is computed as the average of the Hellman-Raviv upper bound and Fano"s lower bound.
     - The estimate is constrained to be non-negative by taking the maximum with zero.
     """
     mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(y_true, y_pred)
@@ -261,13 +264,13 @@ def auc_score(y_true, p_pred):
     n_classes = len(np.unique(y_true))
     if n_classes > 2:
         try:
-            auc_roc = roc_auc_score(y_true, p_pred, multi_class='ovr')
+            auc_roc = roc_auc_score(y_true, p_pred, multi_class="ovr")
         except Exception as e:
             logger.error(f"Exception: {str(e)}")
             try:
                 logger.error(f"Applying normalization to avoid exception")
                 p_pred = normalize(p_pred, axis=1)
-                auc_roc = roc_auc_score(y_true, p_pred, multi_class='ovr')
+                auc_roc = roc_auc_score(y_true, p_pred, multi_class="ovr")
             except Exception as e:
                 logger.error(f"After normalization Exception: {str(e)}")
                 logger.error(f"Setting AUC to NaN")

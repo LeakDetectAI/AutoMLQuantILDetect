@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.utils import check_random_state
 
-__all__ = [`RandomClassifier`, `MajorityVoting`, `PriorClassifier`]
+__all__ = ["RandomClassifier", "MajorityVoting", "PriorClassifier"]
 
 
 class RandomClassifier(DummyClassifier):
@@ -17,7 +17,7 @@ class RandomClassifier(DummyClassifier):
         Additional keyword arguments to pass to DummyClassifier.
     """
     def __init__(self, **kwargs):
-        super(RandomClassifier, self).__init__(strategy=`uniform`, **kwargs)
+        super(RandomClassifier, self).__init__(strategy="uniform", **kwargs)
 
 
 class MajorityVoting(DummyClassifier):
@@ -30,7 +30,7 @@ class MajorityVoting(DummyClassifier):
         Additional keyword arguments to pass to DummyClassifier.
     """
     def __init__(self, **kwargs):
-        super(MajorityVoting, self).__init__(strategy=`most_frequent`, **kwargs)
+        super(MajorityVoting, self).__init__(strategy="most_frequent", **kwargs)
 
 
 class PriorClassifier(DummyClassifier):
@@ -62,7 +62,7 @@ class PriorClassifier(DummyClassifier):
         Random state instance for reproducibility.
     """
     def __init__(self, random_state=None, **kwargs):
-        super(PriorClassifier, self).__init__(strategy=`prior`, **kwargs)
+        super(PriorClassifier, self).__init__(strategy="prior", **kwargs)
         self.class_probabilities = [0.5, 0.5]
         self.classes_ = [0, 1]
         self.n_classes = 2
