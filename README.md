@@ -30,7 +30,7 @@ python setup.py install
 pip install -r requirements.txt
 pip install -e ./
 ```
-Documentation at https://automlquantildetect.readthedocs.io/en/latest/
+Documentation at https://automlquantildetect.readthedocs.io/
 
 ## ⭐ Quickstart Guide
 You can use `AutoMLQuantILDetect` in different ways.
