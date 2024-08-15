@@ -2,7 +2,7 @@ Installation Guide
 ==================
 
 .. note::
-    `ALPBench` is intended to work with **Python 3.10 and above**.
+    `AutoMLQuantILDetect` with package ``autoqild`` is intended to work with **Python 3.9.5 and above**.
 
 Installation Steps
 ------------------
