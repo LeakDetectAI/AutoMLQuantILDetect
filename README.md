@@ -45,7 +45,7 @@ You can find similar example code snippets in
 from sklearn.metrics import accuracy_score
 from autoqild.dataset_readers.synthetic_data_generator import SyntheticDatasetGenerator
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
-from autoqild.utilities.constants import LOG_LOSS_MI_ESTIMATION, MID_POINT_MI_ESTIMATION
+from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION, MID_POINT_MI_ESTIMATION
 
 # Step 1: Generate a Synthetic Dataset
 random_state = 42
@@ -89,12 +89,20 @@ print(f"Estimated MI (Log-Loss): {estimated_mi_log_loss}")
 print(f"Estimated MI (Mid-Point): {estimated_mi_mid_point}")
 print(f"Model Accuracy: {accuracy}")
 
->> Generated dataset X shape: (600, 5), y shape: (600,)
->> ##############################################################
->> Ground-Truth MI: 1.1751928845077875
->> Estimated MI (Log-Loss): 1.3193094645863748
->> Estimated MI (Mid-Point): 1.584961043823006
->> Model Accuracy: 1.0
+>> Generated
+dataset
+X
+shape: (600, 5), y
+shape: (600,)
+>>  ##############################################################
+>> Ground - Truth
+MI: 1.1751928845077875
+>> Estimated
+MI(Log - Loss): 1.3193094645863748
+>> Estimated
+MI(Mid - Point): 1.584961043823006
+>> Model
+Accuracy: 1.0
 
 ```
 

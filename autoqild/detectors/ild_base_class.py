@@ -15,7 +15,7 @@ from statsmodels.stats.multitest import multipletests
 
 from autoqild.bayes_search.bayes_search_utils import get_scores, probability_calibration
 from autoqild.classifiers import MajorityVoting, RandomClassifier
-from autoqild.detectors.utils import *
+from autoqild.detectors._utils import *
 from autoqild.utilities import *
 
 __all__ = ['InformationLeakageDetector']
@@ -657,15 +657,19 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     def hyperparameter_optimization(self, X, y):
         """
-        Performs hyperparameter optimization using Bayesian search to identify the best model parameters.
+        Perform hyperparameter optimization using Bayesian search to identify the best model parameters.
+
+        This method is intended to explore a wide range of hyperparameters using an optimization strategy (such as Bayesian search)
+        to determine the most effective configuration for the models used in information leakage detection. The method is designed
+        to be overridden by subclasses to implement specific optimization routines.
 
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The input data to be used for training during hyperparameter optimization.
+        X : array-like of shape (n_samples, n_features)
+            The input feature matrix used for training during hyperparameter optimization.
 
-        y : array-like, shape (n_samples,)
-            The target values (class labels) corresponding to X.
+        y : array-like of shape (n_samples,)
+            The target values (class labels) corresponding to each row in X.
 
         Returns
         -------
@@ -681,16 +685,19 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     def fit(self, X, y):
         """
-        Fits the model to the provided data using cross-validation and the specified detection method.
-        This method also performs hyperparameter optimization if the model is not already fitted.
+        Fit the model using cross-validation and the specified detection method.
+
+        This function trains the model on the provided dataset, applying cross-validation based on the configured detection
+        strategy. The method also integrates hyperparameter optimization if the model is not already fitted. It serves as the main
+        entry point for model training, allowing subclasses to customize the fitting process for different types of detectors.
 
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The input data to be used for training the models.
+        X : array-like of shape (n_samples, n_features)
+            The input feature matrix used for model training.
 
-        y : array-like, shape (n_samples,)
-            The target values (class labels) corresponding to X.
+        y : array-like of shape (n_samples,)
+            The target values (class labels) corresponding to each row in X.
 
         Raises
         ------
@@ -701,35 +708,43 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """
-        Evaluates the performance of a model using various metrics and stores the results.
+        Evaluate and store model performance metrics for the detection process.
+
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model's
+        predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling. The
+        results are stored and logged for further analysis.
 
         Parameters
         ----------
-        X_test : array-like, shape (n_samples, n_features)
-            The input data used for testing.
+        X_test : array-like of shape (n_samples, n_features)
+            The feature matrix for the test set.
 
-        X_train : array-like, shape (n_samples, n_features)
-            The input data used for training.
+        X_train : array-like of shape (n_samples, n_features)
+            The feature matrix for the training set.
 
-        y_test : array-like, shape (n_samples,)
-            The true target values for the test data.
+        y_test : array-like of shape (n_samples,)
+            The true target labels for the test set.
 
-        y_train : array-like, shape (n_samples,)
-            The true target values for the training data.
+        y_train : array-like of shape (n_samples,)
+            The true target labels for the training set.
 
-        y_pred : array-like, shape (n_samples,)
-            The predicted target values for the test data.
+        y_pred : array-like of shape (n_samples,)
+            The predicted labels for the test set.
 
-        p_pred : array-like, shape (n_samples, n_classes)
-            The predicted probabilities for the test data.
+        p_pred : array-like of shape (n_samples, n_classes)
+            The predicted class probabilities for the test set.
 
         model : object
             The trained model that is being evaluated.
 
         n_model : int
-            The index of the model in the list of evaluated models.
-        """
+            The index of the model within the list of models being evaluated.
 
+        Notes
+        -----
+        The method handles specific metrics like log-loss-based mutual information (MI) estimation and confusion matrices,
+        which are critical for detecting information leakage.
+        """
         model_name = list(self.results.keys())[n_model]
         self.logger.info(f"Appending results for model {model_name}")
         for metric_name, evaluation_metric in mi_estimation_metrics.items():
@@ -756,7 +771,6 @@ class InformationLeakageDetector(metaclass=ABCMeta):
             else:
                 metric_loss = evaluation_metric(y_test, y_pred)
             if metric_name == CONFUSION_MATRIX:
-                # metric_loss = np.array(metric_loss)
                 (tn, fp, fn, tp) = metric_loss.ravel()
                 cm_string = f"TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}"
                 metric_loss = [tn, fp, fn, tp]
@@ -767,17 +781,24 @@ class InformationLeakageDetector(metaclass=ABCMeta):
 
     def detect(self):
         """
-        Executes the detection process to identify potential information leakage using the specified method.
-        This function applies statistical tests to determine if there is significant leakage.
+        Detect potential information leakage using the configured detection method.
+
+        This method applies statistical tests, such as paired t-tests or Fisher's exact tests, to determine if there is
+        a significant difference in model performance that indicates information leakage. The results of these tests are
+        used to decide whether leakage is present and, if so, how many models exhibit it.
 
         Returns
         -------
-        tuple
-            A tuple containing two elements:
-            - A boolean indicating whether any models showed significant leakage.
-            - An integer representing the number of models that were flagged for leakage.
+        detection_decision : bool
+            Indicates whether any models showed significant leakage.
+        hypothesis_rejected : int
+            The number of models flagged for leakage.
+
+        Notes
+        -----
+        The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-        # change for including holm-bonnfernoi
+
         def holm_bonferroni(p_values):
             reject, pvals_corrected, _, alpha = multipletests(p_values, 0.01, method='holm', is_sorted=False)
             reject = [False] * len(p_values) + list(reject)

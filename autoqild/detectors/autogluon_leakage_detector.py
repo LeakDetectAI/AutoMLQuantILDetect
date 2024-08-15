@@ -10,6 +10,56 @@ __all__ = ['AutoGluonLeakageDetector']
 
 
 class AutoGluonLeakageDetector(InformationLeakageDetector):
+    """
+    AutoGluonLeakageDetector leverages the AutoGluon framework for detecting information leakage in machine learning
+    models. This class extends the `InformationLeakageDetector` base class and uses AutoGluon for hyperparameter
+    optimization and model training. It evaluates potential information leakage using various metrics across different
+    cross-validation splits.
+
+    Parameters
+    ----------
+    padding_name : str
+        The name of the padding method used in experiments to potentially obscure or prevent leakage.
+
+    learner_params : dict
+        Parameters related to the AutoGluon classifier used in the leakage detection process.
+
+    fit_params : dict
+        Parameters passed to the `fit` method of the AutoGluon models during training.
+
+    hash_value : str
+        A unique hash value used to identify and manage result files for a specific experiment.
+
+    cv_iterations : int
+        The number of cross-validation iterations to perform during model evaluation.
+
+    n_hypothesis : int
+        The number of hypotheses or models to be tested for leakage.
+
+    base_directory : str
+        The base directory where result files, logs, and backups are stored.
+
+    validation_loss : str
+        The evaluation metric used to assess model performance during hyperparameter optimization.
+
+    random_state : int or None, optional
+        Controls the randomness for reproducibility, ensuring consistent results across different runs.
+
+    **kwargs : dict, optional
+        Additional keyword arguments passed to the `InformationLeakageDetector` base class.
+
+    Attributes
+    ----------
+    base_detector : AutoGluonClassifier
+        The base AutoGluon classifier used for model training.
+
+    learner : AutoGluonClassifier instance
+        The AutoGluon classifier instance used for the current experiment.
+
+    logger : logging.Logger
+        Logger instance used for recording the steps and processes of the leakage detection.
+    """
+
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
                  base_directory, validation_loss, random_state=None, **kwargs):
         super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
@@ -26,6 +76,25 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         self.logger = logging.getLogger(AutoGluonLeakageDetector.__name__)
 
     def hyperparameter_optimization(self, X, y):
+        """
+        Performs hyperparameter optimization using AutoGluon to find the best models for leakage detection.
+
+        This method runs a Bayesian optimization process to identify the best models according to the specified evaluation metric.
+        The optimized models are then stored for subsequent evaluation.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input feature matrix used for training during hyperparameter optimization.
+
+        y : array-like of shape (n_samples,)
+            The target values (class labels) corresponding to each row in X.
+
+        Returns
+        -------
+        int
+            The size of the training dataset after the reduction (if applicable).
+        """
         X_train, y_train = self.__get_training_dataset__(X, y)
         self.learner = self.base_detector(**self.learner_params)
         self.learner.fit(X_train, y_train)
@@ -37,6 +106,20 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         return train_size
 
     def fit(self, X, y, **kwargs):
+        """
+        Fits the models using cross-validation and evaluates them for information leakage.
+
+        This method performs cross-validation, training the AutoGluon models across different data splits.
+        The models are then evaluated for potential leakage using metrics such as accuracy and log-loss.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input feature matrix used for model training.
+
+        y : array-like of shape (n_samples,)
+            The target values (class labels) corresponding to each row in X.
+        """
         if self._is_fitted_:
             self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
@@ -57,8 +140,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                             self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
                         train_data = self.learner.convert_to_dataframe(X_train, y_train)
                         test_data = self.learner.convert_to_dataframe(X_test, None)
-                        X_t = train_data.drop(columns=['class'])  # Extract the features from the training data
-                        y_t = train_data['class']  # Extract the labels from the training data
+                        X_t = train_data.drop(columns=['class'])
+                        y_t = train_data['class']
                         model._n_repeats_finished = 0
                         n_repeat_start = 0
                         model.fit(X=X_t, y=y_t, n_repeat_start=n_repeat_start)
@@ -72,8 +155,50 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             self.__store_results__()
 
     def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+        """
+        Evaluates and stores model performance metrics for the detection process.
+
+        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the
+        model's predictions. The results are stored and logged for further analysis.
+
+        Parameters
+        ----------
+        X_test : array-like of shape (n_samples, n_features)
+            The input feature matrix for the test set.
+
+        X_train : array-like of shape (n_samples, n_features)
+            The input feature matrix for the training set.
+
+        y_test : array-like of shape (n_samples,)
+            The true target labels for the test set.
+
+        y_train : array-like of shape (n_samples,)
+            The true target labels for the training set.
+
+        y_pred : array-like of shape (n_samples,)
+            The predicted labels for the test set.
+
+        p_pred : array-like of shape (n_samples, n_classes)
+            The predicted class probabilities for the test set.
+
+        model : object
+            The trained model that is being evaluated.
+
+        n_model : int
+            The index of the model within the list of models being evaluated.
+        """
         super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
                                 p_pred=p_pred, model=model, n_model=n_model)
 
     def detect(self):
+        """
+        Executes the detection process to identify potential information leakage using the specified method.
+
+        Returns
+        -------
+        detection_decision : bool
+            Indicates whether any models showed significant leakage.
+        hypothesis_rejected : int
+            The number of models flagged for leakage.
+        """
         return super().detect()

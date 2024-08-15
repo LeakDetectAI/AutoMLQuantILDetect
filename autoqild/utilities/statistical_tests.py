@@ -39,7 +39,7 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
 
 def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False):
     """
-    Performs a paired t-test on two sets of values with and without correction for overalp.
+    Performs a paired t-test on two sets of values with and without correction
 
     Parameters
     ----------
