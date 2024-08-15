@@ -29,12 +29,6 @@ class NormalizedDense(Layer):
         Batch normalization layer.
     norm_layer : keras.layers.Layer or None
         Normalization layer if specified.
-
-    Private Methods
-    ---------------
-    __call__(x) :no-index:
-        Applies the layer to the input tensor `x` to output a tensor after applying dense, activation, and
-        batch normalization.
     """
     def __init__(self, units, activation="relu", **kwd):
         super(NormalizedDense, self).__init__()
