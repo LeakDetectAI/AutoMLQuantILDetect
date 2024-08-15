@@ -111,13 +111,15 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         self.optimizer_str = optimizer_str
         self.learning_rate = learning_rate
         self.reg_strength = reg_strength
-        self.optimizer_cls, self._optimizer_config = get_optimizer_and_parameters(optimizer_str, learning_rate, reg_strength)
+        self.optimizer_cls, self._optimizer_config = get_optimizer_and_parameters(optimizer_str, learning_rate,
+                                                                                  reg_strength)
         self.encode_classes = encode_classes
         self.n_hidden = n_hidden
         self.n_units = n_units
         self.loss_function = loss_function
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.logger.info(f"device {self.device} cuda {torch.cuda.is_available()} gpu device {torch.cuda.device_count()}")
+        self.logger.info(
+            f"device {self.device} cuda {torch.cuda.is_available()} gpu device {torch.cuda.device_count()}")
         self.optimizer = None
         self.stat_net = None
         self.dataset_properties = None
@@ -206,7 +208,8 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         else:
             cls_enc = 1
         self.label_binarizer = LabelBinarizer().fit(y)
-        self.stat_net = StatNet(in_dim=self.n_features, cls_enc=cls_enc, n_hidden=self.n_hidden, n_units=self.n_units, device=self.device)
+        self.stat_net = StatNet(in_dim=self.n_features, cls_enc=cls_enc, n_hidden=self.n_hidden, n_units=self.n_units,
+                                device=self.device)
         self.stat_net.apply(init)
         self.stat_net.to(self.device)
         self.optimizer = self.optimizer_cls(self.stat_net.parameters(), **self._optimizer_config)
@@ -375,4 +378,3 @@ class MineMIEstimatorMSE(MIEstimatorBase):
             mi_estimated = self.mi_val
         mi_estimated = np.max([mi_estimated, 0.0])
         return mi_estimated
-

@@ -301,4 +301,3 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
         return super().detect()
-

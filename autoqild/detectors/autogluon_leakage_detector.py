@@ -3,9 +3,9 @@ optimization and model evaluation."""
 import logging
 import os.path
 
+from .ild_base_class import InformationLeakageDetector
 from ..automl import AutoGluonClassifier
 from ..bayes_search.bayes_search_utils import get_scores
-from .ild_base_class import InformationLeakageDetector
 from ..utilities import *
 
 __all__ = ["AutoGluonLeakageDetector"]

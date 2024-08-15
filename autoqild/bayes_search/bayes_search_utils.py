@@ -133,6 +133,7 @@ def log_callback(parameters):
     on_step : callable
         The callback function.
     """
+
     def on_step(opt_result):
         """Callback to view scores after each iteration while performing
         Bayesian Optimization in Skopt."""

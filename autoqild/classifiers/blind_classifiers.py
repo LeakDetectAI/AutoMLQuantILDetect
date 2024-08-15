@@ -17,6 +17,7 @@ class RandomClassifier(DummyClassifier):
     **kwargs : dict, optional
         Additional keyword arguments to pass to DummyClassifier.
     """
+
     def __init__(self, **kwargs):
         super(RandomClassifier, self).__init__(strategy="uniform", **kwargs)
 
@@ -29,6 +30,7 @@ class MajorityVoting(DummyClassifier):
     **kwargs : dict, optional
         Additional keyword arguments to pass to DummyClassifier.
     """
+
     def __init__(self, **kwargs):
         super(MajorityVoting, self).__init__(strategy="most_frequent", **kwargs)
 
@@ -61,6 +63,7 @@ class PriorClassifier(DummyClassifier):
     random_state : RandomState
         Random state instance for reproducibility.
     """
+
     def __init__(self, random_state=None, **kwargs):
         super(PriorClassifier, self).__init__(strategy="prior", **kwargs)
         self.class_probabilities = [0.5, 0.5]

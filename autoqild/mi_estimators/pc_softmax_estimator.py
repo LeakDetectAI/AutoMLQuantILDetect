@@ -290,7 +290,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             scores = test_.detach().numpy()
         else:
             n_samples, n_classes = X.shape[0], X.shape[1]
-            scores = np.zeros(n_samples) + 1/n_classes
+            scores = np.zeros(n_samples) + 1 / n_classes
         return scores
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
@@ -360,4 +360,3 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             mi_estimated = self.mi_val
         mi_estimated = np.max([mi_estimated, 0.0])
         return mi_estimated
-

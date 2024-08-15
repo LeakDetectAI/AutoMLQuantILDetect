@@ -283,9 +283,11 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                         for metric_name, results in metric_results.items():
                             conditions[f"{metric_name} in {model_group}"] = metric_name in model_group
                             self.logger.info(f"Results exists for metric {metric_name}: {metric_name in model_group}")
-                            vals = np.array(model_group[metric_name]) #np.array(model_group.get(metric_name))
+                            vals = np.array(model_group[metric_name])  # np.array(model_group.get(metric_name))
                             self.logger.info(f"Results {vals} stored for {self.cv_iterations} exist for {len(vals)}")
-                            conditions[f"{padding_name_group}_{model_name}_{metric_name} len(vals) == self.cv_iterations"] = len(vals) == self.cv_iterations
+                            conditions[
+                                f"{padding_name_group}_{model_name}_{metric_name} len(vals) == self.cv_iterations"] = len(
+                                vals) == self.cv_iterations
             file.close()
             self.__close_file__()
         conditions_vals = list(conditions.values())
@@ -633,7 +635,6 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         accuracy = accuracy_score(y_test, y_pred)
         self.results[MAJORITY_VOTING][ACCURACY].append(accuracy)
         self.logger.info(f"Majority Voting Performance Metric {ACCURACY}: Value {accuracy}")
-
 
     def __calculate_random_classifier_accuracy__(self, X_train, y_train, X_test, y_test):
         """Calculates and logs the accuracy of a random classifier.

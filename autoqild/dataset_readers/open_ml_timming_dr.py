@@ -214,5 +214,3 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
             n_1 = len(np.where(y == 1)[0])
             self.logger.info(f"After processing----ratio {n_1 / n_0} p {self.imbalance}, n_0 {n_0}, n_1 {n_1}----")
         return X, y
-
-

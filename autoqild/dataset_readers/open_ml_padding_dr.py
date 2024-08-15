@@ -1,7 +1,9 @@
 """Reader for OpenML datasets applying padding strategies to analyze data
 leakage."""
 import logging
+
 import openml
+
 from .open_ml_timming_dr import OpenMLTimingDatasetReader
 from .utils import *
 
@@ -77,6 +79,7 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels, fills
         missing values, and convert class label strings to integer values.
     """
+
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
         super().__init__(dataset_id=dataset_id, imbalance=imbalance, create_datasets=create_datasets,
                          random_state=random_state, **kwargs)

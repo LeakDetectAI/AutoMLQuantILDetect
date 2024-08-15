@@ -138,6 +138,7 @@ class GMMMIEstimator(MIEstimatorBase):
         Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
         technique to the feature matrix with 'n_reduced' features.
     """
+
     def __init__(self, n_classes, n_features, y_cat=False, covariance_type="full", reg_covar=1e-06, val_size=0.30,
                  n_reduced=20, reduction_technique="select_from_model_rf", random_state=42, **kwargs):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)

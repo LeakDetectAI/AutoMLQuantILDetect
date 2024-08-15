@@ -3,8 +3,10 @@ related to mutual information and classification performance, including binary
 cross-entropy, upper and lower bounds of mutual information, AUC score, and
 more."""
 import logging
+
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
+
 from ._utils import normalize
 
 __all__ = ["bin_ce", "helmann_raviv_function", "helmann_raviv_upper_bound", "santhi_vardi_upper_bound",

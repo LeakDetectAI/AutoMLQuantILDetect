@@ -31,6 +31,7 @@ class NormalizedDense(Layer):
     norm_layer : keras.layers.Layer or None
         Normalization layer if specified.
     """
+
     def __init__(self, units, activation="relu", **kwd):
         super(NormalizedDense, self).__init__()
         self.dense = Dense(units, activation="linear", **kwd)

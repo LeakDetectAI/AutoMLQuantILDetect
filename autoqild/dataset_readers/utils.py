@@ -6,7 +6,6 @@ import numpy as np
 
 __all__ = ["GEN_TYPES", "FACTOR", "LABEL_COL", "generate_samples_per_class", "clean_class_label", "pdf"]
 
-
 GEN_TYPES = ["single", "multiple"]
 """
     List of supported generation types for class imbalance:

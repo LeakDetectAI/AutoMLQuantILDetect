@@ -56,6 +56,7 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
     **kwargs : dict, optional
         Additional keyword arguments passed to the parent class.
     """
+
     def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
                  base_directory, search_space, hp_iters, n_inner_folds, validation_loss, random_state=None, **kwargs):
         if "n_classes" in learner_params.keys():

@@ -107,6 +107,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Transform and reduce the feature matrix with `n_features` features, using the specified reduction
         technique to the feature matrix with `n_reduced` features.
     """
+
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique="select_from_model_rf",
                  base_path=None, random_state=None, **kwargs):
         self.n_features = n_features

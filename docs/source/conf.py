@@ -7,8 +7,6 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../autoqild"))
 
-import autoqild
-
 # -- Read the Docs ---------------------------------------------------------------------------------
 master_doc = "index"
 
@@ -87,6 +85,7 @@ StandaloneHTMLBuilder.supported_image_types = [
 # Ignore >>> when copying code
 copybutton_prompt_text = r">>> |\.\.\. "
 copybutton_prompt_is_regexp = True
+
 
 # -- Markdown in docstring -----------------------------------------------------------------------------
 # https://gist.github.com/dmwyatt/0f555c8f9c129c0ac6fed6fabe49078b#file-docstrings-py

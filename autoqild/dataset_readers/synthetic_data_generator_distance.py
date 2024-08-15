@@ -109,6 +109,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         This method creates a random orthogonal matrix and generates a positive semi-definite covariance matrix.
         It then calculates the mean vector for each class.
     """
+
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type="single", **kwargs):
         self.n_classes = n_classes
