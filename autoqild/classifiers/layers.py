@@ -32,8 +32,8 @@ class NormalizedDense(Layer):
 
     Private Methods
     ---------------
-    __call__(x)
-        Applies the layer to the input tensor `x` to ouput a tensor after applying dense, activation, and
+    __call__(x) :no-index:
+        Applies the layer to the input tensor `x` to output a tensor after applying dense, activation, and
         batch normalization.
     """
     def __init__(self, units, activation="relu", **kwd):
