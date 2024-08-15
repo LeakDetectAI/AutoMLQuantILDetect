@@ -1,0 +1,12 @@
+autoqild.bayes\_search.bayes\_search\_cv
+========================================
+
+.. automodule:: autoqild.bayes_search.bayes_search_cv
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BayesSearchCV
+   
