@@ -1,4 +1,8 @@
-"""Implements several utility functions forarray normalization, logging exceptions, managing HDF5 files, and  creating directories safely."""
+"""
+Implements several utility functions for array normalization, logging exceptions, managing HDF5 files,
+and creating directories safely.
+"""
+
 import os
 import sys
 import traceback
@@ -10,7 +14,7 @@ from sklearn.preprocessing import RobustScaler
 
 warnings.filterwarnings("ignore")
 
-__all__ = ["logsumexp", "softmax", "sigmoid", "normalize", "progress_bar", "print_dictionary", "standardize_features",
+__all__ = ["logsumexp", "softmax", "sigmoid", "normalize", "progress_bar", "print_dictionary",
            "standardize_features", "create_directory_safely", "log_exception_error", "check_and_delete_corrupt_h5_file"]
 
 
@@ -106,7 +110,6 @@ def progress_bar(count, total, status=""):
         Total count for completion.
     status : str, optional
         A status message to display along with the progress bar.
-
     """
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
@@ -119,16 +122,16 @@ def progress_bar(count, total, status=""):
 
 def print_dictionary(dictionary, sep='\n', n_keys=None):
     """
-    Print a dictionary with keys and values formatted with a separator.
+    Prints a dictionary with keys and values formatted with a separator.
 
     Parameters
     ----------
     dictionary : dict
         The dictionary to print.
     sep : str, optional
-        Separator between key-value pairs. Default is '\n'.
+        The separator between key-value pairs. The default is '\n'.
     n_keys : int, optional
-        Number of key-value pairs to print. If None, prints all.
+        The number of key-value pairs to print. If None, all pairs are printed.
 
     Returns
     -------
@@ -145,109 +148,6 @@ def print_dictionary(dictionary, sep='\n', n_keys=None):
         else:
             break
     return output
-
-
-def standardize_features(x_train, x_test):
-    """
-    Standardize the features in the training and test sets using RobustScaler as a default.
-
-    Parameters
-    ----------
-    x_train : array-like
-        Training set features.
-    x_test : array-like
-        Test set features.
-
-    Returns
-    -------
-    x_train : array-like
-        Standardized training set features.
-    x_test : array-like
-        Standardized test set features.
-    """
-    standardize = Standardize()
-    x_train = standardize.fit_transform(x_train)
-    x_test = standardize.transform(x_test)
-    return x_train, x_test
-
-
-class Standardize(object):
-    def __init__(self, scalar=RobustScaler):
-        """
-        A class for standardizing features using a specified scaler.
-
-        Parameters
-        ----------
-        scalar : object, optional
-            The scaling class to use (default is "RobustScaler").
-
-        """
-        self.scalar = scalar
-        self.n_features = None
-        self.scalars = dict()
-
-    def fit(self, X):
-        """
-        Fit the scaler to the data.
-
-        Parameters
-        ----------
-        X : array-like or dict
-            The data to fit the scaler on.
-
-        Returns
-        -------
-        self : object
-            Fitted scaler.
-        """
-        if isinstance(X, dict):
-            self.n_features = list(X.keys())
-            for k, x in X.items():
-                scalar = self.scalar()
-                self.scalars[k] = scalar.fit(x)
-        if isinstance(X, (np.ndarray, np.generic)):
-            self.scalar = self.scalar()
-            self.scalar.fit(X)
-            self.n_features = X.shape[-1]
-
-    def transform(self, X):
-        """
-        Apply the scaling transformation to the data.
-
-        Parameters
-        ----------
-        X : array-like or dict
-            The data to transform.
-
-        Returns
-        -------
-        X : array-like or dict
-            The transformed data.
-        """
-        if isinstance(X, dict):
-            for n in self.n_features:
-                X[n] = self.scalars[n].__transform__(X[n])
-        if isinstance(X, (np.ndarray, np.generic)):
-            X = self.scalar.transform(X)
-        return X
-
-    def fit_transform(self, X):
-        """
-        Fit the scaler and transform the data.
-
-        Parameters
-        ----------
-        X : array-like or dict
-            The data to fit and transform.
-
-        Returns
-        -------
-        X : array-like or dict
-            The transformed data.
-        """
-        self.fit(X)
-        X = self.transform(X)
-        return X
 
 
 def log_exception_error(logger, e):
@@ -325,5 +225,109 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
             logger.error(f"The file '{basename}' has been deleted.")
     else:
         logger.info(f"File does not exist '{basename}'")
+
+
+def standardize_features(x_train, x_test):
+    """
+    Standardize the features in the training and test sets using RobustScaler as a default.
+
+    Parameters
+    ----------
+    x_train : array-like
+        Training set features.
+    x_test : array-like
+        Test set features.
+
+    Returns
+    -------
+    x_train : array-like
+        Standardized training set features.
+    x_test : array-like
+        Standardized test set features.
+    """
+    standardize = Standardize()
+    x_train = standardize.fit_transform(x_train)
+    x_test = standardize.transform(x_test)
+    return x_train, x_test
+
+
+class Standardize:
+    """
+    A class for standardizing features using a specified scaler.
+
+    Parameters
+    ----------
+    scalar : object, optional
+        The scaling class to use (default is "RobustScaler").
+    """
+
+    def __init__(self, scalar=RobustScaler):
+        self.scalar = scalar
+        self.n_features = None
+        self.scalars = dict()
+
+    def fit(self, X):
+        """
+        Fit the scaler to the data.
+
+        Parameters
+        ----------
+        X : array-like or dict
+            The data to fit the scaler on.
+
+        Returns
+        -------
+        self : object
+            Fitted scaler.
+        """
+        if isinstance(X, dict):
+            self.n_features = list(X.keys())
+            for k, x in X.items():
+                scalar = self.scalar()
+                self.scalars[k] = scalar.fit(x)
+        if isinstance(X, (np.ndarray, np.generic)):
+            self.scalar = self.scalar()
+            self.scalar.fit(X)
+            self.n_features = X.shape[-1]
+
+    def transform(self, X):
+        """
+        Apply the scaling transformation to the data.
+
+        Parameters
+        ----------
+        X : array-like or dict
+            The data to transform.
+
+        Returns
+        -------
+        X : array-like or dict
+            The transformed data.
+        """
+        if isinstance(X, dict):
+            for n in self.n_features:
+                X[n] = self.scalars[n].__transform__(X[n])
+        if isinstance(X, (np.ndarray, np.generic)):
+            X = self.scalar.transform(X)
+        return X
+
+    def fit_transform(self, X):
+        """
+        Fit the scaler and transform the data.
+
+        Parameters
+        ----------
+        X : array-like or dict
+            The data to fit and transform.
+
+        Returns
+        -------
+        X : array-like or dict
+            The transformed data.
+        """
+        self.fit(X)
+        X = self.transform(X)
+        return X
+
 
 
