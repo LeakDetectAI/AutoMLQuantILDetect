@@ -1,0 +1,12 @@
+autoqild.dataset\_readers.synthetic\_data\_generator
+====================================================
+
+.. automodule:: autoqild.dataset_readers.synthetic_data_generator
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SyntheticDatasetGenerator
+   
