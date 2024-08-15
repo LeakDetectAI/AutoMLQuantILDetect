@@ -14,101 +14,104 @@ __all__ = ['SyntheticDatasetGenerator']
 
 class SyntheticDatasetGenerator(metaclass=ABCMeta):
     """
-        Generator for synthetic datasets with a focus on generating data with varying class distances.
+    Generator for synthetic datasets with a focus on generating data with varying class distances.
 
-        This class generates synthetic datasets by adjusting the distance between class distributions, allowing
-        for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
-        in scenarios like testing classifiers on datasets with controlled class separability.
+    This class generates synthetic datasets by adjusting the distance between class distributions, allowing
+    for the simulation of scenarios with varying levels of overlap between classes. It is designed to help
+    in testing classifiers on datasets with controlled class separability.
 
-        Parameters
-        ----------
-        n_classes : int, default=2
-            Number of classes in the generated dataset.
+    Parameters
+    ----------
+    n_classes : int, default=2
+        Number of classes in the generated dataset.
 
-        n_features : int, default=2
-            Number of features in the generated dataset.
+    n_features : int, default=2
+        Number of features in the generated dataset.
 
-        samples_per_class : int or dict, default=500
-            Number of samples per class. If an integer is provided, it is assumed that all classes have the same
-            number of samples. If a dictionary is provided, the keys should be class labels and values should be
-            the number of samples for each class.
+    samples_per_class : int or dict, default=500
+        Number of samples per class. If an integer is provided, it is assumed that all classes have the same
+        number of samples. If a dictionary is provided, the keys should be class labels and values should be
+        the number of samples for each class.
 
-        flip_y : float, default=0.1
-            The fraction of samples whose class labels will be randomly flipped to simulate noise.
+    flip_y : float, default=0.1
+        The fraction of samples whose class labels will be randomly flipped to simulate noise.
 
-        random_state : int or RandomState instance, default=42
-            Random state for reproducibility.
+    random_state : int or RandomState instance, default=42
+        Random state for reproducibility.
 
-        fold_id : int, default=0
-            Fold ID used for random seed generation.
+    fold_id : int, default=0
+        Fold ID used for random seed generation.
 
-        imbalance : float, default=0.0
-            Proportion of the minority class in the dataset. Must be between 0 and 1.
+    imbalance : float, default=0.0
+        Proportion of the minority class in the dataset. Must be between 0 and 1.
 
-        gen_type : str, default='single'
-            Type of generation process. It can be used to modify the dataset generation method.
+    gen_type : str, default='single'
+        Type of generation process. It can be used to modify the dataset generation method.
 
-        **kwargs : dict
-            Additional keyword arguments.
+    **kwargs : dict
+        Additional keyword arguments.
 
-        Attributes
-        ----------
-        n_classes : int
-            Number of classes in the generated dataset.
+    Attributes
+    ----------
+    n_classes : int
+        Number of classes in the generated dataset.
 
-        n_features : int
-            Number of features in the generated dataset.
+    n_features : int
+        Number of features in the generated dataset.
 
-        random_state : RandomState instance
-            Random state instance for reproducibility.
+    random_state : RandomState instance
+        Random state instance for reproducibility.
 
-        fold_id : int
-            Fold ID used for random seed generation.
+    fold_id : int
+        Fold ID used for random seed generation.
 
-        means : dict
-            Dictionary storing the mean vectors for each class.
+    means : dict
+        Dictionary storing the mean vectors for each class.
 
-        covariances : dict
-            Dictionary storing the covariance matrices for each class.
+    covariances : dict
+        Dictionary storing the covariance matrices for each class.
 
-        seeds : dict
-            Dictionary storing the random seeds used for generating each class.
+    seeds : dict
+        Dictionary storing the random seeds used for generating each class.
 
-        samples_per_class : dict
-            Dictionary storing the number of samples for each class.
+    samples_per_class : dict
+        Dictionary storing the number of samples for each class.
 
-        imbalance : float
-            Proportion of the minority class in the dataset.
+    imbalance : float
+        Proportion of the minority class in the dataset.
 
-        gen_type : str
-            Type of generation process.
+    gen_type : str
+        Type of generation process.
 
-        n_instances : int
-            Total number of instances in the generated dataset.
+    n_instances : int
+        Total number of instances in the generated dataset.
 
-        class_labels : numpy.ndarray
-            Array of class labels.
+    class_labels : numpy.ndarray
+        Array of class labels.
 
-        y_prob : dict
-            Dictionary storing the probability of each class.
+    y_prob : dict
+        Dictionary storing the probability of each class.
 
-        ent_y : float or None
-            Entropy of the class distribution.
+    ent_y : float or None
+        Entropy of the class distribution.
 
-        flip_y_prob : dict
-            Dictionary storing the probability of flipped class labels for each class.
+    flip_y_prob : dict
+        Dictionary storing the probability of flipped class labels for each class.
 
-        flip_y : float
-            The fraction of samples whose class labels will be randomly flipped to simulate noise.
+    flip_y : float
+        The fraction of samples whose class labels will be randomly flipped to simulate noise.
 
-        logger : logging.Logger
-            Logger instance for logging information.
+    logger : logging.Logger
+        Logger instance for logging information.
 
-        Private Methods
-        ---------------
-        __generate_cov_means():
-            Generate the mean vectors and covariance matrices for each class.
+    Private Methods
+    ---------------
+    __generate_cov_means__():
+        Generate the mean vectors and covariance matrices for each class.
+        This method creates a random orthogonal matrix and generates a positive semi-definite covariance matrix.
+        It then calculates the mean vector for each class.
     """
+
     def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,
                  imbalance=0.0, gen_type='single', **kwargs):
 
@@ -135,16 +138,10 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         self.ent_y = None
         self.flip_y_prob = {}
         self.flip_y = flip_y
-        self.generate_cov_means()
+        self.__generate_cov_means__()
         self.logger = logging.getLogger(SyntheticDatasetGenerator.__name__)
 
-    def generate_cov_means(self):
-        """
-            Generate the mean vectors and covariance matrices for each class.
-
-            This method creates a random orthogonal matrix and generates a positive semi-definite covariance matrix.
-            It then calculates the mean vector for each class.
-        """
+    def __generate_cov_means__(self):
         seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
         rs = np.random.RandomState(seed=seed)
         Q = ortho_group.rvs(dim=self.n_features)
@@ -167,29 +164,29 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_prob_dist_x_given_y(self, k_class):
         """
-            Get the multivariate normal distribution for a given class.
+        Get the multivariate normal distribution for a given class.
 
-            Parameters
-            ----------
-            k_class : int
-                The class label for which to get the distribution.
+        Parameters
+        ----------
+        k_class : int
+            The class label for which to get the distribution.
 
-            Returns
-            -------
-            scipy.stats._multivariate.multivariate_normal_frozen
-                The multivariate normal distribution for the given class.
+        Returns
+        -------
+        scipy.stats._multivariate.multivariate_normal_frozen
+            The multivariate normal distribution for the given class.
         """
         return multivariate_normal(mean=self.means[k_class], cov=self.covariances[k_class],
                                    seed=self.seeds[k_class])
 
     def get_prob_fn_margx(self):
         """
-            Get the marginal probability distribution function for the input data.
+        Get the marginal probability distribution function for the input data.
 
-            Returns
-            -------
-            marg_x: lambda function
-                A function that computes the marginal probability for the input data.
+        Returns
+        -------
+        marg_x: function
+            A function that computes the marginal probability for the input data.
         """
         marg_x = lambda x: np.array([self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
                                      for k_class in self.class_labels])
@@ -197,20 +194,20 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_prob_x_given_y(self, X, class_label):
         """
-           Get the probability of X given a specific class label.
+        Get the probability of X given a specific class label.
 
-           Parameters
-           ----------
-           X : array-like of shape (n_samples, n_features)
-               Input data.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
 
-           class_label : int
-               The class label for which to compute the probability.
+        class_label : int
+            The class label for which to compute the probability.
 
-           Returns
-           -------
-           prob_x_given_y: array-like
-               The probability of X given the class label.
+        Returns
+        -------
+        prob_x_given_y: array-like
+            The probability of X given the class label.
         """
         dist = self.get_prob_dist_x_given_y(class_label)
         prob_x_given_y = pdf(dist, X)
@@ -218,20 +215,20 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_prob_y_given_x(self, X, class_label):
         """
-            Get the probability of a class label given the input data X.
+        Get the probability of a class label given the input data X.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Input data.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
 
-            class_label : int
-                The class label for which to compute the probability.
+        class_label : int
+            The class label for which to compute the probability.
 
-            Returns
-            -------
-            prob_y_given_x: array-like
-                The probability of the class label given the input data X.
+        Returns
+        -------
+        prob_y_given_x: array-like
+            The probability of the class label given the input data X.
         """
         pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
         marg_x = self.get_prob_fn_margx()
@@ -241,20 +238,20 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_prob_flip_y_given_x(self, X, class_label):
         """
-            Get the probability of a flipped class label given the input data X.
+        Get the probability of a flipped class label given the input data X.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Input data.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
 
-            class_label : int
-                The class label for which to compute the probability.
+        class_label : int
+            The class label for which to compute the probability.
 
-            Returns
-            -------
-            prob_y_given_x: array-like
-                The probability of a flipped class label given the input data X.
+        Returns
+        -------
+        prob_y_given_x: array-like
+            The probability of a flipped class label given the input data X.
         """
         first_term = (1 - self.flip_y) * self.get_prob_y_given_x(X, class_label)
         # second_term = (self.flip_y / self.n_classes)
@@ -264,20 +261,20 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_prob_x_given_flip_y(self, X, class_label):
         """
-            Get the probability of the input data X given a flipped class label.
+        Get the probability of the input data X given a flipped class label.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Input data.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input data.
 
-            class_label : int
-                The flipped class label for which to compute the probability.
+        class_label : int
+            The flipped class label for which to compute the probability.
 
-            Returns
-            -------
-             prob_x_given_flip_y: array-like
-                The probability of the input data X given a flipped class label.
+        Returns
+        -------
+        prob_x_given_flip_y: array-like
+            The probability of the input data X given a flipped class label.
         """
         prob_flip_y_given_x = self.get_prob_flip_y_given_x(X, class_label)
         marg_x = self.get_prob_fn_margx()
@@ -287,19 +284,19 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def generate_samples_for_class(self, k_class):
         """
-            Generate synthetic samples for a specific class.
+        Generate synthetic samples for a specific class.
 
-            Parameters
-            ----------
-            k_class : int
-                The class label for which to generate samples.
+        Parameters
+        ----------
+        k_class : int
+            The class label for which to generate samples.
 
-            Returns
-            -------
-            data: array-like
-                A tuple containing the generated features
-            labels: array-like
-                A list of labels corresponding to the features
+        Returns
+        -------
+        data: array-like
+            A tuple containing the generated features.
+        labels: array-like
+            A list of labels corresponding to the features.
         """
         seed = self.random_state.randint(2 ** 32, dtype="uint32")
         mvn = self.get_prob_dist_x_given_y(k_class)
@@ -310,14 +307,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def generate_dataset(self):
         """
-           Generate the full synthetic dataset.
+        Generate the full synthetic dataset.
 
-           Returns
-           -------
-           X : array-like of shape (n_samples, n_features)
-                Feature matrix after applying sampling to create imbalance.
-           y : array-like of shape (n_samples,)
-                Target vector after applying sampling to create imbalance.
+        Returns
+        -------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix after applying sampling to create imbalance.
+
+        y : array-like of shape (n_samples,)
+            Target vector after applying sampling to create imbalance.
         """
         X = []
         y = []
@@ -378,17 +376,17 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def entropy_y(self, y):
         """
-            Calculate the entropy of the class distribution in the dataset.
+        Calculate the entropy of the class distribution in the dataset.
 
-            Parameters
-            ----------
-            y : array-like of shape (n_samples,)
-                The labels of the dataset.
+        Parameters
+        ----------
+        y : array-like of shape (n_samples,)
+            The labels of the dataset.
 
-            Returns
-            -------
-            mi_pp: float
-                The entropy of the class distribution.
+        Returns
+        -------
+        mi_pp: float
+            The entropy of the class distribution.
         """
         uni, counts = np.unique(y, return_counts=True)
         y_pred = counts / np.sum(counts)
@@ -547,23 +545,23 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
 
     def get_bayes_mi(self, metric_name=MCMC_LOG_LOSS):
         """
-            Get the estimated mutual information based on the specified metric.
+        Get the estimated mutual information based on the specified metric.
 
-            Parameters
-            ----------
-            metric_name : {'MCMCBayesMI', 'MCMCLogLossBayesMI', 'MCMCPCSoftmaxBayesMI', 'MCMCSoftmaxBayesMI'}, default='MCMCLogLossBayesMI'
-                The name of the metric to use for MI estimation.
-                Must be one of:
+        Parameters
+        ----------
+        metric_name : {'MCMCBayesMI', 'MCMCLogLossBayesMI', 'MCMCPCSoftmaxBayesMI', 'MCMCSoftmaxBayesMI'}, default='MCMCLogLossBayesMI'
+            The name of the metric to use for MI estimation.
+            Must be one of:
 
-                - 'MCMCLogLossBayesMI': Estimate mutual information using the log loss of the bayes pedictor.
-                - 'MCMCBayesMI': Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
-                - 'MCMCPCSoftmaxBayesMI': Estimate mutual information using the MCMC PC Softmax Bayes method.
-                - 'MCMCSoftmaxBayesMI': Estimate mutual information using the MCMC Softmax Bayes method.
+            - 'MCMCLogLossBayesMI': Estimate mutual information using the log loss of the bayes pedictor.
+            - 'MCMCBayesMI': Estimate mutual information using the marginal of inputs and conditionals on inputs using class labels
+            - 'MCMCPCSoftmaxBayesMI': Estimate mutual information using the MCMC PC Softmax Bayes method.
+            - 'MCMCSoftmaxBayesMI': Estimate mutual information using the MCMC Softmax Bayes method.
 
-            Returns
-            -------
-            mutual_information: float
-                The estimated mutual information based on the selected metric.
+        Returns
+        -------
+        mutual_information: float
+            The estimated mutual information based on the selected metric.
         """
         mutual_information = 0
         if metric_name == MCMC_LOG_LOSS:

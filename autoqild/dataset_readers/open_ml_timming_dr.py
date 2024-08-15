@@ -74,14 +74,17 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
     Private Methods
     ---------------
     __read_dataset__()
-        Reads the dataset from OpenML and extracts relevant information.
-
-    __clean_up_dataset__()
-        Cleans and preprocesses the dataset.
+        Reads the dataset from OpenML and extracts relevant information. This method fetches the dataset using the
+        OpenML API, extracts the raw data, and processes the dataset description to retrieve vulnerable class labels,
+        number of features, and server information.
 
     __create_leakage_datasets__()
-        Creates separate datasets for each class by selecting only the samples that belong to the correct class
-        and one vulnerable class at a time.
+        Creates separate datasets for each class by selecting only the samples that belong to the correct class and one
+        vulnerable class at a time.
+
+    __clean_up_dataset__()
+        Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels, fills
+        missing values, and convert class label strings to integer values.
     """
 
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
@@ -98,10 +101,6 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
             self.__create_leakage_datasets__()
 
     def __read_dataset__(self):
-        """Reads the dataset from OpenML and extracts relevant information.
-
-           This method fetches the dataset using the OpenML API, extracts the raw data, and processes the dataset
-           description to retrieve vulnerable class labels, number of features, fold ID, and delay time."""
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
         self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
@@ -119,8 +118,6 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.delay = int(description.split('Bleichenbacher Timing Attack: ')[-1].split(" micro seconds")[0])
 
     def __clean_up_dataset__(self):
-        """Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
-            fills missing values, and convert class label strings to integer values."""
         categorical_columns = self.data_frame_raw.select_dtypes(include=['object']).columns
         label_encoder = LabelEncoder()
         for column in categorical_columns:
@@ -148,8 +145,6 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         self.data_frame = self.data_frame.fillna(value=-1)
 
     def __create_leakage_datasets__(self):
-        """This method creates separate datasets for each class by selecting only the samples that belong to the
-            correct class and one vulnerable class at a time."""
         self.dataset_dictionary = {}
         for j, label in self.inverse_label_mapping.items():
             if label == self.correct_class:
@@ -158,20 +153,21 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
                 self.dataset_dictionary[label] = self.get_data(class_label=j)
 
     def get_data(self, class_label=1):
-        """Retrieves data for a specific class label.
+        """
+        Retrieves data for a specific class label.
 
-            Parameters
-            ----------
-            class_label : int, default=1
-                The class label for which to retrieve the data.
+        Parameters
+        ----------
+        class_label : int, default=1
+            The class label for which to retrieve the data.
 
-            Returns
-            -------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Returns
+        -------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                Target vector.
+        y : array-like of shape (n_samples,)
+            Target vector.
         """
         df = pd.DataFrame.copy(self.data_frame)
         p = [0, class_label]
@@ -182,23 +178,24 @@ class OpenMLTimingDatasetReader(metaclass=ABCMeta):
         return X, y
 
     def get_sampled_imbalanced_data(self, X, y):
-        """Creates an imbalanced dataset by sampling from the data.
+        """
+        Creates an imbalanced dataset by sampling from the data.
 
-            Parameters
-            ----------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix.
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix.
 
-            y : array-like of shape (n_samples,)
-                Target vector.
+        y : array-like of shape (n_samples,)
+            Target vector.
 
-            Returns
-            -------
-            X : array-like of shape (n_samples, n_features)
-                Feature matrix after applying sampling to create imbalance.
+        Returns
+        -------
+        X : array-like of shape (n_samples, n_features)
+            Feature matrix after applying sampling to create imbalance.
 
-            y : array-like of shape (n_samples,)
-                Target vector after applying sampling to create imbalance.
+        y : array-like of shape (n_samples,)
+            Target vector after applying sampling to create imbalance.
         """
         if self.imbalance < 0.5:
             # total_instances = X.shape[0]

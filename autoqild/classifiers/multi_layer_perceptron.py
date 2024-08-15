@@ -128,7 +128,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         assert len(self.hidden_layers) == self.n_hidden
 
     def _construct_model_(self):
-        """Construct and compile the Keras models.
+        """
+        Construct and compile the Keras models.
 
         Returns
         -------
@@ -150,7 +151,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return model, scoring_model
 
     def reshape_inputs(self, y):
-        """Reshape target variable to categorical format if necessary.
+        """
+        Reshape target variable to categorical format if necessary.
 
         Parameters
         ----------
@@ -167,7 +169,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return y
 
     def fit(self, X, y, epochs=50, batch_size=32, callbacks=None, validation_split=0.1, verbose=1, **kwd):
-        """Fit the MLP model to the training data.
+        """
+        Fit the MLP model to the training data.
 
         Parameters
         ----------
@@ -221,7 +224,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return self
 
     def predict(self, X, verbose=0):
-        """Predict class labels for the input samples with maximum class probability.
+        """
+        Predict class labels for the input samples with maximum class probability.
 
         Parameters
         ----------
@@ -241,7 +245,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """Compute the balanced accuracy score for the input samples.
+        """
+        Compute the balanced accuracy score for the input samples.
 
         Parameters
         ----------
@@ -267,7 +272,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return acc
 
     def predict_proba(self, X, verbose=0):
-        """Predict class probabilities for the input samples.
+        """
+        Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -286,7 +292,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return p_pred
 
     def decision_function(self, X, verbose=0):
-        """Compute the real-valued scores for each class for the input samples.
+        """
+        Compute the real-valued scores for each class for the input samples.
 
         Parameters
         ----------
@@ -307,7 +314,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return y_pred
 
     def get_params(self, deep=True):
-        """Get parameters for this estimator.
+        """
+        Get parameters for this estimator.
 
         Parameters
         ----------
@@ -323,7 +331,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return super().get_params(deep=deep)
 
     def set_params(self, **parameters):
-        """Set the parameters of this estimator.
+        """
+        Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
         (such as :class:`~sklearn.pipeline.Pipeline`). The latter have

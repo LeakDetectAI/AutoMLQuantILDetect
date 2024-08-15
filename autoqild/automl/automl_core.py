@@ -21,11 +21,12 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
 
     First, create a subclass of `AutomlClassifier`:
 
+    >>> from sklearn.pipeline import Pipeline
     >>> class CustomClassifier(AutomlClassifier):
     >>>     def fit(self, X, y, **kwd):
     >>>         # Implement your fitting logic here
     >>>         # For instance, you might train a model using the training data X and labels y
-    >>>         self.model_ = SomeModel().fit(X, y)
+    >>>         self.model_ = Pipeline([('scaler', StandardScaler()), ('custom_classifier', CustomClassifier())])
     >>>         return self
     >>>
     >>>     def predict(self, X, verbose=0):
@@ -56,20 +57,12 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
     >>> predictions = clf.predict(X_test)
     >>> accuracy = clf.score(X_test, y_test)
 
-    You can also use your custom classifier in a scikit-learn pipeline or with other scikit-learn utilities:
-
-    >>> from sklearn.pipeline import Pipeline
-    >>> pipeline = Pipeline([
-    >>>     ('scaler', StandardScaler()),
-    >>>     ('custom_classifier', CustomClassifier())
-    >>> ])
-    >>> pipeline.fit(X_train, y_train)
-    >>> pipeline.predict(X_test)
     """
 
     @abstractmethod
     def fit(self, X, y, **kwd):
-        """Fit the AutoML classifier on the provided dataset.
+        """"
+        Fit the AutoML classifier on the provided dataset.
 
         Parameters
         ----------
@@ -87,15 +80,23 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         self : object
             Returns the instance itself.
 
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
+
         Notes
         -----
         This method must be implemented by subclasses. It should contain the logic
-        for training the classifier on the dataset provided in `X` and `y`."""
-        pass
+        for training the classifier on the dataset provided in `X` and `y`.
+        """
+
+        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     @abstractmethod
     def score(self, X, y, sample_weight=None, verbose=0):
-        """Return the score based on the metric on the given test data and labels.
+        """
+        Return the score based on the metric on the given test data and labels.
 
         Parameters
         ----------
@@ -114,12 +115,19 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         score : float
-            Mean accuracy of `self.predict(X)` with respect to `y`."""
-        pass
+            Mean accuracy of `self.predict(X)` with respect to `y`.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
+        """
+        raise NotImplementedError("The 'score' method must be implemented by the subclass.")
 
     @abstractmethod
     def predict(self, X, verbose=0):
-        """Predict class labels for samples in X.
+        """
+        Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -132,12 +140,19 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         y_pred : array-like of shape (n_samples,)
-            Predicted class labels."""
-        pass
+            Predicted class labels.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
+        """
+        raise NotImplementedError("The 'predict' method must be implemented by the subclass.")
 
     @abstractmethod
     def predict_proba(self, X, verbose=0):
-        """Predict class probabilities for samples in X.
+        """
+        Predict class probabilities for samples in X.
 
         Parameters
         ----------
@@ -150,12 +165,19 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         y_proba : array-like of shape (n_samples, n_classes)
-            Predicted class probabilities."""
-        pass
+            Predicted class probabilities.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
+        """
+        raise NotImplementedError("The 'predict_proba' method must be implemented by the subclass.")
 
     @abstractmethod
     def decision_function(self, X, verbose=0):
-        """Predict confidence scores for samples, sometimes coinciding with the probability scores in X.
+        """
+        Predict confidence scores for samples, sometimes coinciding with the probability scores in X.
         The confidence score for a sample is proportional to the signed distance of that sample to the hyperplane.
 
         Parameters
@@ -169,11 +191,18 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         decision : array-like of shape (n_samples,)
-            Predicted confidence scores."""
-        pass
+            Predicted confidence scores.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by the subclass.
+        """
+        raise NotImplementedError("The 'decision_function' method must be implemented by the subclass.")
 
     def get_params(self, deep=True):
-        """Get parameters for this estimator.
+        """
+        Get parameters for this estimator.
 
         Parameters
         ----------
@@ -195,7 +224,8 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         return out
 
     def set_params(self, **parameters):
-        """Set the parameters of this estimator.
+        """
+        Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
         (such as `sklearn.pipeline.Pipeline`). The latter have

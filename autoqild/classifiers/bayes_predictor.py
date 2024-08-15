@@ -50,7 +50,8 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         self.n_classes = None
 
     def fit(self, X, y, **kwd):
-        """Fit the BayesPredictor model.
+        """
+        Fit the BayesPredictor model.
 
         This method sets the number of classes in the training data but does not perform any
         actual fitting. It is intended to be overridden or expanded in a subclass.
@@ -70,7 +71,8 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return self
 
     def predict(self, X, verbose=0):
-        """Predict class labels for the input samples.
+        """
+        Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -90,7 +92,8 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """Compute the accuracy of the predictions.
+        """
+        Compute the accuracy of the predictions.
 
         Parameters
         ----------
@@ -108,15 +111,16 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
 
         Returns
         -------
-        acc_bp : float
+        accuracy_score : float
             The accuracy score.
         """
         y_pred = self.predict(X)
-        acc_bp = np.mean(y_pred == y)
-        return acc_bp
+        accuracy_score = np.mean(y_pred == y)
+        return accuracy_score
 
     def decision_function(self, X, verbose=0):
-        """Compute the decision function for the input samples.
+        """
+        Compute the decision function for the input samples.
 
         The decision function returns the probability estimates of the positive class
         for binary classification problems.
@@ -140,7 +144,8 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return scores
 
     def predict_proba(self, X, verbose=0):
-        """Predict class probabilities for the input samples.
+        """
+        Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -165,7 +170,8 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         return p_pred
 
     def get_bayes_predictor_scores(self):
-        """Generate datasets and evaluate the accuracy of the Bayes predictor.
+        """
+        Generate datasets and evaluate the accuracy of the Bayes predictor.
 
         This method generates multiple datasets and evaluates the accuracy of the Bayes predictor
         on each one. It returns the true and predicted labels along with the prediction probabilities

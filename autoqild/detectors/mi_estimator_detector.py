@@ -1,5 +1,5 @@
 from .sklearn_leakage_detector import SklearnLeakageDetector
-from ..mi_estimators import GMMMIEstimator, MineMIEstimatorHPO
+from ..mi_estimators import GMMMIEstimator, MineMIEstimatorMSE
 from ..utilities import *
 
 __all__ = ['MIEstimationLeakageDetector']
@@ -15,7 +15,7 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
                          **kwargs)
 
         if mi_technique == MINE_MI_ESTIMATOR:
-            self.base_detector = MineMIEstimatorHPO
+            self.base_detector = MineMIEstimatorMSE
             self.n_jobs = 1
         if mi_technique == GMM_MI_ESTIMATOR:
             self.base_detector = GMMMIEstimator

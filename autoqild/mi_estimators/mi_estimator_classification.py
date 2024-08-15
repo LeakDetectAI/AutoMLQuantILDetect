@@ -13,23 +13,57 @@ from autoqild.utilities import *
 
 class ClassficationMIEstimator(MIEstimatorBase):
     """
-       Class to estimate Mutual Information (MI) using a classification model.
+    Class to estimate Mutual Information (MI) using a classification model.
 
-       This class leverages a classification model, such as `RandomForestClassifier`, to estimate the Mutual Information
-       between input features and class labels using various metrics, including log-loss and softmax probabilities.
-       It extends the `MIEstimatorBase` class, inheriting its basic structure and functionalities.
+    This class leverages a classification model, such as `RandomForestClassifier`, to estimate the Mutual Information
+    between input features and class labels using various metrics, including log-loss and softmax probabilities.
+    It extends the `MIEstimatorBase` class, inheriting its basic structure and functionalities.
 
-       Parameters
-       ----------
-       n_classes : int
-            Number of classes in the classification data samples.
-       n_features : int
-            Number of features or dimensionality of the inputs of the classification data samples.
-       random_state : int or object, optional, default=42
-            Random state for reproducibility.
-       **kwargs : dict, optional
-           Additional keyword arguments passed to the base learner `RandomForestClassifier`.
+    Parameters
+    ----------
+    n_classes : int
+        Number of classes in the classification data samples.
+    n_features : int
+        Number of features or dimensionality of the inputs of the classification data samples.
+    random_state : int or object, optional, default=42
+        Random state for reproducibility.
+    **kwargs : dict, optional
+        Additional keyword arguments passed to the base learner `RandomForestClassifier`.
+
+    Attributes
+    ----------
+    random_state : RandomState instance
+        Random state instance for reproducibility.
+    logger : logging.Logger
+        Logger instance for logging information.
+    base_estimator : sklearn.ensemble.RandomForestClassifier
+        Base estimator used for classification.
+    learner_params : dict
+        Parameters passed to the base estimator.
+    base_learner : object
+        The instantiated base learner.
+
+    Methods
+    -------
+    fit(X, y, **kwd):
+        Fit the classification model to the data.
+
+    predict(X, verbose=0):
+        Predict class labels for samples in X.
+
+    score(X, y, sample_weight=None, verbose=0):
+        Return the accuracy score of the model on the given test data and labels.
+
+    predict_proba(X, verbose=0):
+        Predict class probabilities for samples in X.
+
+    decision_function(X, verbose=0):
+        Predict confidence scores for samples, which may coincide with the probability scores in X.
+
+    estimate_mi(X, y, method=LOG_LOSS_MI_ESTIMATION, **kwargs):
+        Estimate Mutual Information using the specified method.
     """
+
     def __init__(self, n_classes, n_features, random_state=None, **kwargs):
         super().__init__(n_classes, n_features, random_state)
         self.random_state = check_random_state(random_state)
@@ -103,7 +137,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         score : float
             Mean accuracy of `self.predict(X)` w.r.t. `y`.
         """
-        return self.base_learner.score(X, y, sample_weight=sample_weight, verbose=verbose)
+        return self.base_learner.score(X, y, sample_weight=sample_weight)
 
     def predict_proba(self, X, verbose=0):
         """
@@ -122,7 +156,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         p_pred : array-like of shape (n_samples, n_classes)
             Predicted class probabilities.
         """
-        p_pred = self.base_learner.predict_proba(X, verbose=verbose)
+        p_pred = self.base_learner.predict_proba(X)
         return p_pred
 
     def decision_function(self, X, verbose=0):
@@ -142,7 +176,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
         scores : array-like of shape (n_samples, n_classes)
             Predicted confidence scores.
         """
-        scores = self.base_learner.decision_function(X, verbose=verbose)
+        scores = self.base_learner.decision_function(X)
         return scores
 
     def estimate_mi(self, X, y, method=LOG_LOSS_MI_ESTIMATION, **kwargs):
@@ -158,8 +192,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
             Target labels.
 
         method : str, optional, default='LogLossMI'
-            The method to use for mutual information estimation.
-            Options include:
+            The method to use for mutual information estimation. Options include:
 
             - 'LogLossMI': Estimate MI using Log-Loss method.
             - 'LogLossMIIsotonicRegression': Estimate MI using Log-Loss method with Isotonic Regression.
@@ -194,12 +227,12 @@ class ClassficationMIEstimator(MIEstimatorBase):
                     c_params = calibrator_params[calibrator_technique]
                     calibrator = calibrator(**c_params)
                     try:
-                        p_pred_cal = probability_calibration(X_train=X_train, y_train=y_train, X_test=X,
+                        p_pred_cal = probability_calibration(X_train=X_train, y_train=y_train, X_test=X_test,
                                                              classifier=self.base_learner, calibrator=calibrator)
                         estimated_mi = evaluation_metric(y, p_pred_cal)
                     except Exception as error:
                         log_exception_error(self.logger, error)
-                        self.logger.error("Error while calibrating the probabilities estimating mi without calibration")
+                        self.logger.error("Error while calibrating the probabilities estimating MI without calibration")
                         estimated_mi = evaluation_metric(y_train, p_pred)
                 else:
                     estimated_mi = evaluation_metric(y_train, p_pred)

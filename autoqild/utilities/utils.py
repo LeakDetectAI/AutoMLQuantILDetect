@@ -225,7 +225,7 @@ class Standardize(object):
         """
         if isinstance(X, dict):
             for n in self.n_features:
-                X[n] = self.scalars[n].transform(X[n])
+                X[n] = self.scalars[n].__transform__(X[n])
         if isinstance(X, (np.ndarray, np.generic)):
             X = self.scalar.transform(X)
         return X

@@ -135,6 +135,7 @@ class ClassNet(nn.Module):
         x_in = F.softmax(x_in, dim=1)
         return x_in
 
+
 class StatNet(nn.Module):
     """
     StatNet is a fully connected neural network used for statistical modeling in MINE (Mutual Information Neural Estimation)

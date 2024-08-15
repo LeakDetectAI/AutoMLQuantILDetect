@@ -14,26 +14,37 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
     ----------
     n_features : int
         The number of features in the input data.
+
     n_classes : int
         The number of classes in the classification task.
+
     time_limit : int, optional, default=1800
         Time limit for training the model, in seconds.
+
     output_folder : str, optional
         Directory where the trained model and related files will be saved. Default is None.
+
     eval_metric : str, optional, default='accuracy'
         Evaluation metric used to assess the performance of the model.
+
     use_hyperparameters : bool, optional, default=True
         Whether to use predefined hyperparameters for model training.
+
     delete_tmp_folder_after_terminate : bool, optional, default=True
         Whether to delete the temporary folder after model training is complete.
+
     auto_stack : bool, optional, default=True
         Whether to use automatic stacking of models in AutoGluon.
+
     remove_boosting_models : bool, optional, default=True
         Whether to exclude boosting models (like GBM, CAT, XGB) from the hyperparameters.
+
     verbosity : int, optional, default=6
         Level of verbosity for logging and output.
+
     random_state : int or None, optional, default=None
         Seed for random number generation to ensure reproducibility.
+
     **kwargs : dict, optional
         Additional keyword arguments passed to the `AutoGluonClassifier` constructor.
 
@@ -41,8 +52,10 @@ class AutoMIGluonEstimator(ClassficationMIEstimator):
     ----------
     base_estimator : AutoGluonClassifier
         The base AutoML estimator used for classification.
+
     learner_params : dict
         Parameters used to configure the base learner.
+
     base_learner : AutoGluonClassifier
         Instance of the AutoGluon classifier used for learning.
     """

@@ -89,6 +89,10 @@ class AutoTabPFNClassifier(AutomlClassifier):
     ---------------
     __clear_memory__()
         Clear memory to release resources by torch.
+
+    __transform__(X, y=None):
+        Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
+        technique to the feature matrix with 'n_reduced' features.
     """
     def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique='select_from_model_rf',
                  base_path=None, random_state=None, **kwargs):
@@ -111,8 +115,10 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.model = None
         self.base_path = base_path
 
-    def transform(self, X, y=None):
-        """Transform and reduce the feature set with dimensionality `n_reduced` using the feature reduction technique.
+    def __transform__(self, X, y=None):
+        """
+        Transform and reduce the feature matrix with 'n_features' features, using the specified reduction
+        technique to the feature matrix with 'n_reduced' features.
 
         Parameters
         ----------
@@ -125,7 +131,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         Returns
         -------
         X : array-like of shape (n_samples, n_reduced)
-            Transformed feature matrix."""
+            Transformed feature matrix.
+        """
         self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
@@ -151,7 +158,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return X
 
     def fit(self, X, y, **kwd):
-        """Fit the TabPFN model to the training data.
+        """
+        Fit the TabPFN model to the training data.
 
         Parameters
         ----------
@@ -163,7 +171,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
 
         **kwd : dict, optional
             Additional keyword arguments."""
-        X = self.transform(X, y)
+        X = self.__transform__(X, y)
         params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
         if self.base_path is not None:
             params['base_path'] = self.base_path
@@ -174,7 +182,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.logger.info("Fitting Done")
 
     def predict(self, X, verbose=0):
-        """Predict class labels for the input samples.
+        """
+        Predict class labels for the input samples.
 
         Parameters
         ----------
@@ -194,7 +203,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return y_pred
 
     def score(self, X, y, sample_weight=None, verbose=0):
-        """Compute the balanced accuracy score for the input samples.
+        """
+        Compute the balanced accuracy score for the input samples.
 
         Parameters
         ----------
@@ -219,7 +229,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return acc
 
     def predict_proba(self, X, batch_size=32, verbose=0):
-        """Predict class probabilities for the input samples.
+        """
+        Predict class probabilities for the input samples.
 
         Parameters
         ----------
@@ -238,7 +249,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
             Predicted class probabilities."""
         self.logger.info("Predicting Probabilities")
         n_samples = X.shape[0]
-        X = self.transform(X)
+        X = self.__transform__(X)
         if batch_size is None:
             y_pred = self.model.predict_proba(X, normalize_with_test=True, return_logits=False)
         else:
@@ -258,7 +269,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         return y_pred
 
     def decision_function(self, X, verbose=0):
-        """Compute the decision function in form of class probabilities for the input samples.
+        """
+        Compute the decision function in form of class probabilities for the input samples.
 
         Parameters
         ----------

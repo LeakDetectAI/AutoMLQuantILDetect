@@ -67,7 +67,8 @@ class PriorClassifier(DummyClassifier):
         self.random_state = check_random_state(random_state)
 
     def fit(self, X, y, sample_weight=None):
-        """Fit the classifier according to the given training data.
+        """
+        Fit the classifier according to the given training data.
 
         Parameters
         ----------
@@ -93,7 +94,8 @@ class PriorClassifier(DummyClassifier):
             self.class_probabilities[i] = len(y[y == i]) / len(y)
 
     def predict(self, X):
-        """Perform classification on samples in X.
+        """
+        Perform classification on samples in X.
 
         Parameters
         ----------
@@ -106,4 +108,5 @@ class PriorClassifier(DummyClassifier):
             Predicted class labels.
         """
         n = X.shape[0]
-        return self.random_state.choice(self.classes_, p=self.class_probabilities, size=n)
+        y_pred = self.random_state.choice(self.classes_, p=self.class_probabilities, size=n)
+        return y_pred

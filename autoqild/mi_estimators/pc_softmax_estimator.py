@@ -13,24 +13,42 @@ from .pytorch_utils import get_optimizer_and_parameters, init
 
 class PCSoftmaxMIEstimator(MIEstimatorBase):
     """
-    PCSoftmaxMIEstimator estimates Mutual Information (MI) using a neural network trained with a modified softmax function.
+    PCSoftmaxMIEstimator estimates Mutual Information (MI) using a neural network trained with a modified softmax
+    function.
 
-    This class uses a neural network to estimate the MI between input features and class labels. The neural network is trained using a custom softmax function that accounts for label proportions, which can help in handling imbalanced data.
+    This class uses a neural network to estimate the MI between input features and class labels. The neural network is
+    trained using a custom softmax function that accounts for label proportions, which can help in handling imbalanced
+    data.
 
     Parameters
     ----------
     n_classes : int
         Number of classes in the classification task.
+
     n_features : int
         Number of features or dimensionality of the input data.
+
     n_hidden : int, optional, default=10
         Number of hidden layers in the neural network.
+
     n_units : int, optional, default=100
         Number of units in each hidden layer.
+
     loss_function : torch.nn.Module, optional, default=torch.nn.NLLLoss()
         Loss function to be used during training.
-    optimizer_str : str, optional, default='adam'
-        Optimizer to use for training. Options include 'adam', 'sgd', 'RMSprop', etc.
+
+    optimizer_str : {'RMSprop', 'sgd', 'adam', 'AdamW', 'Adagrad', 'Adamax', 'Adadelta'}, default='adam'
+        Optimizer type to use for training the neural network.
+        Must be one of:
+
+        - 'RMSprop': RMSprop optimizer.
+        - 'sgd': Stochastic Gradient Descent optimizer.
+        - 'adam': Adam optimizer.
+        - 'AdamW': AdamW optimizer.
+        - 'Adagrad': Adagrad optimizer.
+        - 'Adamax': Adamax optimizer.
+        - 'Adadelta': Adadelta optimizer.
+
     learning_rate : float, optional, default=0.001
         Learning rate for the optimizer.
     reg_strength : float, optional, default=0.001
@@ -78,7 +96,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.final_loss = 0
         self.mi_val = 0
 
-    def pytorch_tensor_dataset(self, X, y, batch_size=32):
+    def __pytorch_tensor_dataset__(self, X, y, batch_size=32):
         """
         Create a PyTorch dataset and data loader from the input data.
 
@@ -136,7 +154,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         self.class_net.to(self.device)
         self.optimizer = self.optimizer_cls(self.class_net.parameters(), **self._optimizer_config)
 
-        dataset_prop, tra_dataloader = self.pytorch_tensor_dataset(X, y)
+        dataset_prop, tra_dataloader = self.__pytorch_tensor_dataset__(X, y)
         self.dataset_properties = dataset_prop
         self.final_loss = 0
         for epoch in range(1, epochs + 1):
@@ -180,7 +198,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Predicted class labels.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
-        dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             a_label = a_label.to(self.device).squeeze()
@@ -214,7 +232,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             acc = 0.0
         s_pred = self.predict_proba(X, verbose=0)
         pyx = ((s_pred * np.log2(s_pred)).sum(axis=1)).mean()
-        dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         val_loss = 0
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
@@ -242,7 +260,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Predicted class probabilities.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
-        dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
@@ -265,7 +283,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Decision function values.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
-        dataset_prop, test_dataloader = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0])
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
@@ -273,7 +291,30 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
 
     def estimate_mi(self, X, y, verbose=1, **kwargs):
         """
-        Estimate Mutual Information using the trained neural network using PC-sosftmax loss function.
+        Estimate Mutual Information using the trained neural network using PC-softmax and softmax loss function.
+        .. math::
+
+            I(X;Y) = H(Y) - H(Y|X)
+
+        Softmax Function:
+
+        .. math::
+
+            S(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( K \) is the total number of classes.
+
+        PC-Softmax (Probability-Corrected Softmax) Function:
+
+        .. math::
+
+            S_{pc}(z_k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j} \\cdot p_j}
+
+        where:
+            - \( z_k \) is the logit or raw score for class \( k \).
+            - \( p_j \) is the prior probability of class \( j \), calculated as \( p_j = \frac{\text{counts}_j}{\text{total samples}} \).
 
         Parameters
         ----------
@@ -291,7 +332,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         mi_estimated : float
             The estimated mutual information.
         """
-        dataset_prop, test_dataset = self.pytorch_tensor_dataset(X, y, batch_size=1)
+        dataset_prop, test_dataset = self.__pytorch_tensor_dataset__(X, y, batch_size=1)
         softmax_list = []
         for a_data, a_label in test_dataset:
             int_label = a_label.cpu().item()

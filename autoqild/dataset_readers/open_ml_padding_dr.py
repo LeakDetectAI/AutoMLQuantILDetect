@@ -64,14 +64,17 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
     Private Methods
     ---------------
     __read_dataset__()
-        Reads the dataset from OpenML and extracts relevant information.
+        Reads the dataset from OpenML and extracts relevant information. This method fetches the dataset using the
+        OpenML API, extracts the raw data, and processes the dataset description to retrieve vulnerable class labels,
+        number of features, and server information.
 
     __create_leakage_datasets__()
-        Creates separate datasets for each class by selecting only the samples that belong to the correct class
-        and one vulnerable class at a time.
+        Creates separate datasets for each class by selecting only the samples that belong to the correct class and one
+        vulnerable class at a time.
 
     __clean_up_dataset__()
-        Cleans and preprocesses the dataset.
+        Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels, fills
+        missing values, and convert class label strings to integer values.
     """
     def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
         super().__init__(dataset_id=dataset_id, imbalance=imbalance, create_datasets=create_datasets,
@@ -82,9 +85,6 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
             self.__create_leakage_datasets__()
 
     def __read_dataset__(self):
-        """Reads the dataset from OpenML and extracts relevant information.
-            This method fetches the dataset using the OpenML API, extracts the raw data, and processes the dataset
-            description to retrieve vulnerable class labels, number of features, and server information."""
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
         self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format='dataframe')
@@ -101,17 +101,14 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         self.server = self.dataset.name.split('padding-attack-dataset-')[-1]
 
     def __create_leakage_datasets__(self):
-        """This method creates separate datasets for each class by selecting only the samples that belong to the
-            correct class and one vulnerable class at a time."""
         super().__create_leakage_datasets__()
 
     def __clean_up_dataset__(self):
-        """Cleans and preprocesses the dataset. This method encodes categorical columns, formats class labels,
-            fills missing values, and convert class label strings to integer values."""
         super().__clean_up_dataset__()
 
     def get_data(self, class_label=1):
-        """Retrieves data for a specific class label.
+        """
+        Retrieves data for a specific class label.
 
         Parameters
         ----------
@@ -129,7 +126,8 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         super().get_data(class_label=class_label)
 
     def get_sampled_imbalanced_data(self, X, y):
-        """Creates an imbalanced dataset by sampling from the data.
+        """
+        Creates an imbalanced dataset by sampling from the data.
 
         Parameters
         ----------

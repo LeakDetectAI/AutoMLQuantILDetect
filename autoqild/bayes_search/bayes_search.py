@@ -135,7 +135,8 @@ class BayesSearchCV(BayesSearchCVSK):
         self.logger = logging.getLogger(BayesSearchCV.__name__)
 
     def _step(self, search_space, optimizer, evaluate_candidates, n_points=1):
-        """Generate n_jobs parameters and evaluate them in parallel.
+        """
+        Generate n_jobs parameters and evaluate them in parallel.
 
         Parameters
         ----------
@@ -154,7 +155,8 @@ class BayesSearchCV(BayesSearchCVSK):
         Returns
         -------
         optimizer : skopt.optimizer.Optimizer
-            The updated optimizer instance."""
+            The updated optimizer instance.
+            """
         # get parameter values to evaluate
         params = optimizer.ask(n_points=n_points)
 
@@ -177,12 +179,14 @@ class BayesSearchCV(BayesSearchCVSK):
         return optimizer.tell(params, [-score for score in local_results])
 
     def _run_search(self, evaluate_candidates):
-        """Run the search for the best parameters.
+        """
+        Run the search for the best parameters.
 
         Parameters
         ----------
         evaluate_candidates : callable
-            The function to evaluate the candidates."""
+            The function to evaluate the candidates.
+        """
         # check if space is a single dict, convert to list if so
         search_spaces = self.search_spaces
         if isinstance(search_spaces, dict):
