@@ -1,0 +1,1241 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+        <title>autoqild.detectors.ild_base_class - AutoMLQuantILDetect 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #272822;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #272822;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">AutoMLQuantILDetect 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">OVERVIEW</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API REFERENCE</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api.html">📖 API References</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 📖 API References</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.automl.html">autoqild.automl</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of autoqild.automl</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.automl.autogluon_classifier.html">autoqild.automl.autogluon_classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.automl.automl_core.html">autoqild.automl.automl_core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.automl.model_configurations.html">autoqild.automl.model_configurations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.automl.tabpfn_classifier.html">autoqild.automl.tabpfn_classifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.bayes_search.html">autoqild.bayes_search</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of autoqild.bayes_search</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.bayes_search.bayes_search_cv.html">autoqild.bayes_search.bayes_search_cv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.bayes_search.bayes_search_utils.html">autoqild.bayes_search.bayes_search_utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.classifiers.html">autoqild.classifiers</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of autoqild.classifiers</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.classifiers.bayes_predictor.html">autoqild.classifiers.bayes_predictor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.classifiers.blind_classifiers.html">autoqild.classifiers.blind_classifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.classifiers.layers.html">autoqild.classifiers.layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.classifiers.multi_layer_perceptron.html">autoqild.classifiers.multi_layer_perceptron</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.dataset_readers.html">autoqild.dataset_readers</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of autoqild.dataset_readers</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.dataset_readers.open_ml_padding_dr.html">autoqild.dataset_readers.open_ml_padding_dr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.dataset_readers.open_ml_timming_dr.html">autoqild.dataset_readers.open_ml_timming_dr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.dataset_readers.synthetic_data_generator.html">autoqild.dataset_readers.synthetic_data_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.dataset_readers.synthetic_data_generator_distance.html">autoqild.dataset_readers.synthetic_data_generator_distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.dataset_readers.utils.html">autoqild.dataset_readers.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.mi_estimators.html">autoqild.mi_estimators</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of autoqild.mi_estimators</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.auto_gluon_estimator.html">autoqild.mi_estimators.auto_gluon_estimator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.gmm_mi_estimator.html">autoqild.mi_estimators.gmm_mi_estimator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.mi_base_class.html">autoqild.mi_estimators.mi_base_class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.mi_estimator_classification.html">autoqild.mi_estimators.mi_estimator_classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.mine_estimator.html">autoqild.mi_estimators.mine_estimator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.mine_estimator_mse.html">autoqild.mi_estimators.mine_estimator_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.neural_networks_torch.html">autoqild.mi_estimators.neural_networks_torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.pc_softmax_estimator.html">autoqild.mi_estimators.pc_softmax_estimator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.pytorch_utils.html">autoqild.mi_estimators.pytorch_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.mi_estimators.tab_pfn_estimator.html">autoqild.mi_estimators.tab_pfn_estimator</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/autoqild.detectors.html">autoqild.detectors</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of autoqild.detectors</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.autogluon_leakage_detector.html">autoqild.detectors.autogluon_leakage_detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.ild_base_class.html">autoqild.detectors.ild_base_class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.mi_estimator_detector.html">autoqild.detectors.mi_estimator_detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.mlp_leakage_detector.html">autoqild.detectors.mlp_leakage_detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.random_forest_leakage_detector.html">autoqild.detectors.random_forest_leakage_detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.sklearn_leakage_detector.html">autoqild.detectors.sklearn_leakage_detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/autoqild.detectors.tabpfn_leakage_detector.html">autoqild.detectors.tabpfn_leakage_detector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for autoqild.detectors.ild_base_class</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Abstract base class that defines the structure and core methods for leakage</span>
+<span class="sd">detection algorithms.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">fcntl</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">fisher_exact</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">StratifiedShuffleSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.multitest</span> <span class="kn">import</span> <span class="n">multipletests</span>
+
+<span class="kn">from</span> <span class="nn">autoqild.bayes_search.bayes_search_utils</span> <span class="kn">import</span> <span class="n">get_scores</span><span class="p">,</span> <span class="n">probability_calibration</span>
+<span class="kn">from</span> <span class="nn">autoqild.classifiers</span> <span class="kn">import</span> <span class="n">MajorityVoting</span><span class="p">,</span> <span class="n">RandomClassifier</span>
+<span class="kn">from</span> <span class="nn">autoqild.detectors._utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">autoqild.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;InformationLeakageDetector&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector">[docs]</a>
+<span class="k">class</span> <span class="nc">InformationLeakageDetector</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The `InformationLeakageDetector` class is designed to identify and</span>
+<span class="sd">    diagnose information leakage in machine learning models. Information</span>
+<span class="sd">    leakage occurs when a model inadvertently gains access to information that</span>
+<span class="sd">    should not be available during training, leading to overly optimistic</span>
+<span class="sd">    performance estimates.</span>
+
+<span class="sd">    This class facilitates the detection of such leakage by employing various statistical and machine learning-based</span>
+<span class="sd">    methods. It supports multiple detection techniques and is capable of managing the entire process, from</span>
+<span class="sd">    cross-validation setup to result storage and evaluation.</span>
+
+<span class="sd">    The class is built with flexibility in mind, allowing users to easily extend or customize detection techniques.</span>
+<span class="sd">    It includes robust mechanisms for handling result files and backups, ensuring that detection results are safely</span>
+<span class="sd">    stored and can be restored if necessary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    padding_name : str</span>
+<span class="sd">        The name of the padding method used in the experiments to potentially obscure or prevent leakage.</span>
+
+<span class="sd">    learner_params : dict</span>
+<span class="sd">        Parameters related to the machine learning models (learners) used in the leakage detection process.</span>
+
+<span class="sd">    fit_params : dict</span>
+<span class="sd">        Parameters passed to the `fit` method of the models during training.</span>
+
+<span class="sd">    hash_value : str</span>
+<span class="sd">        A unique hash value used to identify and manage result files for a specific experiment.</span>
+
+<span class="sd">    cv_iterations : int</span>
+<span class="sd">        The number of cross-validation iterations to perform during model evaluation.</span>
+
+<span class="sd">    n_hypothesis : int</span>
+<span class="sd">        The number of hypotheses or models to be tested for leakage.</span>
+
+<span class="sd">    base_directory : str</span>
+<span class="sd">        The base directory where result files, logs, and backups are stored.</span>
+
+<span class="sd">    detection_method : str</span>
+<span class="sd">        The method to use for detecting information leakage. Options include:</span>
+<span class="sd">        - `paired-t-test`: Uses paired t-test to compare the accuracy of models against the majority voting baseline.</span>
+<span class="sd">        - `paired-t-test-random`: Uses paired t-test to compare the accuracy of models against a random classifier.</span>
+<span class="sd">        - `fishers-exact-mean`: Applies Fisher&#39;s Exact Test on the confusion matrix and computes the mean p-value.</span>
+<span class="sd">        - `fishers-exact-median`: Applies Fisher&#39;s Exact Test on the confusion matrix and computes the median p-value.</span>
+<span class="sd">        - `estimated_mutual_information`: Estimates mutual information to detect leakage.</span>
+<span class="sd">        - `mid_point_mi`: Detects leakage using the midpoint mutual information estimation.</span>
+<span class="sd">        - `log_loss_mi`: Detects leakage using log loss mutual information estimation.</span>
+<span class="sd">        - `log_loss_mi_isotonic_regression`: Uses log loss mutual information estimation with isotonic regression calibration.</span>
+<span class="sd">        - `log_loss_mi_platt_scaling`: Uses log loss mutual information estimation with Platt scaling calibration.</span>
+<span class="sd">        - `log_loss_mi_beta_calibration`: Uses log loss mutual information estimation with beta calibration.</span>
+<span class="sd">        - `log_loss_mi_temperature_scaling`: Uses log loss mutual information estimation with temperature scaling.</span>
+<span class="sd">        - `log_loss_mi_histogram_binning`: Uses log loss mutual information estimation with histogram binning.</span>
+<span class="sd">        - `p_c_softmax_mi`: Uses PC-Softmax mutual information estimation for detection.</span>
+
+<span class="sd">    random_state : int or RandomState instance</span>
+<span class="sd">        Controls the randomness for reproducibility, ensuring consistent results across different runs.</span>
+
+<span class="sd">    **kwargs : dict, optional</span>
+<span class="sd">        Additional keyword arguments passed to customize the detector.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger instance used for recording the steps and processes of the leakage detection.</span>
+
+<span class="sd">    padding_name : str</span>
+<span class="sd">        The name of the padding method, used for creating unique identifiers and managing results.</span>
+
+<span class="sd">    padding_code : str</span>
+<span class="sd">        A hash code derived from the padding name, used to uniquely identify the experiment.</span>
+
+<span class="sd">    fit_params : dict</span>
+<span class="sd">        Parameters used for fitting the models during training and evaluation.</span>
+
+<span class="sd">    learner_params : dict</span>
+<span class="sd">        Parameters related to the machine learning models (learners) used in the leakage detection process.</span>
+
+<span class="sd">    cv_iterations : int</span>
+<span class="sd">        The number of cross-validation iterations to perform during model evaluation.</span>
+
+<span class="sd">    n_hypothesis : int</span>
+<span class="sd">        The number of hypotheses or models being tested for leakage.</span>
+
+<span class="sd">    hash_value : str</span>
+<span class="sd">        A unique identifier (hash) used to manage and store results.</span>
+
+<span class="sd">    random_state : RandomState instance</span>
+<span class="sd">        Random state instance that ensures reproducibility in cross-validation and other random processes.</span>
+
+<span class="sd">    cv_iterator : StratifiedKFold</span>
+<span class="sd">        Cross-validation iterator that manages the splitting of data into training and test sets.</span>
+
+<span class="sd">    estimators : list</span>
+<span class="sd">        A list of models (estimators) that are evaluated for leakage.</span>
+
+<span class="sd">    results : dict</span>
+<span class="sd">        Dictionary that stores the results of each model`s evaluation, organized by metrics.</span>
+
+<span class="sd">    base_detector : object</span>
+<span class="sd">        The underlying model or detector used as the reference for detecting leakage.</span>
+
+<span class="sd">    base_directory : str</span>
+<span class="sd">        The base directory where all results, logs, and backups are stored.</span>
+
+<span class="sd">    detection_method : str</span>
+<span class="sd">        The method used for detecting information leakage, as specified by the user.</span>
+
+<span class="sd">    rf_name : str</span>
+<span class="sd">        The filename where the main results are stored.</span>
+
+<span class="sd">    results_file : str</span>
+<span class="sd">        The full path to the main results file.</span>
+
+<span class="sd">    rf_backup_name : str</span>
+<span class="sd">        The filename where backup results are stored.</span>
+
+<span class="sd">    results_file_backup : str</span>
+<span class="sd">        The full path to the backup results file.</span>
+
+<span class="sd">    Private Methods</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    __initialize_objects__()</span>
+<span class="sd">        Initializes the results dictionary for storing metric results.</span>
+
+<span class="sd">    __init_results_files__()</span>
+<span class="sd">        Initializes the results and backup files and restores results from backup if necessary.</span>
+
+<span class="sd">    _is_fitted_()</span>
+<span class="sd">        Checks if the detector has already been fitted by verifying the existence of results files.</span>
+
+<span class="sd">    __create_results_from_backup__()</span>
+<span class="sd">        Creates results files from backup if the main results file is missing or incomplete.</span>
+
+<span class="sd">    __update_backup_file__()</span>
+<span class="sd">        Updates the backup results file with the latest results from the main results file.</span>
+
+<span class="sd">    __format_name__(padding_name)</span>
+<span class="sd">        Formats the padding name and generates a corresponding hash code.</span>
+
+<span class="sd">    __close_file__()</span>
+<span class="sd">        Safely closes the main results file.</span>
+
+<span class="sd">    __close_backup_file__()</span>
+<span class="sd">        Safely closes the backup results file.</span>
+
+<span class="sd">    __read_majority_accuracies__()</span>
+<span class="sd">        Reads and returns the accuracy scores from the majority voting classifier.</span>
+
+<span class="sd">    __read_random_accuracies__()</span>
+<span class="sd">        Reads and returns the accuracy scores from the random classifier.</span>
+
+<span class="sd">    __get_training_dataset__(X, y)</span>
+<span class="sd">        Splits the data into training and test sets using cross-validation.</span>
+
+<span class="sd">    __store_results__()</span>
+<span class="sd">        Stores the evaluation results into the main results file and updates the backup.</span>
+
+<span class="sd">    __allkeys__(obj)</span>
+<span class="sd">        Recursively finds all keys in an h5py.Group object.</span>
+
+<span class="sd">    __read_results_file__(detection_method)</span>
+<span class="sd">        Reads and returns the results for the specified detection method.</span>
+
+<span class="sd">    __calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)</span>
+<span class="sd">        Calculates and logs the accuracy of a majority voting classifier.</span>
+
+<span class="sd">    __calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)</span>
+<span class="sd">        Calculates and logs the accuracy of a random classifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding_name</span><span class="p">,</span> <span class="n">learner_params</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">hash_value</span><span class="p">,</span> <span class="n">cv_iterations</span><span class="p">,</span> <span class="n">n_hypothesis</span><span class="p">,</span>
+                 <span class="n">base_directory</span><span class="p">,</span> <span class="n">detection_method</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">InformationLeakageDetector</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__format_name__</span><span class="p">(</span><span class="n">padding_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="o">=</span> <span class="n">fit_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span> <span class="o">=</span> <span class="n">learner_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_iterations</span> <span class="o">=</span> <span class="n">cv_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_hypothesis</span> <span class="o">=</span> <span class="n">n_hypothesis</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span> <span class="o">=</span> <span class="n">hash_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_iterator</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_iterations</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_detector</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span> <span class="o">=</span> <span class="n">base_directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="o">=</span> <span class="n">detection_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_results_files__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initialize_objects__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="InformationLeakageDetector.__initialize_objects__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__initialize_objects__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__initialize_objects__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the results dictionary for storing metric results.</span>
+
+<span class="sd">        The results dictionary is organized by hypothesis models and</span>
+<span class="sd">        metrics. It initializes storage for each model`s metric scores,</span>
+<span class="sd">        as well as for the majority voting and random classifier</span>
+<span class="sd">        baselines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hypothesis</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;model_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">evaluation_metric</span> <span class="ow">in</span> <span class="n">mi_estimation_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;model_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">MAJORITY_VOTING</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">MAJORITY_VOTING</span><span class="p">][</span><span class="n">ACCURACY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">RANDOM_CLASSIFIER</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">RANDOM_CLASSIFIER</span><span class="p">][</span><span class="n">ACCURACY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__init_results_files__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__init_results_files__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__init_results_files__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the results and backup files and restores results from</span>
+<span class="sd">        backup if necessary.</span>
+
+<span class="sd">        This method checks the validity of the specified detection</span>
+<span class="sd">        method and prepares the file paths for storing results and</span>
+<span class="sd">        backups. If backups exist, it attempts to restore results to</span>
+<span class="sd">        ensure continuity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leakage_detection_methods</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid Detection Method </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">hv_dm</span> <span class="o">=</span> <span class="n">leakage_detection_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span><span class="si">}</span><span class="s2">_eval.h5&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span><span class="p">,</span> <span class="n">RESULT_FOLDER</span><span class="p">,</span> <span class="n">hv_dm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span><span class="si">}</span><span class="s2">_backup.h5&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span><span class="p">,</span> <span class="n">RESULT_FOLDER</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span><span class="p">)</span>
+        <span class="n">create_directory_safely</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">create_directory_safely</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__create_results_from_backup__</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_is_fitted_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the detector has already been fitted by verifying the</span>
+<span class="sd">        existence of results files.</span>
+
+<span class="sd">        The method assesses if the required result files and their content are complete and consistent. If results</span>
+<span class="sd">        are incomplete or corrupted, they are removed to ensure fresh simulations can be run.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the results file is valid and complete, otherwise False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;++++++++++++++++++++++++++++++++ _is_fitted_ function ++++++++++++++++++++++++++++++++&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checking main file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="si">}</span><span class="s2"> for results for padding </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">check_and_delete_corrupt_h5_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;os.path.exists(self.results_file)&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">conditions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="si">}</span><span class="s2"> in file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">in</span> <span class="n">file</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulations done for padding label </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">metric_results</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check if </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> exists in results </span><span class="si">{</span><span class="n">model_name</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">padding_name_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">conditions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">padding_name_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">padding_name_group</span>
+                    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">padding_name_group</span><span class="p">:</span>
+                        <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">metric_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">conditions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">model_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">model_group</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results exists for metric </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">metric_name</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">model_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model_group</span><span class="p">[</span><span class="n">metric_name</span><span class="p">])</span> <span class="c1">#np.array(model_group.get(metric_name))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results </span><span class="si">{</span><span class="n">vals</span><span class="si">}</span><span class="s2"> stored for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_iterations</span><span class="si">}</span><span class="s2"> exist for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">conditions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">padding_name_group</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> len(vals) == self.cv_iterations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_iterations</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+        <span class="n">conditions_vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">conditions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results for padding </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">conditions_vals</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;Coniditions: </span><span class="si">{</span><span class="n">print_dictionary</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">conditions_vals</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results for padding </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_name</span><span class="si">}</span><span class="s2"> removed since it is incomplete &quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">conditions_vals</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">print_dictionary</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;++++++++++++++++++++ _is_fitted_ </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">conditions_vals</span><span class="p">)</span><span class="si">}</span><span class="s2"> +++++++++++++++++++++++++++++&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">conditions_vals</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InformationLeakageDetector.__create_results_from_backup__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__create_results_from_backup__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__create_results_from_backup__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates results files from backup if the main results file is</span>
+<span class="sd">        missing or incomplete.</span>
+
+<span class="sd">        The method locks the backup file, copies the necessary data, and</span>
+<span class="sd">        unlocks the file to ensure safe restoration of results in case</span>
+<span class="sd">        the main file is not valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_and_delete_corrupt_h5_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted_</span><span class="p">:</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                <span class="c1"># Apply a shared lock on the source file</span>
+                <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">get_vfd_handle</span><span class="p">(),</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_SH</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Locked the backup file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="c1"># Perform the file copy operation</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied the file from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="c1"># Release the lock on the source file</span>
+                <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">get_vfd_handle</span><span class="p">(),</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_UN</span><span class="p">)</span>
+                <span class="n">source</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unlocked the backup file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latest results already complete for the </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup results file does not exists </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_backup_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__update_backup_file__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__update_backup_file__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__update_backup_file__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the backup results file with the latest results from the</span>
+<span class="sd">        main results file.</span>
+
+<span class="sd">        If the backup file exists, the method deletes outdated results,</span>
+<span class="sd">        copies the relevant group data from the main file, and ensures</span>
+<span class="sd">        the backup is updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">):</span>
+                <span class="n">dest_h5</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">in</span> <span class="n">dest_h5</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">dest_h5</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+                <span class="n">dest_h5</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">source_h5</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">destination_h5</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">in</span> <span class="n">source_h5</span><span class="p">:</span>
+                <span class="n">source_group</span> <span class="o">=</span> <span class="n">source_h5</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+                <span class="n">destination_h5</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source_group</span><span class="p">,</span> <span class="n">destination_h5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">)</span>
+            <span class="n">source_h5</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">destination_h5</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_backup_file__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__format_name__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__format_name__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__format_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats the padding name and generates a corresponding hash code.</span>
+
+<span class="sd">        The method processes the padding name by removing spaces, converting it to lowercase, and generating a hash.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        padding_name : str</span>
+<span class="sd">            The name of the padding method used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            Formatted padding name and its corresponding hash code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">padding_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">padding_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">padding_name</span> <span class="o">=</span> <span class="n">padding_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">hash_object</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">()</span>
+        <span class="n">hash_object</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">padding_name</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">hex_dig</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hash_object</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())[:</span><span class="mi">16</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">padding_name</span><span class="p">,</span> <span class="n">hex_dig</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__close_file__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__close_file__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__close_file__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely closes the main results file if it is open.</span>
+
+<span class="sd">        The method verifies if the file is still open and closes it if</span>
+<span class="sd">        necessary, handling potential exceptions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">is_open</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">valid</span>
+            <span class="k">if</span> <span class="n">is_open</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The result file is open closing it&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The result file is not open.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot open the result file since it does not exist&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__close_backup_file__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__close_backup_file__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__close_backup_file__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely closes the backup results file if it is open.</span>
+
+<span class="sd">        The method checks if the backup file is open and closes it,</span>
+<span class="sd">        handling exceptions appropriately.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file_backup</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">is_open</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">valid</span>
+            <span class="k">if</span> <span class="n">is_open</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The backup file is open closing it&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The backup file is not open.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot open the backup file since it does not exist&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__read_majority_accuracies__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__read_majority_accuracies__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__read_majority_accuracies__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and returns the accuracy scores from the majority voting</span>
+<span class="sd">        classifier.</span>
+
+<span class="sd">        This method retrieves accuracy scores stored in the results file, focusing on the majority voting classifier`s</span>
+<span class="sd">        performance metrics.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        accuracies : numpy.ndarray</span>
+<span class="sd">            Array of accuracy scores.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="c1"># self.logger.error(self.allkeys(file))</span>
+            <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+            <span class="c1"># self.logger.error(self.allkeys(padding_name_group))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="p">[</span><span class="n">MAJORITY_VOTING</span><span class="p">]</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model_group</span><span class="p">[</span><span class="n">ACCURACY</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while getting the metric </span><span class="si">{</span><span class="n">ACCURACY</span><span class="si">}</span><span class="s2"> for the&quot;</span>
+                                  <span class="sa">f</span><span class="s2">&quot;detection method </span><span class="si">{</span><span class="n">PAIRED_TTEST</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">accuracies</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The results are not found at the path </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__read_random_accuracies__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__read_random_accuracies__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__read_random_accuracies__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and returns the accuracy scores from the random classifier.</span>
+
+<span class="sd">        This method retrieves accuracy scores stored in the results file, focusing on the random classifier`s</span>
+<span class="sd">        performance metrics.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        accuracies : numpy.ndarray</span>
+<span class="sd">            Array of accuracy scores.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="p">[</span><span class="n">RANDOM_CLASSIFIER</span><span class="p">]</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model_group</span><span class="p">[</span><span class="n">ACCURACY</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while getting the metric </span><span class="si">{</span><span class="n">ACCURACY</span><span class="si">}</span><span class="s2"> for the&quot;</span>
+                                  <span class="sa">f</span><span class="s2">&quot;detection method </span><span class="si">{</span><span class="n">PAIRED_TTEST</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">accuracies</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The results are not found at the path </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__get_training_dataset__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__get_training_dataset__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__get_training_dataset__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Splits the data into training and test sets using cross-validation.</span>
+
+<span class="sd">        This method uses StratifiedKFold and StratifiedShuffleSplit to generate train-test splits, ensuring that</span>
+<span class="sd">        class distributions are preserved.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input features.</span>
+
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target labels.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_train: ()</span>
+<span class="sd">        y_train</span>
+<span class="sd">             and training target labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lengths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_iterator</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+            <span class="n">lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_index</span><span class="p">))</span>
+        <span class="n">test_size</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test size </span><span class="si">{</span><span class="n">test_size</span><span class="si">}</span><span class="s2"> Train sizes </span><span class="si">{</span><span class="n">lengths</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sss</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sss</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__store_results__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__store_results__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__store_results__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stores the evaluation results into the main results file and updates</span>
+<span class="sd">        the backup.</span>
+
+<span class="sd">        The method saves model performance metrics into the HDF5 results</span>
+<span class="sd">        file, ensuring that results are consistently stored. It then</span>
+<span class="sd">        updates the backup file to maintain data integrity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;__store_results__ Result file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rf_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">metric_results</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">padding_name_group</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model_name</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">padding_name_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">model_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">padding_name_group</span><span class="p">:</span>
+                    <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating model group </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> results </span><span class="si">{</span><span class="n">model_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting model group </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> results </span><span class="si">{</span><span class="n">model_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">metric_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Storing results </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> results </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">model_group</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">model_group</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span>
+                    <span class="n">model_group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Problem creating the dataset &quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update_backup_file__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__allkeys__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__allkeys__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__allkeys__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively finds all keys in an h5py.Group object.</span>
+
+<span class="sd">        This method traverses through all nested groups in an HDF5 file, gathering the names of all datasets and</span>
+<span class="sd">        groups.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : h5py.Group</span>
+<span class="sd">            The group object to recursively inspect.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple of all key names found within the group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__allkeys__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">+</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="n">keys</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__read_results_file__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__read_results_file__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__read_results_file__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detection_method</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and returns the results for the specified detection method.</span>
+
+<span class="sd">        The method retrieves model results based on the selected detection method, ensuring compatibility with the</span>
+<span class="sd">        configured base detector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        detection_method : str</span>
+<span class="sd">            The method used to detect information leakage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary mapping model names to their corresponding metric results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metric_name</span> <span class="o">=</span> <span class="n">leakage_detection_methods</span><span class="p">[</span><span class="n">detection_method</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;For the detection method </span><span class="si">{</span><span class="n">detection_method</span><span class="si">}</span><span class="s2">, metric </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">model_results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">):</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">padding_name_group</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">padding_code</span><span class="p">]</span>
+            <span class="c1"># self.logger.error(self.allkeys(padding_name_group))</span>
+            <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">MAJORITY_VOTING</span><span class="p">,</span> <span class="n">RANDOM_CLASSIFIER</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">model_group</span> <span class="o">=</span> <span class="n">padding_name_group</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+                <span class="c1"># self.logger.error(self.allkeys(model_group))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">model_results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model_group</span><span class="p">[</span><span class="n">metric_name</span><span class="p">])</span>
+                <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while getting the metric </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> for the&quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;detection method </span><span class="si">{</span><span class="n">detection_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provided Metric Name </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> is not applicable &quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;for current base detector </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_detector</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;so cannot apply the provided detection method </span><span class="si">{</span><span class="n">detection_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__close_file__</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">model_results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The results are not found at the path </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__calculate_majority_voting_accuracy__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__calculate_majority_voting_accuracy__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__calculate_majority_voting_accuracy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates and logs the accuracy of a majority voting classifier.</span>
+
+<span class="sd">        The method fits a majority voting classifier and computes its accuracy on the test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_train : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Training feature matrix.</span>
+
+<span class="sd">        y_train : array-like of shape (n_samples,)</span>
+<span class="sd">            Training target labels.</span>
+
+<span class="sd">        X_test : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Test feature matrix.</span>
+
+<span class="sd">        y_test : array-like of shape (n_samples,)</span>
+<span class="sd">            Test target labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">MajorityVoting</span><span class="p">()</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">p_pred</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">get_scores</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">estimator</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">MAJORITY_VOTING</span><span class="p">][</span><span class="n">ACCURACY</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Majority Voting Performance Metric </span><span class="si">{</span><span class="n">ACCURACY</span><span class="si">}</span><span class="s2">: Value </span><span class="si">{</span><span class="n">accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.__calculate_random_classifier_accuracy__">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.__calculate_random_classifier_accuracy__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__calculate_random_classifier_accuracy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates and logs the accuracy of a random classifier.</span>
+
+<span class="sd">        The method fits a random classifier and computes its accuracy on the test set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_train : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Training feature matrix.</span>
+
+<span class="sd">        y_train : array-like of shape (n_samples,)</span>
+<span class="sd">            Training target labels.</span>
+
+<span class="sd">        X_test : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Test feature matrix.</span>
+
+<span class="sd">        y_test : array-like of shape (n_samples,)</span>
+<span class="sd">            Test target labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">RandomClassifier</span><span class="p">()</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">p_pred</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">get_scores</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">estimator</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">RANDOM_CLASSIFIER</span><span class="p">][</span><span class="n">ACCURACY</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random Classifier Performance Metric </span><span class="si">{</span><span class="n">ACCURACY</span><span class="si">}</span><span class="s2">: Value </span><span class="si">{</span><span class="n">accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.hyperparameter_optimization">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.hyperparameter_optimization">[docs]</a>
+    <span class="k">def</span> <span class="nf">hyperparameter_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform hyperparameter optimization using Bayesian search to</span>
+<span class="sd">        identify the best model parameters.</span>
+
+<span class="sd">        This method is intended to explore a wide range of hyperparameters using an optimization strategy (such as Bayesian search)</span>
+<span class="sd">        to determine the most effective configuration for the models used in information leakage detection. The method is designed</span>
+<span class="sd">        to be overridden by subclasses to implement specific optimization routines.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input feature matrix used for training during hyperparameter optimization.</span>
+
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values (class labels) corresponding to each row in X.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The size of the training dataset after the reduction (if applicable).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The &#39;hyperparameter_optimization&#39; method must be implemented by the subclass.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.fit">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the model using cross-validation and the specified detection</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        This function trains the model on the provided dataset, applying cross-validation based on the configured detection</span>
+<span class="sd">        strategy. The method also integrates hyperparameter optimization if the model is not already fitted. It serves as the main</span>
+<span class="sd">        entry point for model training, allowing subclasses to customize the fitting process for different types of detectors.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input feature matrix used for model training.</span>
+
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values (class labels) corresponding to each row in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The &#39;fit&#39; method must be implemented by the subclass.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.evaluate_scores">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.evaluate_scores">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate and store model performance metrics for the detection</span>
+<span class="sd">        process.</span>
+
+<span class="sd">        This method computes various evaluation metrics, such as log-loss, accuracy, and confusion matrix, for the model&#39;s</span>
+<span class="sd">        predictions. It also supports probability calibration using techniques like isotonic regression and Platt scaling. The</span>
+<span class="sd">        results are stored and logged for further analysis.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X_test : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The feature matrix for the test set.</span>
+
+<span class="sd">        X_train : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The feature matrix for the training set.</span>
+
+<span class="sd">        y_test : array-like of shape (n_samples,)</span>
+<span class="sd">            The true target labels for the test set.</span>
+
+<span class="sd">        y_train : array-like of shape (n_samples,)</span>
+<span class="sd">            The true target labels for the training set.</span>
+
+<span class="sd">        y_pred : array-like of shape (n_samples,)</span>
+<span class="sd">            The predicted labels for the test set.</span>
+
+<span class="sd">        p_pred : array-like of shape (n_samples, n_classes)</span>
+<span class="sd">            The predicted class probabilities for the test set.</span>
+
+<span class="sd">        model : object</span>
+<span class="sd">            The trained model that is being evaluated.</span>
+
+<span class="sd">        n_model : int</span>
+<span class="sd">            The index of the model within the list of models being evaluated.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The method handles specific metrics like log-loss-based mutual information (MI) estimation and confusion matrices,</span>
+<span class="sd">        which are critical for detecting information leakage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">n_model</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Appending results for model </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">evaluation_metric</span> <span class="ow">in</span> <span class="n">mi_estimation_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">LOG_LOSS_MI_ESTIMATION</span> <span class="ow">in</span> <span class="n">metric_name</span> <span class="ow">or</span> <span class="n">PC_SOFTMAX_MI_ESTIMATION</span> <span class="ow">in</span> <span class="n">metric_name</span><span class="p">:</span>
+                <span class="n">calibrator_technique</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">calibrators</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">metric_name</span><span class="p">:</span>
+                        <span class="n">calibrator_technique</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="k">if</span> <span class="n">calibrator_technique</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">calibrator</span> <span class="o">=</span> <span class="n">calibrators</span><span class="p">[</span><span class="n">calibrator_technique</span><span class="p">]</span>
+                    <span class="n">c_params</span> <span class="o">=</span> <span class="n">calibrator_params</span><span class="p">[</span><span class="n">calibrator_technique</span><span class="p">]</span>
+                    <span class="n">calibrator</span> <span class="o">=</span> <span class="n">calibrator</span><span class="p">(</span><span class="o">**</span><span class="n">c_params</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">p_pred_cal</span> <span class="o">=</span> <span class="n">probability_calibration</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                                                             <span class="n">X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                                             <span class="n">calibrator</span><span class="o">=</span><span class="n">calibrator</span><span class="p">)</span>
+                        <span class="n">metric_loss</span> <span class="o">=</span> <span class="n">evaluation_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">p_pred_cal</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                        <span class="n">log_exception_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error while calibrating the probabilities&quot;</span><span class="p">)</span>
+                        <span class="n">metric_loss</span> <span class="o">=</span> <span class="n">evaluation_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">metric_loss</span> <span class="o">=</span> <span class="n">evaluation_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metric_loss</span> <span class="o">=</span> <span class="n">evaluation_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metric_name</span> <span class="o">==</span> <span class="n">CONFUSION_MATRIX</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">)</span> <span class="o">=</span> <span class="n">metric_loss</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+                <span class="n">cm_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;TN: </span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s2">, FP: </span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2">, FN: </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">, TP: </span><span class="si">{</span><span class="n">tp</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">metric_loss</span> <span class="o">=</span> <span class="p">[</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">: Value: </span><span class="si">{</span><span class="n">cm_string</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">: Value: </span><span class="si">{</span><span class="n">metric_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">][</span><span class="n">metric_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_loss</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InformationLeakageDetector.detect">
+<a class="viewcode-back" href="../../../api/autoqild.detectors.ild_base_class.html#autoqild.detectors.ild_base_class.InformationLeakageDetector.detect">[docs]</a>
+    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect potential information leakage using the configured detection</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        This method applies statistical tests, such as paired t-tests or Fisher&#39;s exact tests, to determine if there is</span>
+<span class="sd">        a significant difference in model performance that indicates information leakage. The results of these tests are</span>
+<span class="sd">        used to decide whether leakage is present and, if so, how many models exhibit it.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        detection_decision : bool</span>
+<span class="sd">            Indicates whether any models showed significant leakage.</span>
+<span class="sd">        hypothesis_rejected : int</span>
+<span class="sd">            The number of models flagged for leakage.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">holm_bonferroni</span><span class="p">(</span><span class="n">p_values</span><span class="p">):</span>
+            <span class="n">reject</span><span class="p">,</span> <span class="n">pvals_corrected</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;holm&quot;</span><span class="p">,</span> <span class="n">is_sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_values</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">reject</span><span class="p">)</span>
+            <span class="n">pvals_corrected</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_values</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">pvals_corrected</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">p_values</span><span class="p">,</span> <span class="n">pvals_corrected</span><span class="p">,</span> <span class="n">reject</span>
+
+        <span class="n">n_training_folds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_iterations</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">n_test_folds</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">model_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__read_results_file__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span><span class="p">)</span>
+        <span class="n">model_p_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">metric_vals</span> <span class="ow">in</span> <span class="n">model_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">p_value</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="ow">in</span> <span class="n">mi_leakage_detection_methods</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">base_mi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metric_vals</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1e-2</span>
+                <span class="n">p_value</span> <span class="o">=</span> <span class="n">paired_ttest</span><span class="p">(</span><span class="n">base_mi</span><span class="p">,</span> <span class="n">metric_vals</span><span class="p">,</span> <span class="n">n_training_folds</span><span class="p">,</span> <span class="n">n_test_folds</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Normal Paired T-Test for MI estimation Technique&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="o">==</span> <span class="n">PAIRED_TTEST</span><span class="p">:</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__read_majority_accuracies__</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Majority Voting Accuracies </span><span class="si">{</span><span class="n">accuracies</span><span class="si">}</span><span class="s2"> learner </span><span class="si">{</span><span class="n">metric_vals</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">p_value</span> <span class="o">=</span> <span class="n">paired_ttest</span><span class="p">(</span><span class="n">accuracies</span><span class="p">,</span> <span class="n">metric_vals</span><span class="p">,</span> <span class="n">n_training_folds</span><span class="p">,</span> <span class="n">n_test_folds</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Paired T-Test for accuracy comparison with majority&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="o">==</span> <span class="n">PAIRED_TTEST_RANDOM</span><span class="p">:</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__read_random_accuracies__</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random Classifier Accuracies </span><span class="si">{</span><span class="n">accuracies</span><span class="si">}</span><span class="s2"> learner </span><span class="si">{</span><span class="n">metric_vals</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">p_value</span> <span class="o">=</span> <span class="n">paired_ttest</span><span class="p">(</span><span class="n">accuracies</span><span class="p">,</span> <span class="n">metric_vals</span><span class="p">,</span> <span class="n">n_training_folds</span><span class="p">,</span> <span class="n">n_test_folds</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Paired T-Test for accuracy comparison with random&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="ow">in</span> <span class="p">[</span><span class="n">FISHER_EXACT_TEST_MEAN</span><span class="p">,</span> <span class="n">FISHER_EXACT_TEST_MEDIAN</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fisher&#39;s Exact-Test for confusion matrix&quot;</span><span class="p">)</span>
+                <span class="n">metric_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">],</span> <span class="p">[</span><span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">]])</span> <span class="k">for</span> <span class="p">[</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">]</span> <span class="ow">in</span> <span class="n">metric_vals</span><span class="p">]</span>
+                <span class="n">p_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fisher_exact</span><span class="p">(</span><span class="n">cm</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">cm</span> <span class="ow">in</span> <span class="n">metric_vals</span><span class="p">])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="o">==</span> <span class="n">FISHER_EXACT_TEST_MEAN</span><span class="p">:</span>
+                    <span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">p_values</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detection_method</span> <span class="o">==</span> <span class="n">FISHER_EXACT_TEST_MEDIAN</span><span class="p">:</span>
+                    <span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">p_values</span><span class="p">)</span>
+            <span class="n">model_p_values</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> p-value </span><span class="si">{</span><span class="n">p_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">p_vals</span><span class="p">,</span> <span class="n">pvals_corrected</span><span class="p">,</span> <span class="n">rejected</span> <span class="o">=</span> <span class="n">holm_bonferroni</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model_p_values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="n">detection_decision</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">rejected</span><span class="p">)</span>
+        <span class="n">hypothesis_rejected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rejected</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">detection_decision</span><span class="p">,</span> <span class="n">hypothesis_rejected</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Gupta et al.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=ccdb6887"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
