@@ -486,7 +486,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             - \( z_k \) is the logit or raw score for class \( k \).
             - \( K \) is the total number of classes.
 
-        
+
         PC-Softmax Function:
 
         .. math::

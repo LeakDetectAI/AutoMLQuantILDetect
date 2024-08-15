@@ -42,13 +42,13 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         Optimizer type to use for training the neural network.
         Must be one of:
 
-        - `RMSprop`: RMSprop optimizer.
-        - `sgd`: Stochastic Gradient Descent optimizer.
-        - `adam`: Adam optimizer.
-        - `AdamW`: AdamW optimizer.
-        - `Adagrad`: Adagrad optimizer.
-        - `Adamax`: Adamax optimizer.
-        - `Adadelta`: Adadelta optimizer.
+        - `RMSprop`: Root Mean Square Propagation, an adaptive learning rate method.
+        - `sgd`: Stochastic Gradient Descent, a simple and widely-used optimizer.
+        - "adam": Adaptive Moment Estimation, combining momentum and RMSProp for better convergence.
+        - `AdamW`: Adam with weight decay, an improved variant of Adam with better regularization.
+        - `Adagrad`: Adaptive Gradient Algorithm, adjusting the learning rate based on feature frequency.
+        - `Adamax`: Variant of Adam based on infinity norm, more robust with sparse gradients.
+        - `Adadelta`: An extension of Adagrad that seeks to reduce its aggressive learning rate decay.
 
     learning_rate : float, optional, default=0.001
         Learning rate for the optimizer.
