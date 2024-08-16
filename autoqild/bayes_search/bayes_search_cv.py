@@ -1,6 +1,7 @@
 """Implements the main `BayesSearchCV` class, which orchestrates the Bayesian
 optimization process extending the functionality of `BayesSearchCV` from the
 `scikit-optimize` library."""
+
 import logging
 
 import dill
@@ -86,6 +87,7 @@ class BayesSearchCV(BayesSearchCVSK):
     optimizers_file_path : string, default=`results.pkl`
         Path to save the optimizer states.
 
+
     Private Methods
     ---------------
     _step(search_space, optimizer, evaluate_candidates, n_points=1)
@@ -97,24 +99,24 @@ class BayesSearchCV(BayesSearchCVSK):
     """
 
     def __init__(
-            self,
-            estimator,
-            search_spaces,
-            optimizer_kwargs=None,
-            n_iter=50,
-            scoring=None,
-            fit_params=None,
-            n_jobs=1,
-            n_points=1,
-            iid=True,
-            refit=True,
-            cv=None,
-            verbose=0,
-            pre_dispatch="2*n_jobs",
-            random_state=None,
-            error_score="raise",
-            return_train_score=False,
-            optimizers_file_path="results.pkl"
+        self,
+        estimator,
+        search_spaces,
+        optimizer_kwargs=None,
+        n_iter=50,
+        scoring=None,
+        fit_params=None,
+        n_jobs=1,
+        n_points=1,
+        iid=True,
+        refit=True,
+        cv=None,
+        verbose=0,
+        pre_dispatch="2*n_jobs",
+        random_state=None,
+        error_score="raise",
+        return_train_score=False,
+        optimizers_file_path="results.pkl",
     ):
         super().__init__(
             estimator,
@@ -170,7 +172,7 @@ class BayesSearchCV(BayesSearchCVSK):
         self.logger.info(f"Parameters values to be tested {params}")
         try:
             all_results = evaluate_candidates(params_dict)
-            local_results = all_results["mean_test_score"][-len(params):]
+            local_results = all_results["mean_test_score"][-len(params) :]
         except Exception as e:
             local_results = list(np.zeros(len(params)))
             self.logger.info(params_dict)
@@ -229,7 +231,9 @@ class BayesSearchCV(BayesSearchCVSK):
                 n_iter = self.n_iter
             n_finished = len(optimizer.yi)
             n_iter = n_iter - n_finished
-            self.logger.info(f"Iterations already done: {n_finished} and running iterations {n_iter}")
+            self.logger.info(
+                f"Iterations already done: {n_finished} and running iterations {n_iter}"
+            )
             # do the optimization for particular search space
             optim_result = None
             iter_idx = 0
@@ -237,9 +241,16 @@ class BayesSearchCV(BayesSearchCVSK):
                 # when n_iter < n_points points left for evaluation
                 n_points_adjusted = min(n_iter, n_points)
                 iter_idx += n_points
-                self.logger.info(f"The {iter_idx + n_finished}th parameter values are being tested")
+                self.logger.info(
+                    f"The {iter_idx + n_finished}th parameter values are being tested"
+                )
                 try:
-                    optim_result = self._step(search_space, optimizer, evaluate_candidates, n_points=n_points_adjusted)
+                    optim_result = self._step(
+                        search_space,
+                        optimizer,
+                        evaluate_candidates,
+                        n_points=n_points_adjusted,
+                    )
                 except Exception as error:
                     log_exception_error(self.logger, error)
                     self.logger.info(f"Cannot evaluate the points {n_points_adjusted}")
@@ -247,7 +258,13 @@ class BayesSearchCV(BayesSearchCVSK):
                 if eval_callbacks(callbacks, optim_result):
                     break
                 self._optim_results[i] = optim_result
-                dill.dump((self.optimizers_, self._optim_results), open(self.optimizers_file_path, "wb"))
+                dill.dump(
+                    (self.optimizers_, self._optim_results),
+                    open(self.optimizers_file_path, "wb"),
+                )
             if optim_result is not None:
                 self._optim_results[i] = optim_result
-            dill.dump((self.optimizers_, self._optim_results), open(self.optimizers_file_path, "wb"))
+            dill.dump(
+                (self.optimizers_, self._optim_results),
+                open(self.optimizers_file_path, "wb"),
+            )

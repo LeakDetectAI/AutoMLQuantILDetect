@@ -1,5 +1,6 @@
 """Uses a Multi-Layer Perceptron (MLP) for detecting leakage using deep
 learning approaches."""
+
 from .sklearn_leakage_detector import SklearnLeakageDetector
 from ..classifiers import MultiLayerPerceptron
 
@@ -56,13 +57,37 @@ class MLPLeakageDetector(SklearnLeakageDetector):
         Additional keyword arguments passed to the parent class.
     """
 
-    def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
-                 base_directory, search_space, hp_iters, n_inner_folds, validation_loss, random_state=None, **kwargs):
-        super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
-                         hash_value=hash_value, cv_iterations=cv_iterations, n_hypothesis=n_hypothesis,
-                         base_directory=base_directory, search_space=search_space, hp_iters=hp_iters,
-                         n_inner_folds=n_inner_folds, validation_loss=validation_loss, random_state=random_state,
-                         **kwargs)
+    def __init__(
+        self,
+        padding_name,
+        learner_params,
+        fit_params,
+        hash_value,
+        cv_iterations,
+        n_hypothesis,
+        base_directory,
+        search_space,
+        hp_iters,
+        n_inner_folds,
+        validation_loss,
+        random_state=None,
+        **kwargs
+    ):
+        super().__init__(
+            padding_name=padding_name,
+            learner_params=learner_params,
+            fit_params=fit_params,
+            hash_value=hash_value,
+            cv_iterations=cv_iterations,
+            n_hypothesis=n_hypothesis,
+            base_directory=base_directory,
+            search_space=search_space,
+            hp_iters=hp_iters,
+            n_inner_folds=n_inner_folds,
+            validation_loss=validation_loss,
+            random_state=random_state,
+            **kwargs
+        )
         self.n_jobs = 1
         self.base_detector = MultiLayerPerceptron
 
@@ -116,7 +141,9 @@ class MLPLeakageDetector(SklearnLeakageDetector):
         """
         super().fit(X, y)
 
-    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+    def evaluate_scores(
+        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
+    ):
         """Evaluate and store model performance metrics for the detection
         process.
 
@@ -150,8 +177,16 @@ class MLPLeakageDetector(SklearnLeakageDetector):
         n_model : int
             The index of the model in the list of evaluated models.
         """
-        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
-                                p_pred=p_pred, model=model, n_model=n_model)
+        super().evaluate_scores(
+            X_test=X_test,
+            X_train=X_train,
+            y_test=y_test,
+            y_train=y_train,
+            y_pred=y_pred,
+            p_pred=p_pred,
+            model=model,
+            n_model=n_model,
+        )
 
     def detect(self):
         """Executes the detection process to identify potential information

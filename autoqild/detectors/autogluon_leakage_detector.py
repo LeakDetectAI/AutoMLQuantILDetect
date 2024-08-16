@@ -1,5 +1,6 @@
 """A leakage detection class leveraging AutoGluon for hyperparameter
 optimization and model evaluation."""
+
 import logging
 import os.path
 
@@ -63,14 +64,38 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         Logger instance used for recording the steps and processes of the leakage detection.
     """
 
-    def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
-                 base_directory, validation_loss, random_state=None, **kwargs):
-        super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
-                         hash_value=hash_value, cv_iterations=cv_iterations, n_hypothesis=n_hypothesis,
-                         base_directory=base_directory, random_state=random_state, **kwargs)
+    def __init__(
+        self,
+        padding_name,
+        learner_params,
+        fit_params,
+        hash_value,
+        cv_iterations,
+        n_hypothesis,
+        base_directory,
+        validation_loss,
+        random_state=None,
+        **kwargs,
+    ):
+        super().__init__(
+            padding_name=padding_name,
+            learner_params=learner_params,
+            fit_params=fit_params,
+            hash_value=hash_value,
+            cv_iterations=cv_iterations,
+            n_hypothesis=n_hypothesis,
+            base_directory=base_directory,
+            random_state=random_state,
+            **kwargs,
+        )
         self.base_detector = AutoGluonClassifier
         self.learner = None
-        output_folder = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value, f"{self.padding_code}_autogluon")
+        output_folder = os.path.join(
+            base_directory,
+            OPTIMIZER_FOLDER,
+            hash_value,
+            f"{self.padding_code}_autogluon",
+        )
         create_directory_safely(output_folder)
         self.learner_params["output_folder"] = output_folder
         self.learner_params["eval_metric"] = validation_loss
@@ -124,7 +149,9 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             The target values (class labels) corresponding to each row in X.
         """
         if self._is_fitted_:
-            self.logger.info(f"Model already fitted for the padding {self.padding_code}")
+            self.logger.info(
+                f"Model already fitted for the padding {self.padding_code}"
+            )
         else:
             train_size = self.hyperparameter_optimization(X, y)
             n_hypothesis = 0
@@ -132,15 +159,25 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                 if n_hypothesis == self.n_hypothesis:
                     break
                 try:
-                    self.logger.info(f"************** Model {i + 1}: {model.__class__.__name__} **************")
-                    for k, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
-                        self.logger.info(f"************************** Split {k + 1} ***************************")
+                    self.logger.info(
+                        f"************** Model {i + 1}: {model.__class__.__name__} **************"
+                    )
+                    for k, (train_index, test_index) in enumerate(
+                        self.cv_iterator.split(X, y)
+                    ):
+                        self.logger.info(
+                            f"************************** Split {k + 1} ***************************"
+                        )
                         train_index = train_index[:train_size]
                         X_train, X_test = X[train_index], X[test_index]
                         y_train, y_test = y[train_index], y[test_index]
                         if i == 0:
-                            self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
-                            self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
+                            self.__calculate_random_classifier_accuracy__(
+                                X_train, y_train, X_test, y_test
+                            )
+                            self.__calculate_majority_voting_accuracy__(
+                                X_train, y_train, X_test, y_test
+                            )
                         train_data = self.learner.convert_to_dataframe(X_train, y_train)
                         test_data = self.learner.convert_to_dataframe(X_test, None)
                         X_t = train_data.drop(columns=["class"])
@@ -149,15 +186,28 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                         n_repeat_start = 0
                         model.fit(X=X_t, y=y_t, n_repeat_start=n_repeat_start)
                         p_pred, y_pred = get_scores(test_data, model)
-                        self.evaluate_scores(X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_hypothesis)
+                        self.evaluate_scores(
+                            X_test,
+                            X_train,
+                            y_test,
+                            y_train,
+                            y_pred,
+                            p_pred,
+                            model,
+                            n_hypothesis,
+                        )
                     n_hypothesis += 1
-                    self.logger.info(f"Hypothesis Done {n_hypothesis} out of {self.n_hypothesis}")
+                    self.logger.info(
+                        f"Hypothesis Done {n_hypothesis} out of {self.n_hypothesis}"
+                    )
                 except Exception as error:
                     log_exception_error(self.logger, error)
                     self.logger.error(f"Problem with fitting the model")
             self.__store_results__()
 
-    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+    def evaluate_scores(
+        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
+    ):
         """Evaluates and stores model performance metrics for the detection
         process.
 
@@ -190,8 +240,16 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         n_model : int
             The index of the model within the list of models being evaluated.
         """
-        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
-                                p_pred=p_pred, model=model, n_model=n_model)
+        super().evaluate_scores(
+            X_test=X_test,
+            X_train=X_train,
+            y_test=y_test,
+            y_train=y_train,
+            y_pred=y_pred,
+            p_pred=p_pred,
+            model=model,
+            n_model=n_model,
+        )
 
     def detect(self):
         """Executes the detection process to identify potential information

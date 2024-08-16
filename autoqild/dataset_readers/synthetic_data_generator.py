@@ -1,5 +1,6 @@
 """Generates synthetic datasets with introducing noise by flipping certain
 percentage of labels for testing and evaluating machine learning models."""
+
 import logging
 from abc import ABCMeta
 
@@ -114,8 +115,18 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         It then calculates the mean vector for each class.
     """
 
-    def __init__(self, n_classes=2, n_features=2, samples_per_class=500, flip_y=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type="single", **kwargs):
+    def __init__(
+        self,
+        n_classes=2,
+        n_features=2,
+        samples_per_class=500,
+        flip_y=0.1,
+        random_state=42,
+        fold_id=0,
+        imbalance=0.0,
+        gen_type="single",
+        **kwargs,
+    ):
 
         self.n_classes = n_classes
         self.n_features = n_features
@@ -125,7 +136,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         self.covariances = {}
         self.seeds = {}
         if isinstance(samples_per_class, int):
-            self.samples_per_class = dict.fromkeys(np.arange(n_classes), samples_per_class)
+            self.samples_per_class = dict.fromkeys(
+                np.arange(n_classes), samples_per_class
+            )
         elif isinstance(samples_per_class, dict):
             self.samples_per_class = {}
             for key in samples_per_class.keys():
@@ -144,7 +157,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         self.logger = logging.getLogger(SyntheticDatasetGenerator.__name__)
 
     def __generate_cov_means__(self):
-        seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
+        seed = self.random_state.randint(2**31, dtype="uint32") + self.fold_id
         rs = np.random.RandomState(seed=seed)
         Q = ortho_group.rvs(dim=self.n_features)
         S = np.diag(np.diag(rs.rand(self.n_features, self.n_features)))
@@ -153,13 +166,15 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             # A = rs.rand(n_features, n_features)
             # matrix1 = np.matmul(A, A.transpose())
             # positive semi-definite matrix
-            seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
+            seed = self.random_state.randint(2**31, dtype="uint32") + self.fold_id
             mean = np.ones(self.n_features) + (k_class * FACTOR)
             self.means[k_class] = mean
             self.covariances[k_class] = cov
             self.seeds[k_class] = seed
             self.y_prob[k_class] = self.samples_per_class[k_class] / self.n_instances
-            self.flip_y_prob[k_class] = (self.y_prob[k_class] * (1 - self.flip_y) + self.flip_y / self.n_classes)
+            self.flip_y_prob[k_class] = (
+                self.y_prob[k_class] * (1 - self.flip_y) + self.flip_y / self.n_classes
+            )
             self.flip_y_prob[k_class] = np.around(self.flip_y_prob[k_class], 4)
         # print(self.y_prob)
         # print(self.flip_y_prob)
@@ -177,8 +192,11 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         scipy.stats._multivariate.multivariate_normal_frozen
             The multivariate normal distribution for the given class.
         """
-        return multivariate_normal(mean=self.means[k_class], cov=self.covariances[k_class],
-                                   seed=self.seeds[k_class])
+        return multivariate_normal(
+            mean=self.means[k_class],
+            cov=self.covariances[k_class],
+            seed=self.seeds[k_class],
+        )
 
     def get_prob_fn_margx(self):
         """Get the marginal probability distribution function for the input
@@ -189,8 +207,12 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         marg_x: function
             A function that computes the marginal probability for the input data.
         """
-        marg_x = lambda x: np.array([self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
-                                     for k_class in self.class_labels])
+        marg_x = lambda x: np.array(
+            [
+                self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
+                for k_class in self.class_labels
+            ]
+        )
         return marg_x
 
     def get_prob_x_given_y(self, X, class_label):
@@ -229,7 +251,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         prob_y_given_x: array-like
             The probability of the class label given the input data X.
         """
-        pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
+        pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(
+            self.get_prob_dist_x_given_y(k_class), x
+        )
         marg_x = self.get_prob_fn_margx()
         x_marg = marg_x(X).sum(axis=0)
         prob_y_given_x = pdf_xy(X, class_label) / x_marg
@@ -253,7 +277,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         """
         first_term = (1 - self.flip_y) * self.get_prob_y_given_x(X, class_label)
         # second_term = (self.flip_y / self.n_classes)
-        second_term = (self.flip_y * self.y_prob[class_label])
+        second_term = self.flip_y * self.y_prob[class_label]
         prob_y_given_x = first_term + second_term
         return prob_y_given_x
 
@@ -276,7 +300,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         prob_flip_y_given_x = self.get_prob_flip_y_given_x(X, class_label)
         marg_x = self.get_prob_fn_margx()
         x_marg = marg_x(X).sum(axis=0)
-        prob_x_given_flip_y = (prob_flip_y_given_x * x_marg)
+        prob_x_given_flip_y = prob_flip_y_given_x * x_marg
         return prob_x_given_flip_y
 
     def generate_samples_for_class(self, k_class):
@@ -294,7 +318,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         labels: array-like
             A list of labels corresponding to the features.
         """
-        seed = self.random_state.randint(2 ** 32, dtype="uint32")
+        seed = self.random_state.randint(2**32, dtype="uint32")
         mvn = self.get_prob_dist_x_given_y(k_class)
         n_samples = self.samples_per_class[k_class]
         data = mvn.rvs(n_samples, random_state=seed)
@@ -328,7 +352,11 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                 indices = []
                 for k_class in self.class_labels:
                     flip_samples = int(self.flip_y * self.samples_per_class[k_class])
-                    ind0 = list(self.random_state.choice(np.where(y == k_class)[0], flip_samples, replace=False))
+                    ind0 = list(
+                        self.random_state.choice(
+                            np.where(y == k_class)[0], flip_samples, replace=False
+                        )
+                    )
                     indices.extend(ind0)
                 uni, counts = np.unique(y, return_counts=True)
                 d = {i: c for i, c in zip(uni, counts)}
@@ -341,7 +369,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                 self.logger.info(f"After Flipping {d}")
                 self.logger.info(f"Flipping Ratio {d_o}")
             else:
-                self.logger.info("################# Imbalanced Dataset #################")
+                self.logger.info(
+                    "################# Imbalanced Dataset #################"
+                )
                 uni, counts = np.unique(y, return_counts=True)
                 d = {i: c for i, c in zip(uni, counts)}
                 self.logger.info(f"Original {d}")
@@ -349,16 +379,27 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                 choices = []
                 indices = []
                 for i, y_i in enumerate(y):
-                    choice = self.random_state.choice(2, 1, p=[1 - self.flip_y, self.flip_y])
+                    choice = self.random_state.choice(
+                        2, 1, p=[1 - self.flip_y, self.flip_y]
+                    )
                     choices.append(choice)
                     if choice == 1:
                         indices.append(i)
                         # y[i] = self.random_state.choice(self.n_classes, 1)
-                p = np.array([self.samples_per_class[int(k)] / self.n_instances for k in range(self.n_classes)])
+                p = np.array(
+                    [
+                        self.samples_per_class[int(k)] / self.n_instances
+                        for k in range(self.n_classes)
+                    ]
+                )
                 y_old = np.copy(y)
-                y[indices] = self.random_state.choice(self.n_classes, size=len(indices), p=p)
+                y[indices] = self.random_state.choice(
+                    self.n_classes, size=len(indices), p=p
+                )
                 # y[indices] = self.random_state.randint(self.n_classes, size=len(indices))
-                self.logger.info(f"Actual Flip {self.flip_y} Flips {np.mean(y_old != y)}")
+                self.logger.info(
+                    f"Actual Flip {self.flip_y} Flips {np.mean(y_old != y)}"
+                )
                 self.logger.info(f"Chosen flips {np.mean(choices)}")
                 uni, counts = np.unique(y, return_counts=True)
                 d = {i: c for i, c in zip(list(uni), counts)}
@@ -415,10 +456,10 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                     x_y_prob = self.get_prob_x_given_y(X=data, class_label=k_class)
                     marg_x = self.get_prob_fn_margx()
                     p_x_marg = marg_x(data).sum(axis=0)
-                    a_log_x_prob = (x_y_prob / p_x_marg)
+                    a_log_x_prob = x_y_prob / p_x_marg
                 else:
                     x_y_prob = self.get_prob_flip_y_given_x(X=data, class_label=k_class)
-                    a_log_x_prob = (x_y_prob / self.y_prob[k_class])
+                    a_log_x_prob = x_y_prob / self.y_prob[k_class]
                     # print(x_y_prob)
                 prob_list = np.nanmean(np.log2(a_log_x_prob))
                 # print(prob_list)
@@ -452,7 +493,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             if self.flip_y == 0.0:
                 y_pred[:, k_class] = self.get_prob_y_given_x(X=X, class_label=k_class)
             else:
-                y_pred[:, k_class] = self.get_prob_flip_y_given_x(X=X, class_label=k_class)
+                y_pred[:, k_class] = self.get_prob_flip_y_given_x(
+                    X=X, class_label=k_class
+                )
         y_pred[y_pred == 0] = np.finfo(float).eps
         y_pred[y_pred == 1] = 1 - np.finfo(float).eps
         self.logger.info(f"Sum {y_pred.sum(axis=1)}")
@@ -487,6 +530,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             - \( K \) is the total number of classes.
 
 
+
         PC-Softmax Function:
 
         .. math::
@@ -512,7 +556,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             if self.flip_y == 0.0:
                 y_pred[:, k_class] = self.get_prob_y_given_x(X=X, class_label=k_class)
             else:
-                y_pred[:, k_class] = self.get_prob_flip_y_given_x(X=X, class_label=k_class)
+                y_pred[:, k_class] = self.get_prob_flip_y_given_x(
+                    X=X, class_label=k_class
+                )
 
         y_pred[y_pred == 0] = np.finfo(float).eps
         y_pred[y_pred == 1] = 1 - np.finfo(float).eps

@@ -1,6 +1,7 @@
 """Generates synthetic datasets by instroducing noise with reducing the
 distance between gaussians of each class, simulating different
 distributions."""
+
 import logging
 from abc import ABCMeta
 
@@ -110,8 +111,18 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         It then calculates the mean vector for each class.
     """
 
-    def __init__(self, n_classes=2, n_features=2, samples_per_class=500, noise=0.1, random_state=42, fold_id=0,
-                 imbalance=0.0, gen_type="single", **kwargs):
+    def __init__(
+        self,
+        n_classes=2,
+        n_features=2,
+        samples_per_class=500,
+        noise=0.1,
+        random_state=42,
+        fold_id=0,
+        imbalance=0.0,
+        gen_type="single",
+        **kwargs,
+    ):
         self.n_classes = n_classes
         self.n_features = n_features
         self.random_state = check_random_state(random_state)
@@ -120,7 +131,9 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         self.covariances = {}
         self.seeds = {}
         if isinstance(samples_per_class, int):
-            self.samples_per_class = dict.fromkeys(np.arange(n_classes), samples_per_class)
+            self.samples_per_class = dict.fromkeys(
+                np.arange(n_classes), samples_per_class
+            )
         elif isinstance(samples_per_class, dict):
             self.samples_per_class = {}
             for key in samples_per_class.keys():
@@ -138,7 +151,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         self.logger = logging.getLogger(SyntheticDatasetGeneratorDistance.__name__)
 
     def __generate_cov_means__(self):
-        seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
+        seed = self.random_state.randint(2**31, dtype="uint32") + self.fold_id
         rs = np.random.RandomState(seed=seed)
         Q = ortho_group.rvs(dim=self.n_features)
         S = np.diag(np.diag(rs.rand(self.n_features, self.n_features)))
@@ -147,7 +160,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
             # A = rs.rand(n_features, n_features)
             # matrix1 = np.matmul(A, A.transpose())
             # positive semi-definite matrix
-            seed = self.random_state.randint(2 ** 31, dtype="uint32") + self.fold_id
+            seed = self.random_state.randint(2**31, dtype="uint32") + self.fold_id
             mean = np.ones(self.n_features) + (k_class * FACTOR) * (1 - self.noise)
             self.means[k_class] = mean
             self.covariances[k_class] = cov
@@ -169,8 +182,11 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         scipy.stats._multivariate.multivariate_normal_frozen
             The multivariate normal distribution for the given class.
         """
-        return multivariate_normal(mean=self.means[k_class], cov=self.covariances[k_class],
-                                   seed=self.seeds[k_class])
+        return multivariate_normal(
+            mean=self.means[k_class],
+            cov=self.covariances[k_class],
+            seed=self.seeds[k_class],
+        )
 
     def get_prob_fn_margx(self):
         """Get the marginal probability distribution function for the input
@@ -181,8 +197,12 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         marg_x: lambda function
             A function that computes the marginal probability for the input data.
         """
-        marg_x = lambda x: np.array([self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
-                                     for k_class in self.class_labels])
+        marg_x = lambda x: np.array(
+            [
+                self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
+                for k_class in self.class_labels
+            ]
+        )
         return marg_x
 
     def get_prob_x_given_y(self, X, class_label):
@@ -221,7 +241,9 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         prob_y_given_x: array-like
             The probability of a flipped class label given the input data X.
         """
-        pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(self.get_prob_dist_x_given_y(k_class), x)
+        pdf_xy = lambda x, k_class: self.y_prob[k_class] * pdf(
+            self.get_prob_dist_x_given_y(k_class), x
+        )
         marg_x = self.get_prob_fn_margx()
         x_marg = marg_x(X).sum(axis=0)
         prob_y_given_x = pdf_xy(X, class_label) / x_marg
@@ -242,7 +264,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         labels: array-like
             A list of labels corresponding to the features
         """
-        seed = self.random_state.randint(2 ** 32, dtype="uint32")
+        seed = self.random_state.randint(2**32, dtype="uint32")
         mvn = self.get_prob_dist_x_given_y(k_class)
         n_samples = self.samples_per_class[k_class]
         data = mvn.rvs(n_samples, random_state=seed)
@@ -316,7 +338,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
                 x_y_prob = self.get_prob_x_given_y(X=data, class_label=k_class)
                 marg_x = self.get_prob_fn_margx()
                 p_x_marg = marg_x(data).sum(axis=0)
-                a_log_x_prob = (x_y_prob / p_x_marg)
+                a_log_x_prob = x_y_prob / p_x_marg
                 prob_list = np.nanmean(np.log2(a_log_x_prob))
                 nter += 1
                 if nter >= 100:

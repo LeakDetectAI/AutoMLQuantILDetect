@@ -1,5 +1,6 @@
 """A versatile leakage detection class built on top of the scikit-learn
 framework, supporting multiple estimators."""
+
 import copy
 import gc
 import logging
@@ -92,19 +93,43 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         Logger instance for recording the process of leakage detection.
     """
 
-    def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
-                 base_directory, search_space, hp_iters, n_inner_folds, validation_loss, random_state=None, **kwargs):
-        super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
-                         hash_value=hash_value, cv_iterations=cv_iterations, n_hypothesis=n_hypothesis,
-                         base_directory=base_directory, random_state=random_state, **kwargs)
+    def __init__(
+        self,
+        padding_name,
+        learner_params,
+        fit_params,
+        hash_value,
+        cv_iterations,
+        n_hypothesis,
+        base_directory,
+        search_space,
+        hp_iters,
+        n_inner_folds,
+        validation_loss,
+        random_state=None,
+        **kwargs,
+    ):
+        super().__init__(
+            padding_name=padding_name,
+            learner_params=learner_params,
+            fit_params=fit_params,
+            hash_value=hash_value,
+            cv_iterations=cv_iterations,
+            n_hypothesis=n_hypothesis,
+            base_directory=base_directory,
+            random_state=random_state,
+            **kwargs,
+        )
         self.search_space = search_space
         self.hp_iters = hp_iters
         self.n_inner_folds = n_inner_folds
         self.validation_loss = validation_loss
-        self.inner_cv_iterator = StratifiedShuffleSplit(n_splits=self.n_inner_folds, test_size=0.30,
-                                                        random_state=self.random_state)
-        self.tabpfn_folder = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value,
-                                          f"{self.padding_code}.pkl")
+        self.inner_cv_iterator = StratifiedShuffleSplit(
+            n_splits=self.n_inner_folds, test_size=0.30, random_state=self.random_state
+        )
+        self.tabpfn_folder = os.path.join(
+            base_directory, OPTIMIZER_FOLDER, hash_value, f"{self.padding_code}.pkl"
+        )
         create_directory_safely(self.tabpfn_folder, True)
         self.logger = logging.getLogger(SklearnLeakageDetector.__name__)
         self.n_jobs = 10
@@ -137,10 +162,17 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         """
         X_train, y_train = self.__get_training_dataset__(X, y)
         learner = self.base_detector(**self.learner_params)
-        bayes_search_params = dict(estimator=learner, search_spaces=self.search_space, n_iter=self.hp_iters,
-                                   scoring=self.validation_loss, n_jobs=self.n_jobs, cv=self.inner_cv_iterator,
-                                   error_score=0, random_state=self.random_state,
-                                   optimizers_file_path=self.tabpfn_folder)
+        bayes_search_params = dict(
+            estimator=learner,
+            search_spaces=self.search_space,
+            n_iter=self.hp_iters,
+            scoring=self.validation_loss,
+            n_jobs=self.n_jobs,
+            cv=self.inner_cv_iterator,
+            error_score=0,
+            random_state=self.random_state,
+            optimizers_file_path=self.tabpfn_folder,
+        )
         bayes_search = BayesSearchCV(**bayes_search_params)
         search_keys = list(self.search_space.keys())
         search_keys.sort()
@@ -148,7 +180,9 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         callback = log_callback(search_keys)
         X_train, y_train = self.reduce_dataset(X_train, y_train)
         try:
-            bayes_search.fit(X_train, y_train, groups=None, callback=callback, **self.fit_params)
+            bayes_search.fit(
+                X_train, y_train, groups=None, callback=callback, **self.fit_params
+            )
         except Exception as error:
             log_exception_error(self.logger, error)
             self.logger.error(" Cannot fit the Bayes SearchCV ")
@@ -161,7 +195,9 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         self.estimators = []
         for i in range(self.n_hypothesis):
             learner_params = copy.deepcopy(self.learner_params)
-            loss, learner_params = update_params_at_k(bayes_search, search_keys, learner_params, k=i)
+            loss, learner_params = update_params_at_k(
+                bayes_search, search_keys, learner_params, k=i
+            )
             self.estimators.append([loss, learner_params])
         return train_size
 
@@ -186,14 +222,20 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         During fitting, random classifier and majority voting classifier performance is also calculated for comparison.
         """
         if self._is_fitted_:
-            self.logger.info(f"Model already fitted for the padding {self.padding_code}")
+            self.logger.info(
+                f"Model already fitted for the padding {self.padding_code}"
+            )
         else:
             train_size = self.hyperparameter_optimization(X, y)
             for i in range(self.n_hypothesis):
                 loss, learner_params = self.estimators[i]
-                self.logger.info(f"**********  Model {i + 1} with loss {loss} **********")
+                self.logger.info(
+                    f"**********  Model {i + 1} with loss {loss} **********"
+                )
                 self.logger.info(f"Parameters {print_dictionary(learner_params)}")
-                for k, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
+                for k, (train_index, test_index) in enumerate(
+                    self.cv_iterator.split(X, y)
+                ):
                     train_index = train_index[:train_size]
                     X_train, X_test = X[train_index], X[test_index]
                     y_train, y_test = y[train_index], y[test_index]
@@ -203,16 +245,26 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     X_test, y_test = self.reduce_dataset(X_test, y_test)
                     model.fit(X=X_train, y=y_train)
                     p_pred, y_pred = get_scores(X_test, model)
-                    self.logger.info(f"************************* Split {k + 1} **************************")
-                    self.evaluate_scores(X_test, X_train, y_test, y_train, y_pred, p_pred, model, i)
+                    self.logger.info(
+                        f"************************* Split {k + 1} **************************"
+                    )
+                    self.evaluate_scores(
+                        X_test, X_train, y_test, y_train, y_pred, p_pred, model, i
+                    )
                     if i == 0:
-                        self.__calculate_random_classifier_accuracy__(X_train, y_train, X_test, y_test)
-                        self.__calculate_majority_voting_accuracy__(X_train, y_train, X_test, y_test)
+                        self.__calculate_random_classifier_accuracy__(
+                            X_train, y_train, X_test, y_test
+                        )
+                        self.__calculate_majority_voting_accuracy__(
+                            X_train, y_train, X_test, y_test
+                        )
                     directory_path = learner_params.get("base_path", None)
                     if directory_path is not None:
                         try:
                             os.rmdir(directory_path)
-                            self.logger.info(f"The directory `{directory_path}` has been removed.")
+                            self.logger.info(
+                                f"The directory `{directory_path}` has been removed."
+                            )
                         except OSError as e:
                             self.logger.error(f"Error: {directory_path} : {e.strerror}")
             self.__store_results__()
@@ -239,12 +291,21 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         """
         if X.shape[0] > 4000 and self.base_detector == AutoTabPFNClassifier:
             reduced_size = 4000
-            self.logger.info(f"Initial instances {X.shape[0]} reduced to {reduced_size}")
-            X, _, y, _ = train_test_split(X, y, train_size=reduced_size,
-                                          stratify=y, random_state=self.random_state)
+            self.logger.info(
+                f"Initial instances {X.shape[0]} reduced to {reduced_size}"
+            )
+            X, _, y, _ = train_test_split(
+                X,
+                y,
+                train_size=reduced_size,
+                stratify=y,
+                random_state=self.random_state,
+            )
         return X, y
 
-    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
+    def evaluate_scores(
+        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
+    ):
         """Evaluate and store model performance metrics for the detection
         process.
 
@@ -278,8 +339,16 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         n_model : int
             The index of the model in the list of evaluated models.
         """
-        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
-                                p_pred=p_pred, model=model, n_model=n_model)
+        super().evaluate_scores(
+            X_test=X_test,
+            X_train=X_train,
+            y_test=y_test,
+            y_train=y_train,
+            y_pred=y_pred,
+            p_pred=p_pred,
+            model=model,
+            n_model=n_model,
+        )
 
     def detect(self):
         """Executes the detection process to identify potential information

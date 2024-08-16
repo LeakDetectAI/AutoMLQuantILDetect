@@ -1,5 +1,6 @@
 """Implementation of paired t-test and wilcoxon_signed_rank_test used to detect
 leakage using blind classifiers."""
+
 import logging
 
 import numpy as np
@@ -8,7 +9,9 @@ from scipy.stats import t, wilcoxon
 __all__ = ["wilcoxon_signed_rank_test", "paired_ttest"]
 
 
-def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", verbose=False):
+def wilcoxon_signed_rank_test(
+    accuracies, accuracies2, alternative="two-sided", verbose=False
+):
     """Performs the Wilcoxon signed-rank test on two sets of accuracies.
 
     Parameters
@@ -30,7 +33,9 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
     logger = logging.getLogger("Wilcoxon-Signed_Rank")
 
     try:
-        _, p_value = wilcoxon(accuracies, accuracies2, correction=True, alternative=alternative)
+        _, p_value = wilcoxon(
+            accuracies, accuracies2, correction=True, alternative=alternative
+        )
     except Exception as e:
         if verbose:
             logger.info("Accuracies are exactly same {}".format(str(e)))
@@ -38,7 +43,15 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
     return p_value
 
 
-def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False):
+def paired_ttest(
+    x1,
+    x2,
+    n_training_folds,
+    n_test_folds,
+    correction=True,
+    alternative="two-sided",
+    verbose=False,
+):
     """Performs a paired t-test on two sets of values with and without
     correction.
 
@@ -81,7 +94,9 @@ def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, altern
         if verbose:
             logger.info("With the correction option")
     if verbose:
-        logger.info("D_bar {} Variance {} Sigma {}".format(d_bar, sigma2, np.sqrt(sigma2)))
+        logger.info(
+            "D_bar {} Variance {} Sigma {}".format(d_bar, sigma2, np.sqrt(sigma2))
+        )
 
     # compute the modified variance
     if correction:
@@ -101,11 +116,29 @@ def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, altern
     elif alternative == "two-sided":
         p_value = 2 * t.sf(np.abs(t_static), df)
     if verbose:
-        logger.info("Final Variance {} Sigma {} t_static {} p {}".format(sigma2, np.sqrt(sigma2), t_static, p_value))
-        logger.info("np.isnan(p) {}, np.isinf {},  d_bar == 0 {}, sigma2_mod == 0 {}, np.isinf(t_static) {}, "
-                    "np.isnan(t_static) {}".format(np.isnan(p_value), np.isinf(p_value), d_bar == 0, sigma2 == 0,
-                                                   np.isinf(t_static),
-                                                   np.isnan(t_static)))
-    if np.isnan(p_value) or np.isinf(p_value) or d_bar == 0 or sigma2 == 0 or np.isinf(t_static) or np.isnan(t_static):
+        logger.info(
+            "Final Variance {} Sigma {} t_static {} p {}".format(
+                sigma2, np.sqrt(sigma2), t_static, p_value
+            )
+        )
+        logger.info(
+            "np.isnan(p) {}, np.isinf {},  d_bar == 0 {}, sigma2_mod == 0 {}, np.isinf(t_static) {}, "
+            "np.isnan(t_static) {}".format(
+                np.isnan(p_value),
+                np.isinf(p_value),
+                d_bar == 0,
+                sigma2 == 0,
+                np.isinf(t_static),
+                np.isnan(t_static),
+            )
+        )
+    if (
+        np.isnan(p_value)
+        or np.isinf(p_value)
+        or d_bar == 0
+        or sigma2 == 0
+        or np.isinf(t_static)
+        or np.isnan(t_static)
+    ):
         p_value = 1.0
     return p_value

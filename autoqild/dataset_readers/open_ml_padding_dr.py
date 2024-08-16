@@ -1,5 +1,6 @@
 """Reader for OpenML datasets applying padding strategies to analyze data
 leakage."""
+
 import logging
 
 import openml
@@ -80,9 +81,21 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         missing values, and convert class label strings to integer values.
     """
 
-    def __init__(self, dataset_id: int, imbalance: float, create_datasets=True, random_state=None, **kwargs):
-        super().__init__(dataset_id=dataset_id, imbalance=imbalance, create_datasets=create_datasets,
-                         random_state=random_state, **kwargs)
+    def __init__(
+        self,
+        dataset_id: int,
+        imbalance: float,
+        create_datasets=True,
+        random_state=None,
+        **kwargs,
+    ):
+        super().__init__(
+            dataset_id=dataset_id,
+            imbalance=imbalance,
+            create_datasets=create_datasets,
+            random_state=random_state,
+            **kwargs,
+        )
         self.logger = logging.getLogger(OpenMLPaddingDatasetReader.__name__)
 
         if create_datasets:
@@ -91,14 +104,22 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
     def __read_dataset__(self):
         self.dataset = openml.datasets.get_dataset(self.dataset_id, download_data=True)
         # Access the dataset information
-        self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(dataset_format="dataframe")
+        self.data_frame_raw, _, _, self.attribute_names = self.dataset.get_data(
+            dataset_format="dataframe"
+        )
         self.attribute_names.remove(LABEL_COL)
         self.dataset_dictionary = {}
         if self.correct_class not in self.data_frame_raw[LABEL_COL].unique():
-            raise ValueError(f"Dataframe is does not contain correct class {self.correct_class}")
-        self.logger.info(f"Class Labels unformulated {list(self.data_frame_raw[LABEL_COL].unique())}")
+            raise ValueError(
+                f"Dataframe is does not contain correct class {self.correct_class}"
+            )
+        self.logger.info(
+            f"Class Labels unformulated {list(self.data_frame_raw[LABEL_COL].unique())}"
+        )
         description = self.dataset.description
-        vulnerable_classes_str = description.split("\n")[-1].split("vulnerable_classes ")[-1]
+        vulnerable_classes_str = description.split("\n")[-1].split(
+            "vulnerable_classes "
+        )[-1]
         vulnerable_classes_str = vulnerable_classes_str.strip("[]")
         self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(",")]
         self.n_features = len(self.dataset.features) - 1

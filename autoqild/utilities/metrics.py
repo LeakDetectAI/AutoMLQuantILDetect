@@ -2,16 +2,28 @@
 related to mutual information and classification performance, including binary
 cross-entropy, upper and lower bounds of mutual information, AUC score, and
 more."""
+
 import logging
 
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
 
-from ._utils import normalize
+from .utils import normalize
 
-__all__ = ["bin_ce", "helmann_raviv_function", "helmann_raviv_upper_bound", "santhi_vardi_upper_bound",
-           "fanos_lower_bound", "fanos_adjusted_lower_bound", "auc_score", "pc_softmax_estimation",
-           "log_loss_estimation", "mid_point_mi", "false_positive_rate", "false_negative_rate"]
+__all__ = [
+    "bin_ce",
+    "helmann_raviv_function",
+    "helmann_raviv_upper_bound",
+    "santhi_vardi_upper_bound",
+    "fanos_lower_bound",
+    "fanos_adjusted_lower_bound",
+    "auc_score",
+    "pc_softmax_estimation",
+    "log_loss_estimation",
+    "mid_point_mi",
+    "false_positive_rate",
+    "false_negative_rate",
+]
 
 logger = logging.getLogger("Metrics")
 
@@ -72,14 +84,15 @@ def helmann_raviv_function(n_classes, pe):
     num = pe.shape[0]
 
     for k in range(1, int(n_classes)):
+
         def cal_l(k, n_pe):
             T = (k + 1) / k
             T2 = (k - 1) / k
             l = np.log2(k) + k * (k + 1) * np.log2(T) * (n_pe - T2)
             return l
 
-        l_mpe = (1 - 1 / k)
-        u_mpe = (1 - 1 / (k + 1))
+        l_mpe = 1 - 1 / k
+        u_mpe = 1 - 1 / (k + 1)
         idx = np.where((pe >= l_mpe) & (pe < u_mpe))[0]
         indices.extend(idx)
         if len(idx) != 0:
@@ -231,7 +244,9 @@ def mid_point_mi(y_true, y_pred):
     - This estimate is computed as the average of the Hellman-Raviv upper bound and Fano"s lower bound.
     - The estimate is constrained to be non-negative by taking the maximum with zero.
     """
-    mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(y_true, y_pred)
+    mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(
+        y_true, y_pred
+    )
     mid_point = mid_point / 2.0
     mid_point = np.max([mid_point, 0.0])
     return mid_point
@@ -481,7 +496,7 @@ def log_loss_estimation(y_true, y_pred):
     if y_true.size != 0:
         mi_pp = get_entropy_y(y_true)
         if len(y_pred.shape) == 1:
-            pyx = (y_pred * np.log2(y_pred) + (1 - y_pred) * np.log2(1 - y_pred))
+            pyx = y_pred * np.log2(y_pred) + (1 - y_pred) * np.log2(1 - y_pred)
         else:
             pyx = (y_pred * np.log2(y_pred)).sum(axis=1)
         mi_bp = pyx.mean()

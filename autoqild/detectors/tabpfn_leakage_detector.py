@@ -1,5 +1,6 @@
 """Uses the TabPFN model to detect information leakage, particularly in small
 tabular datasets."""
+
 import os
 
 from .sklearn_leakage_detector import SklearnLeakageDetector
@@ -59,18 +60,43 @@ class TabPFNLeakageDetector(SklearnLeakageDetector):
         Additional keyword arguments passed to the parent class.
     """
 
-    def __init__(self, padding_name, learner_params, fit_params, hash_value, cv_iterations, n_hypothesis,
-                 base_directory, search_space, hp_iters, n_inner_folds, validation_loss, random_state=None, **kwargs):
-        super().__init__(padding_name=padding_name, learner_params=learner_params, fit_params=fit_params,
-                         hash_value=hash_value, cv_iterations=cv_iterations, n_hypothesis=n_hypothesis,
-                         base_directory=base_directory, search_space=search_space, hp_iters=hp_iters,
-                         n_inner_folds=n_inner_folds, validation_loss=validation_loss, random_state=random_state,
-                         **kwargs)
+    def __init__(
+        self,
+        padding_name,
+        learner_params,
+        fit_params,
+        hash_value,
+        cv_iterations,
+        n_hypothesis,
+        base_directory,
+        search_space,
+        hp_iters,
+        n_inner_folds,
+        validation_loss,
+        random_state=None,
+        **kwargs,
+    ):
+        super().__init__(
+            padding_name=padding_name,
+            learner_params=learner_params,
+            fit_params=fit_params,
+            hash_value=hash_value,
+            cv_iterations=cv_iterations,
+            n_hypothesis=n_hypothesis,
+            base_directory=base_directory,
+            search_space=search_space,
+            hp_iters=hp_iters,
+            n_inner_folds=n_inner_folds,
+            validation_loss=validation_loss,
+            random_state=random_state,
+            **kwargs,
+        )
         self.n_jobs = 8
         self.base_detector = AutoTabPFNClassifier
         if self.base_detector == AutoTabPFNClassifier:
-            self.learner_params["base_path"] = os.path.join(base_directory, OPTIMIZER_FOLDER, hash_value,
-                                                            self.padding_code)
+            self.learner_params["base_path"] = os.path.join(
+                base_directory, OPTIMIZER_FOLDER, hash_value, self.padding_code
+            )
 
     def hyperparameter_optimization(self, X, y):
         train_size = super().hyperparameter_optimization(X, y)
@@ -85,9 +111,19 @@ class TabPFNLeakageDetector(SklearnLeakageDetector):
     def fit(self, X, y):
         super().fit(X, y)
 
-    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
-        super().evaluate_scores(X_test=X_test, X_train=X_train, y_test=y_test, y_train=y_train, y_pred=y_pred,
-                                p_pred=p_pred, model=model, n_model=n_model)
+    def evaluate_scores(
+        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
+    ):
+        super().evaluate_scores(
+            X_test=X_test,
+            X_train=X_train,
+            y_test=y_test,
+            y_train=y_train,
+            y_pred=y_pred,
+            p_pred=p_pred,
+            model=model,
+            n_model=n_model,
+        )
 
     def detect(self):
         """Executes the detection process to identify potential information

@@ -1,4 +1,5 @@
 """Configurations for search space for AutoGluon tools."""
+
 from autogluon.common.space import Real, Int, Categorical
 
 hyperparameters = {
@@ -36,7 +37,10 @@ hyperparameters = {
         "learning_rate": Real(1e-5, 1e-1, default=5e-4, log=True),
         "wd": Real(1e-6, 1e-1, default=5e-4, log=True),
         "emb_drop": Real(0.0, 0.5),
-        "ps": Real(0.0, 0.5, ),
+        "ps": Real(
+            0.0,
+            0.5,
+        ),
         "smoothing": Real(0.0, 0.5),
     },
     "RF": {
@@ -46,7 +50,7 @@ hyperparameters = {
         "max_features": Categorical("sqrt", "log2"),
         "min_samples_leaf": Int(lower=2, upper=50, default=10),
         "min_samples_split": Int(lower=2, upper=50, default=10),
-        "class_weight": Categorical("balanced", "balanced_subsample")
+        "class_weight": Categorical("balanced", "balanced_subsample"),
     },
     "XT": {
         "n_estimators": Int(20, 300),
@@ -55,7 +59,7 @@ hyperparameters = {
         "max_features": Categorical("sqrt", "log2"),
         "min_samples_leaf": Int(lower=2, upper=50, default=10),
         "min_samples_split": Int(lower=2, upper=50, default=10),
-        "class_weight": Categorical("balanced", "balanced_subsample")
+        "class_weight": Categorical("balanced", "balanced_subsample"),
     },
     "KNN": {
         "weights": Categorical("uniform", "distance"),
@@ -76,7 +80,10 @@ reduced_hyperparameters = {
         "learning_rate": Real(1e-5, 1e-1, default=5e-4, log=True),
         "wd": Real(1e-6, 1e-1, default=5e-4, log=True),
         "emb_drop": Real(0.0, 0.5),
-        "ps": Real(0.0, 0.5, ),
+        "ps": Real(
+            0.0,
+            0.5,
+        ),
         "smoothing": Real(0.0, 0.5),
     },
     "RF": {
@@ -86,7 +93,7 @@ reduced_hyperparameters = {
         "max_features": Categorical("sqrt", "log2"),
         "min_samples_leaf": Int(lower=2, upper=50, default=10),
         "min_samples_split": Int(lower=2, upper=50, default=10),
-        "class_weight": Categorical("balanced")
+        "class_weight": Categorical("balanced"),
     },
     "XT": {
         "n_estimators": Int(20, 300),
@@ -95,7 +102,7 @@ reduced_hyperparameters = {
         "max_features": Categorical("sqrt", "log2"),
         "min_samples_leaf": Int(lower=2, upper=50, default=10),
         "min_samples_split": Int(lower=2, upper=50, default=10),
-        "class_weight": Categorical("balanced")
+        "class_weight": Categorical("balanced"),
     },
 }
 """This dictionary defines the hyperparameters for simpler models like

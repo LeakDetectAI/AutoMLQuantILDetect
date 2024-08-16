@@ -1,5 +1,6 @@
 """MI estimator integrating the TabPFN model, optimized for small tabular
 datasets with efficient MI estimation."""
+
 from autoqild.automl import AutoTabPFNClassifier
 from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
@@ -62,13 +63,33 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         Instance of the TabPFN classifier used for learning.
     """
 
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique="select_from_model_rf",
-                 base_path=None, random_state=None, **kwargs):
-        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs)
+    def __init__(
+        self,
+        n_features,
+        n_classes,
+        n_ensembles=100,
+        n_reduced=20,
+        reduction_technique="select_from_model_rf",
+        base_path=None,
+        random_state=None,
+        **kwargs
+    ):
+        super().__init__(
+            n_classes=n_classes,
+            n_features=n_features,
+            random_state=random_state,
+            **kwargs
+        )
         self.base_estimator = AutoTabPFNClassifier
-        self.learner_params = dict(n_features=n_features, n_classes=n_classes, n_ensembles=n_ensembles,
-                                   n_reduced=n_reduced, reduction_technique=reduction_technique,
-                                   base_path=base_path, random_state=random_state)
+        self.learner_params = dict(
+            n_features=n_features,
+            n_classes=n_classes,
+            n_ensembles=n_ensembles,
+            n_reduced=n_reduced,
+            reduction_technique=reduction_technique,
+            base_path=base_path,
+            random_state=random_state,
+        )
         self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):

@@ -1,4 +1,5 @@
 """Base class for all Mutual Information estimators."""
+
 import logging
 
 from sklearn.base import BaseEstimator, ClassifierMixin
@@ -49,7 +50,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         self : object
             Fitted estimator.
         """
-        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'fit' method must be implemented by the subclass."
+        )
 
     def score(self, X, y, sample_weight=None, verbose=0):
         """Return the score based on the metric on the given test data and
@@ -76,7 +79,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'score' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'score' method must be implemented by the subclass."
+        )
 
     def predict(self, X, verbose=0):
         """Predict class labels for samples in X.
@@ -96,7 +101,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'predict' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'predict' method must be implemented by the subclass."
+        )
 
     def predict_proba(self, X, verbose=0):
         """Predict class probabilities for samples in X.
@@ -116,7 +123,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'predict_proba' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'predict_proba' method must be implemented by the subclass."
+        )
 
     def decision_function(self, X, verbose=0):
         """Predict confidence scores for samples, sometimes conincciding with
@@ -138,7 +147,9 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'decision_function' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'decision_function' method must be implemented by the subclass."
+        )
 
     def get_params(self, deep=True):
         """Get parameters for this estimator.
@@ -209,4 +220,6 @@ class MIEstimatorBase(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError("The 'estimate_mi' method must be implemented by the subclass.")
+        raise NotImplementedError(
+            "The 'estimate_mi' method must be implemented by the subclass."
+        )

@@ -1,6 +1,7 @@
 """Classes implementing classifiers which predicts a constant function which
 predict label only using the outputs of the dataset, which are used as
 baselines for detecting information leakage."""
+
 import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.utils import check_random_state
@@ -111,5 +112,7 @@ class PriorClassifier(DummyClassifier):
             Predicted class labels.
         """
         n = X.shape[0]
-        y_pred = self.random_state.choice(self.classes_, p=self.class_probabilities, size=n)
+        y_pred = self.random_state.choice(
+            self.classes_, p=self.class_probabilities, size=n
+        )
         return y_pred

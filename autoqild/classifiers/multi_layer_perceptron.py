@@ -1,5 +1,6 @@
 """A customizable feedforward neural network implemented using Keras for more
 complex classification tasks."""
+
 import logging
 
 import numpy as np
@@ -75,10 +76,25 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         Construct and compile the Keras models.
     """
 
-    def __init__(self, n_features, n_classes, n_hidden=10, n_units=100, batch_normalization=True, activation="relu",
-                 loss_function="categorical_crossentropy", metrics=["accuracy"], optimizer_str="adam",
-                 reg_strength=1e-4, kernel_initializer="lecun_normal", learning_rate=0.001,
-                 early_stopping=False, model_save_path="", random_state=None, **kwargs):
+    def __init__(
+        self,
+        n_features,
+        n_classes,
+        n_hidden=10,
+        n_units=100,
+        batch_normalization=True,
+        activation="relu",
+        loss_function="categorical_crossentropy",
+        metrics=["accuracy"],
+        optimizer_str="adam",
+        reg_strength=1e-4,
+        kernel_initializer="lecun_normal",
+        learning_rate=0.001,
+        early_stopping=False,
+        model_save_path="",
+        random_state=None,
+        **kwargs
+    ):
         self.logger = logging.getLogger(name=MultiLayerPerceptron.__name__)
         self.n_features = n_features
         self.n_classes = n_classes
@@ -119,13 +135,17 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self.input = Input(shape=self.n_features, dtype="float32")
         if self.batch_normalization:
             self.hidden_layers = [
-                NormalizedDense(self.n_units, name="hidden_{}".format(x), **kwargs) for x in range(self.n_hidden)
+                NormalizedDense(self.n_units, name="hidden_{}".format(x), **kwargs)
+                for x in range(self.n_hidden)
             ]
         else:
             self.hidden_layers = [
-                Dense(self.n_units, name="hidden_{}".format(x), **kwargs) for x in range(self.n_hidden)
+                Dense(self.n_units, name="hidden_{}".format(x), **kwargs)
+                for x in range(self.n_hidden)
             ]
-        self.score_layer = Dense(self.n_classes, activation=None, kernel_regularizer=self.kernel_regularizer)
+        self.score_layer = Dense(
+            self.n_classes, activation=None, kernel_regularizer=self.kernel_regularizer
+        )
         self.output_node = Activation("softmax", name="predictions")
         assert len(self.hidden_layers) == self.n_hidden
 
@@ -146,9 +166,15 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         scores = self.score_layer(x)
         output = self.output_node(scores)
         model = Model(inputs=self.input, outputs=output, name="mlp_baseline")
-        scoring_model = Model(inputs=self.input, outputs=scores, name="mlp_baseline_scorer")
-        model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
-        scoring_model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
+        scoring_model = Model(
+            inputs=self.input, outputs=scores, name="mlp_baseline_scorer"
+        )
+        model.compile(
+            loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics
+        )
+        scoring_model.compile(
+            loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics
+        )
         return model, scoring_model
 
     def reshape_inputs(self, y):
@@ -168,7 +194,17 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
             y = to_categorical(y, num_classes=self.n_classes)
         return y
 
-    def fit(self, X, y, epochs=50, batch_size=32, callbacks=None, validation_split=0.1, verbose=1, **kwd):
+    def fit(
+        self,
+        X,
+        y,
+        epochs=50,
+        batch_size=32,
+        callbacks=None,
+        validation_split=0.1,
+        verbose=1,
+        **kwd
+    ):
         """Fit the MLP model to the training data.
 
         Parameters
@@ -202,7 +238,9 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self : MultiLayerPerceptron
             Fitted estimator.
         """
-        class_weights = class_weight.compute_class_weight("balanced", classes=np.unique(y), y=y)
+        class_weights = class_weight.compute_class_weight(
+            "balanced", classes=np.unique(y), y=y
+        )
         class_weights = dict(enumerate(class_weights))
         self._construct_layers(
             kernel_regularizer=self.kernel_regularizer,
@@ -218,8 +256,16 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
                 callbacks.append(er)
             else:
                 callbacks = [er]
-        self.model.fit(x=X, y=y, batch_size=batch_size, class_weight=class_weights, validation_split=validation_split,
-                       epochs=epochs, callbacks=callbacks, verbose=verbose)
+        self.model.fit(
+            x=X,
+            y=y,
+            batch_size=batch_size,
+            class_weight=class_weights,
+            validation_split=validation_split,
+            epochs=epochs,
+            callbacks=callbacks,
+            verbose=verbose,
+        )
         return self
 
     def predict(self, X, verbose=0):

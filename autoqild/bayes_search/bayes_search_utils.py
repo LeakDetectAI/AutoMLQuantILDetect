@@ -1,5 +1,6 @@
 """Provides utility functions to support the hyperparameter tuning process,
 including callback mechanisms, parameter extraction, and scoring functions."""
+
 import logging
 
 import numpy as np
@@ -14,8 +15,14 @@ from ..automl.tabpfn_classifier import AutoTabPFNClassifier
 from ..utilities import print_dictionary, sigmoid
 from ..utilities.metrics import remove_nan_values
 
-__all__ = ["convert_value", "get_parameters_at_k", "update_params_at_k", "log_callback", "get_scores",
-           "probability_calibration"]
+__all__ = [
+    "convert_value",
+    "get_parameters_at_k",
+    "update_params_at_k",
+    "log_callback",
+    "get_scores",
+    "probability_calibration",
+]
 
 logger = logging.getLogger("BayesSearchUtils")
 
@@ -108,14 +115,18 @@ def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
     learner_params : dict
         The updated learner parameters.
     """
-    loss, best_params = get_parameters_at_k(optimizers=bayes_search.optimizers_, search_keys=search_keys, k=k)
+    loss, best_params = get_parameters_at_k(
+        optimizers=bayes_search.optimizers_, search_keys=search_keys, k=k
+    )
     if version.parse(sklearn.__version__) < version.parse("0.25.0"):
         if "criterion" in best_params.keys():
             if best_params["criterion"] == "squared_error":
                 best_params["criterion"] = "mse"
     learner_params.update(best_params)
     params_str = print_dictionary(learner_params, sep="\t")
-    logger.info(f"Parameters at position k:{k} are {params_str} with objective of: {-loss}\n")
+    logger.info(
+        f"Parameters at position k:{k} are {params_str} with objective of: {-loss}\n"
+    )
     return loss, learner_params
 
 
@@ -220,8 +231,12 @@ def probability_calibration(X_train, y_train, X_test, classifier, calibrator):
     if isinstance(classifier, AbstractModel):
         n_features = X_train.shape[-1]
         n_classes = len(np.unique(y_train))
-        X_train = AutoGluonClassifier(n_features=n_features, n_classes=n_classes).convert_to_dataframe(X_train, None)
-        X_test = AutoGluonClassifier(n_features=n_features, n_classes=n_classes).convert_to_dataframe(X_test, None)
+        X_train = AutoGluonClassifier(
+            n_features=n_features, n_classes=n_classes
+        ).convert_to_dataframe(X_train, None)
+        X_test = AutoGluonClassifier(
+            n_features=n_features, n_classes=n_classes
+        ).convert_to_dataframe(X_test, None)
 
     y_pred_train, _ = get_scores(X_train, classifier)
     y_pred_test, _ = get_scores(X_test, classifier)

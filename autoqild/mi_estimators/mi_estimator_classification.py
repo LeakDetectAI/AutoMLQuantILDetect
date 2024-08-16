@@ -1,5 +1,6 @@
 """Base class for classification-based MI estimators, providing a framework for
 estimating MI in supervised learning."""
+
 import logging
 
 import numpy as np
@@ -8,7 +9,11 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.utils import check_random_state
 
 from autoqild.bayes_search.bayes_search_utils import probability_calibration, get_scores
-from autoqild.detectors._utils import calibrators, calibrator_params, mi_estimation_metrics
+from autoqild.detectors._utils import (
+    calibrators,
+    calibrator_params,
+    mi_estimation_metrics,
+)
 from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
 from autoqild.utilities import *
 
@@ -224,12 +229,19 @@ class ClassficationMIEstimator(MIEstimatorBase):
                     c_params = calibrator_params[calibrator_technique]
                     calibrator = calibrator(**c_params)
                     try:
-                        p_pred_cal = probability_calibration(X_train=X_train, y_train=y_train, X_test=X_test,
-                                                             classifier=self.base_learner, calibrator=calibrator)
+                        p_pred_cal = probability_calibration(
+                            X_train=X_train,
+                            y_train=y_train,
+                            X_test=X_test,
+                            classifier=self.base_learner,
+                            calibrator=calibrator,
+                        )
                         estimated_mi = evaluation_metric(y, p_pred_cal)
                     except Exception as error:
                         log_exception_error(self.logger, error)
-                        self.logger.error("Error while calibrating the probabilities estimating MI without calibration")
+                        self.logger.error(
+                            "Error while calibrating the probabilities estimating MI without calibration"
+                        )
                         estimated_mi = evaluation_metric(y_train, p_pred)
                 else:
                     estimated_mi = evaluation_metric(y_train, p_pred)

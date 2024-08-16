@@ -1,6 +1,7 @@
 """AutoTabPFNClassifier is an AutoML model wrapper designed to work with the
 TabPFN (Tabular Prior-based Fully Bayesian Network) for classification
 tasks."""
+
 import logging
 
 import numpy as np
@@ -108,8 +109,17 @@ class AutoTabPFNClassifier(AutomlClassifier):
         technique to the feature matrix with `n_reduced` features.
     """
 
-    def __init__(self, n_features, n_classes, n_ensembles=100, n_reduced=20, reduction_technique="select_from_model_rf",
-                 base_path=None, random_state=None, **kwargs):
+    def __init__(
+        self,
+        n_features,
+        n_classes,
+        n_ensembles=100,
+        n_reduced=20,
+        reduction_technique="select_from_model_rf",
+        base_path=None,
+        random_state=None,
+        **kwargs,
+    ):
         self.n_features = n_features
         self.n_classes = n_classes
         self.logger = logging.getLogger(name=AutoTabPFNClassifier.__name__)
@@ -147,7 +157,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
         X : array-like of shape (n_samples, n_reduced)
             Transformed feature matrix.
         """
-        self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
+        self.logger.info(
+            f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
+        )
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
             self.logger.info(f"Classes {classes} No of Classes {n_classes}")
@@ -156,19 +168,26 @@ class AutoTabPFNClassifier(AutomlClassifier):
                 raise ValueError(f"Dataset passed does not contain {self.n_features}")
             if y is not None:
                 if self.n_classes != len(np.unique(y)):
-                    raise ValueError(f"Dataset passed does not contain {self.n_classes}")
-            self.selection_model = create_dimensionality_reduction_model(reduction_technique=self.reduction_technique,
-                                                                         n_reduced=self.n_reduced)
+                    raise ValueError(
+                        f"Dataset passed does not contain {self.n_classes}"
+                    )
+            self.selection_model = create_dimensionality_reduction_model(
+                reduction_technique=self.reduction_technique, n_reduced=self.n_reduced
+            )
             self.logger.info(f"Creating the model")
             if self.n_features > 50 and self.n_reduced < self.n_features:
-                self.logger.info(f"Transforming and reducing the {self.n_features} features to {self.n_reduced}")
+                self.logger.info(
+                    f"Transforming and reducing the {self.n_features} features to {self.n_reduced}"
+                )
                 self.selection_model.fit(X, y)
                 X = self.selection_model.transform(X)
                 self.__is_fitted__ = True
         else:
             if self.n_features > 50 and self.n_reduced < self.n_features:
                 X = self.selection_model.transform(X)
-        self.logger.info(f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
+        self.logger.info(
+            f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
+        )
         return X
 
     def fit(self, X, y, **kwd):
@@ -186,7 +205,11 @@ class AutoTabPFNClassifier(AutomlClassifier):
             Additional keyword arguments.
         """
         X = self.__transform__(X, y)
-        params = dict(device=self.device, base_path=self.base_path, N_ensemble_configurations=self.n_ensembles)
+        params = dict(
+            device=self.device,
+            base_path=self.base_path,
+            N_ensemble_configurations=self.n_ensembles,
+        )
         if self.base_path is not None:
             params["base_path"] = self.base_path
 
@@ -265,7 +288,9 @@ class AutoTabPFNClassifier(AutomlClassifier):
         n_samples = X.shape[0]
         X = self.__transform__(X)
         if batch_size is None:
-            y_pred = self.model.predict_proba(X, normalize_with_test=True, return_logits=False)
+            y_pred = self.model.predict_proba(
+                X, normalize_with_test=True, return_logits=False
+            )
         else:
             n_batches = np.ceil(n_samples / batch_size).astype(int)
             predictions = []
@@ -273,8 +298,12 @@ class AutoTabPFNClassifier(AutomlClassifier):
                 start_idx = i * batch_size
                 end_idx = min((i + 1) * batch_size, n_samples)
                 X_batch = X[start_idx:end_idx]
-                self.logger.info(f"Processing batch {i + 1}/{n_batches} Start id {start_idx} end id {end_idx}")
-                batch_pred = self.model.predict_proba(X_batch, normalize_with_test=True, return_logits=False)
+                self.logger.info(
+                    f"Processing batch {i + 1}/{n_batches} Start id {start_idx} end id {end_idx}"
+                )
+                batch_pred = self.model.predict_proba(
+                    X_batch, normalize_with_test=True, return_logits=False
+                )
                 predictions.append(batch_pred)
 
             y_pred = np.concatenate(predictions, axis=0)
@@ -305,6 +334,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
     def __clear_memory__():
         """Clear memory to release resources by torch."""
         import gc
+
         gc.collect()
         # Explicitly clear CUDA cache if available
         if torch.cuda.is_available():

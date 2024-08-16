@@ -1,5 +1,6 @@
 """Neural Nwtowkr implementations for running the PC-softmax and Mine MI
 estimator."""
+
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -134,7 +135,9 @@ class StatNet(nn.Module):
         super(StatNet, self).__init__()
         self.device = device
         self.input = nn.Linear(in_dim + cls_enc, n_units).to(self.device)
-        self.hidden_layers = [nn.Linear(n_units, n_units).to(self.device) for _ in range(n_hidden - 1)]
+        self.hidden_layers = [
+            nn.Linear(n_units, n_units).to(self.device) for _ in range(n_hidden - 1)
+        ]
         self.output = nn.Linear(n_units, 1).to(self.device)
 
     def forward(self, x_in):

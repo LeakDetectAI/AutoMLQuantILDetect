@@ -1,5 +1,6 @@
 """A custom dense layer with batch normalization and optional pre-activation
 normalization."""
+
 from keras.layers import Layer, Dense, Activation, BatchNormalization
 
 

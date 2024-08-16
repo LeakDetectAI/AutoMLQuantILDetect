@@ -10,7 +10,7 @@ from sklearn.utils import check_random_state
 
 from autoqild.automl.automl_core import AutomlClassifier
 from .model_configurations import hyperparameters, reduced_hyperparameters
-from ..utilities._utils import log_exception_error
+from ..utilities.utils import log_exception_error
 
 
 class AutoGluonClassifier(AutomlClassifier):
@@ -95,9 +95,21 @@ class AutoGluonClassifier(AutomlClassifier):
         Property to check if the model is already fitted.
     """
 
-    def __init__(self, n_features, n_classes, time_limit=1800, output_folder=None, eval_metric="accuracy",
-                 use_hyperparameters=True, delete_tmp_folder_after_terminate=True, auto_stack=True,
-                 remove_boosting_models=True, verbosity=6, random_state=None, **kwargs):
+    def __init__(
+        self,
+        n_features,
+        n_classes,
+        time_limit=1800,
+        output_folder=None,
+        eval_metric="accuracy",
+        use_hyperparameters=True,
+        delete_tmp_folder_after_terminate=True,
+        auto_stack=True,
+        remove_boosting_models=True,
+        verbosity=6,
+        random_state=None,
+        **kwargs,
+    ):
         self.logger = logging.getLogger(name=AutoGluonClassifier.__name__)
         self.random_state = check_random_state(random_state)
         self.output_folder = output_folder
@@ -114,7 +126,16 @@ class AutoGluonClassifier(AutomlClassifier):
         else:
             self.hyperparameters = None
         if remove_boosting_models:
-            self.exclude_model_types = ["GBM", "CAT", "XGB", "LGB", "KNN", "NN_TORCH", "AG_AUTOMM", "LR"]
+            self.exclude_model_types = [
+                "GBM",
+                "CAT",
+                "XGB",
+                "LGB",
+                "KNN",
+                "NN_TORCH",
+                "AG_AUTOMM",
+                "LR",
+            ]
         else:
             self.exclude_model_types = ["AG_AUTOMM", "LR"]
         self.auto_stack = auto_stack
@@ -124,7 +145,9 @@ class AutoGluonClassifier(AutomlClassifier):
         self.time_limit = time_limit
         self.model = None
         self.class_label = "class"
-        self.columns = [f"feature_{i}" for i in range(self.n_features)] + [self.class_label]
+        self.columns = [f"feature_{i}" for i in range(self.n_features)] + [
+            self.class_label
+        ]
         if self.n_classes > 2:
             self.problem_type = "multiclass"
         if self.n_classes == 2:
@@ -153,7 +176,11 @@ class AutoGluonClassifier(AutomlClassifier):
 
         if self.model is not None:
             self.leaderboard = self.model.leaderboard(extra_info=True)
-            time_taken = self.leaderboard["fit_time"].sum() + self.leaderboard["pred_time_val"].sum() + 20
+            time_taken = (
+                self.leaderboard["fit_time"].sum()
+                + self.leaderboard["pred_time_val"].sum()
+                + 20
+            )
             difference = self.time_limit - time_taken
             if 200 <= self.time_limit < 300:
                 limit = 150
@@ -161,13 +188,17 @@ class AutoGluonClassifier(AutomlClassifier):
                 limit = 2000
             else:
                 limit = 200
-            self.logger.info(f"Fitting time of the model {time_taken} and remaining {difference}, limit {limit}")
+            self.logger.info(
+                f"Fitting time of the model {time_taken} and remaining {difference}, limit {limit}"
+            )
             num_models = len(self.leaderboard["fit_time"])
             self.logger.info(f"Number of models trained is {num_models} ")
             if num_models < 1200:
                 if num_models <= 50:
                     self.model = None
-                    self.logger.info(f"Retraining the model since they are less than 50")
+                    self.logger.info(
+                        f"Retraining the model since they are less than 50"
+                    )
                 if difference >= limit:
                     self.model = None
             else:
@@ -176,8 +207,10 @@ class AutoGluonClassifier(AutomlClassifier):
         if self.model is None:
             try:
                 shutil.rmtree(self.output_folder)
-                self.logger.error(f"Since the model is not completely fitted, the folder '{basename}' "
-                                  f"and its contents are deleted successfully.")
+                self.logger.error(
+                    f"Since the model is not completely fitted, the folder '{basename}' "
+                    f"and its contents are deleted successfully."
+                )
             except OSError as error:
                 log_exception_error(self.logger, error)
                 self.logger.error(f"Folder does not exist")
@@ -202,15 +235,27 @@ class AutoGluonClassifier(AutomlClassifier):
         while not self._is_fitted_:
             try:
                 self.logger.info("Fitting the model from scratch")
-                self.model = TabularPredictor(label=self.class_label, sample_weight=self.sample_weight,
-                                              problem_type=self.problem_type, eval_metric=self.eval_metric,
-                                              path=self.output_folder, verbosity=self.verbosity)
-                self.model.fit(train_data, time_limit=self.time_limit, hyperparameters=self.hyperparameters,
-                               hyperparameter_tune_kwargs=self.hyperparameter_tune_kwargs, auto_stack=self.auto_stack,
-                               excluded_model_types=self.exclude_model_types)
+                self.model = TabularPredictor(
+                    label=self.class_label,
+                    sample_weight=self.sample_weight,
+                    problem_type=self.problem_type,
+                    eval_metric=self.eval_metric,
+                    path=self.output_folder,
+                    verbosity=self.verbosity,
+                )
+                self.model.fit(
+                    train_data,
+                    time_limit=self.time_limit,
+                    hyperparameters=self.hyperparameters,
+                    hyperparameter_tune_kwargs=self.hyperparameter_tune_kwargs,
+                    auto_stack=self.auto_stack,
+                    excluded_model_types=self.exclude_model_types,
+                )
             except Exception as error:
                 log_exception_error(self.logger, error)
-                self.logger.error("Fit function did not work, checking the saved models")
+                self.logger.error(
+                    "Fit function did not work, checking the saved models"
+                )
         self.leaderboard = self.model.leaderboard(extra_info=True)
         if self.delete_tmp_folder_after_terminate:
             self.model.delete_models(models_to_keep="best", dry_run=False)
@@ -334,7 +379,9 @@ class AutoGluonClassifier(AutomlClassifier):
         data = np.concatenate((X, y[:, None]), axis=1)
 
         if self.n_features != X.shape[-1]:
-            raise ValueError(f"Dataset passed does not contain {self.n_features} features")
+            raise ValueError(
+                f"Dataset passed does not contain {self.n_features} features"
+            )
 
         df_data = pd.DataFrame(data=data, columns=self.columns)
         return df_data

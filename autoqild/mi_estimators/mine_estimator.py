@@ -1,5 +1,6 @@
 """Mutual Information Neural Estimator (MINE) that uses multiple deep learning
 architectures to estimate MI for classification tasks."""
+
 import logging
 from itertools import product
 
@@ -108,19 +109,33 @@ class MineMIEstimator(MIEstimatorBase):
     >>> print(mi_estimate)
     """
 
-    def __init__(self, n_classes, n_features, loss_function="donsker_varadhan_softplus", optimizer_str="adam",
-                 learning_rate=1e-4, reg_strength=0, encode_classes=True, random_state=42):
-        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
+    def __init__(
+        self,
+        n_classes,
+        n_features,
+        loss_function="donsker_varadhan_softplus",
+        optimizer_str="adam",
+        learning_rate=1e-4,
+        reg_strength=0,
+        encode_classes=True,
+        random_state=42,
+    ):
+        super().__init__(
+            n_classes=n_classes, n_features=n_features, random_state=random_state
+        )
         self.logger = logging.getLogger(MineMIEstimator.__name__)
         self.optimizer_str = optimizer_str
         self.learning_rate = learning_rate
         self.reg_strength = reg_strength
-        self.optimizer_cls, self._optimizer_config = get_optimizer_and_parameters(optimizer_str, learning_rate,
-                                                                                  reg_strength)
+        self.optimizer_cls, self._optimizer_config = get_optimizer_and_parameters(
+            optimizer_str, learning_rate, reg_strength
+        )
         self.encode_classes = encode_classes
         self.loss_function = loss_function
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.logger.info(f"device {self.device} cuda {torch.cuda.is_available()} device {torch.cuda.device_count()}")
+        self.logger.info(
+            f"device {self.device} cuda {torch.cuda.is_available()} device {torch.cuda.device_count()}"
+        )
         self.optimizer = None
         self.dataset_properties = None
         self.label_binarizer = None
@@ -152,7 +167,7 @@ class MineMIEstimator(MIEstimatorBase):
         tensor_xy_tilde : torch.Tensor
             Tensor containing the permuted data and labels.
         """
-        seed = self.random_state.randint(2 ** 31, dtype="uint32") + i
+        seed = self.random_state.randint(2**31, dtype="uint32") + i
         rs = np.random.RandomState(seed)
         if self.encode_classes:
             y_t = self.label_binarizer.transform(y)
@@ -164,7 +179,9 @@ class MineMIEstimator(MIEstimatorBase):
             xy = np.hstack((X, y[:, None]))
             y_s = rs.permutation(y)
             xy_tilde = np.hstack((X, y_s[:, None]))
-        tensor_xy = torch.tensor(xy, dtype=torch.float32).to(self.device)  # transform to torch tensor
+        tensor_xy = torch.tensor(xy, dtype=torch.float32).to(
+            self.device
+        )  # transform to torch tensor
         tensor_xy_tilde = torch.tensor(xy_tilde, dtype=torch.float32).to(self.device)
         return tensor_xy, tensor_xy_tilde
 
@@ -213,10 +230,17 @@ class MineMIEstimator(MIEstimatorBase):
         self.models = []
         self.n_models = 0
         for n_unit, n_hidden in product(n_hidden_layers, n_hidden_units):
-            stat_net = StatNet(in_dim=self.n_features, cls_enc=cls_enc, n_hidden=n_hidden, n_units=n_unit)
+            stat_net = StatNet(
+                in_dim=self.n_features,
+                cls_enc=cls_enc,
+                n_hidden=n_hidden,
+                n_units=n_unit,
+            )
             stat_net.apply(init)
             stat_net.to(self.device)
-            optimizer = self.optimizer_cls(stat_net.parameters(), **self._optimizer_config)
+            optimizer = self.optimizer_cls(
+                stat_net.parameters(), **self._optimizer_config
+            )
             all_estimates = []
             sum_loss = 0
             for iter_ in tqdm(range(epochs), total=epochs, desc="iteration"):
@@ -224,8 +248,10 @@ class MineMIEstimator(MIEstimatorBase):
                 xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                 preds_xy = stat_net(xy)
                 preds_xy_tilde = stat_net(xy_tilde)
-                train_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
-                loss = train_div.mul_(-1.)
+                train_div = get_mine_loss(
+                    preds_xy, preds_xy_tilde, metric=self.loss_function
+                )
+                loss = train_div.mul_(-1.0)
                 loss.backward()
                 optimizer.step()
                 sum_loss += loss
@@ -233,15 +259,23 @@ class MineMIEstimator(MIEstimatorBase):
                     with torch.no_grad():
                         mi_hats = []
                         for _ in range(MON_ITER):
-                            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
+                            xy, xy_tilde = self.__pytorch_tensor_dataset__(
+                                X, y, i=iter_
+                            )
                             preds_xy = stat_net(xy)
                             preds_xy_tilde = stat_net(xy_tilde)
-                            eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
+                            eval_div = get_mine_loss(
+                                preds_xy, preds_xy_tilde, metric=self.loss_function
+                            )
                             mi_hats.append(eval_div.cpu().numpy())
                         mi_hat = np.mean(mi_hats)
                         if verbose:
-                            print(f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}")
-                        self.logger.info(f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}")
+                            print(
+                                f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}"
+                            )
+                        self.logger.info(
+                            f"iter: {iter_}, MI hat: {mi_hat} Loss: {loss.detach().numpy()[0]}"
+                        )
                         all_estimates.append(mi_hat)
             final_loss = sum_loss.detach().numpy()[0]
             mis = np.array(all_estimates)
@@ -250,7 +284,9 @@ class MineMIEstimator(MIEstimatorBase):
             self.models.append(stat_net)
             self.final_loss += final_loss
             self.mi_validation_final += mi_val
-            self.logger.info(f"Fit Loss {final_loss} MI Val: {mi_val} for n_hidden {n_hidden} n_unit {n_unit}")
+            self.logger.info(
+                f"Fit Loss {final_loss} MI Val: {mi_val} for n_hidden {n_hidden} n_unit {n_unit}"
+            )
         self.n_models = len(self.models)
         self.final_loss = self.final_loss / self.n_models
         self.mi_validation_final = self.mi_validation_final / self.n_models
@@ -393,7 +429,9 @@ class MineMIEstimator(MIEstimatorBase):
                 xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                 preds_xy = model(xy)
                 preds_xy_tilde = model(xy_tilde)
-                eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
+                eval_div = get_mine_loss(
+                    preds_xy, preds_xy_tilde, metric=self.loss_function
+                )
                 mi_hat = eval_div.detach().numpy().flatten()[0]
                 if verbose:
                     print(f"iter: {iter_}, MI hat: {mi_hat}")
