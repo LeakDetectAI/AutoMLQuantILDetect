@@ -1,5 +1,5 @@
 <a href="https://arxiv.org/abs/2401.14283">
-  <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/logo.png" alt="Paper" width="100" height="100">
+  <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/logo.png" alt="Paper" width="200" height="200">
 </a>
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/LeakDetectAI/AutoMLQuantILDetect/blob/master/LICENSE)
