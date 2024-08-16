@@ -1,6 +1,8 @@
-<a href="https://arxiv.org/abs/2401.14283">
-  <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/logo.png" alt="Paper" width="200" height="200">
-</a>
+<div style="text-align: right;">
+  <a href="https://arxiv.org/abs/2401.14283">
+    <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/logo.png" alt="Paper" width="200" height="200">
+  </a>
+</div>
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/LeakDetectAI/AutoMLQuantILDetect/blob/master/LICENSE)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -38,7 +40,7 @@ pip install -e ./
 ```
 Documentation at https://automlquantildetect.readthedocs.io/
 
-## ⭐ Quickstart Guide
+## ⚙️ Quickstart Guide
 You can use `AutoMLQuantILDetect` in different ways.
 Quite a few classifiers and AutoML tools already exist that can be used to estimate mutual information using the log-loss and the accuracy of the learned model.
 
@@ -114,9 +116,8 @@ Accuracy: 1.0
 ```
 
  
-
- 💬 If you use this toolkit in your research, please cite our paper available on arXiv:
-
+### 💬 Cite Us
+If you use this toolkit in your research, please cite our paper available on arXiv:
 ```
 @article{gupta2024information,
   title={Information Leakage Detection through Approximate Bayes-optimal Prediction},
@@ -127,5 +128,8 @@ Accuracy: 1.0
   primaryClass={stat.ML}
 }
 ```
+
+## 📧 Contact Information
+For any questions or feedback, please contact Pritha Gupta at prithagupta15@gmail.com.
 
 
