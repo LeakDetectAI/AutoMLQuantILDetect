@@ -1,0 +1,12 @@
+autoqild.mi\_estimators.mine\_estimator
+=======================================
+
+.. automodule:: autoqild.mi_estimators.mine_estimator
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MineMIEstimator
+   
