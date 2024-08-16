@@ -1,0 +1,17 @@
+autoqild.bayes\_search.bayes\_search\_utils
+===========================================
+
+.. automodule:: autoqild.bayes_search.bayes_search_utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      convert_value
+      get_parameters_at_k
+      get_scores
+      log_callback
+      probability_calibration
+      update_params_at_k
+   
