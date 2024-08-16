@@ -87,11 +87,6 @@ class MineMIEstimatorMSE(MIEstimatorBase):
     mi_val : float
         The final estimated mutual information value.
 
-    Private Methods
-    ---------------
-    __pytorch_tensor_dataset__:
-        Create PyTorch tensor datasets for the input features and target labels.
-
     Notes
     -----
     This class is particularly suited for scenarios involving hyperparameter tuning where the goal is to identify
@@ -141,7 +136,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         self.final_loss = 0
         self.mi_val = 0
 
-    def __pytorch_tensor_dataset__(self, X, y, batch_size=64, i=2):
+    def pytorch_tensor_dataset(self, X, y, batch_size=64, i=2):
         """Create PyTorch tensor datasets for the input features and target
         labels.
 
@@ -238,7 +233,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         sum_loss = 0
         for iter_ in tqdm(range(epochs), total=epochs, desc="iteration"):
             self.stat_net.zero_grad()
-            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, batch_size=batch_size, i=iter_)
+            xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=batch_size, i=iter_)
             preds_xy = self.stat_net(xy)
             preds_xy_tilde = self.stat_net(xy_tilde)
             train_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
@@ -250,7 +245,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
                 with torch.no_grad():
                     mi_hats = []
                     for _ in range(MON_ITER):
-                        xy, xy_tilde = self.__pytorch_tensor_dataset__(
+                        xy, xy_tilde = self.pytorch_tensor_dataset(
                             X, y, batch_size=batch_size, i=iter_
                         )
                         preds_xy = self.stat_net(xy)
@@ -320,7 +315,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
             The score of the model using the mean squared error between the original and permuted samples loss.
         """
         torch.no_grad()
-        xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0], i=0)
+        xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=0)
         preds_xy = self.stat_net(xy).cpu().detach().numpy().flatten()
         preds_xy_tilde = self.stat_net(xy_tilde).cpu().detach().numpy().flatten()
         mse = mean_squared_error(preds_xy, preds_xy_tilde)
@@ -354,7 +349,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         scores = None
         for n_class in range(self.n_classes):
             y = np.zeros(X.shape[0]) + n_class
-            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0], i=0)
+            xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=0)
             score = self.stat_net(xy).cpu().detach().numpy()
             if scores is None:
                 scores = score
@@ -389,7 +384,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         """
         mi_hats = []
         for iter_ in range(MON_ITER):
-            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0], i=iter_)
+            xy, xy_tilde = self.pytorch_tensor_dataset(X, y, batch_size=X.shape[0], i=iter_)
             preds_xy = self.stat_net(xy)
             preds_xy_tilde = self.stat_net(xy_tilde)
             eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)

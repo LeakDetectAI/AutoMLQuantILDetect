@@ -96,11 +96,6 @@ class MineMIEstimator(MIEstimatorBase):
     features and labels are complex or non-linear, as the aggregation process helps to smooth out inconsistencies
     across individual model predictions.
 
-    Private Methods
-    ---------------
-    __pytorch_tensor_dataset__:
-        Create PyTorch tensor datasets for the input features and target labels.
-
     Example
     -------
     >>> estimator = MineMIEstimator(n_classes=3, n_features=10)
@@ -142,7 +137,7 @@ class MineMIEstimator(MIEstimatorBase):
         self.models = []
         self.n_models = 0
 
-    def __pytorch_tensor_dataset__(self, X, y, i=2):
+    def pytorch_tensor_dataset(self, X, y, i=2):
         """Create PyTorch tensor datasets for the input features and target
         labels.
 
@@ -241,7 +236,7 @@ class MineMIEstimator(MIEstimatorBase):
             sum_loss = 0
             for iter_ in tqdm(range(epochs), total=epochs, desc="iteration"):
                 stat_net.zero_grad()
-                xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
+                xy, xy_tilde = self.pytorch_tensor_dataset(X, y, i=iter_)
                 preds_xy = stat_net(xy)
                 preds_xy_tilde = stat_net(xy_tilde)
                 train_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
@@ -253,7 +248,7 @@ class MineMIEstimator(MIEstimatorBase):
                     with torch.no_grad():
                         mi_hats = []
                         for _ in range(MON_ITER):
-                            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
+                            xy, xy_tilde = self.pytorch_tensor_dataset(X, y, i=iter_)
                             preds_xy = stat_net(xy)
                             preds_xy_tilde = stat_net(xy_tilde)
                             eval_div = get_mine_loss(
@@ -378,7 +373,7 @@ class MineMIEstimator(MIEstimatorBase):
         for model in self.models:
             for n_class in range(self.n_classes):
                 y = np.zeros(X.shape[0]) + n_class
-                xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=0)
+                xy, xy_tilde = self.pytorch_tensor_dataset(X, y, i=0)
                 score = model(xy).detach().numpy()
                 if scores is None:
                     scores = score
@@ -418,7 +413,7 @@ class MineMIEstimator(MIEstimatorBase):
         for model in self.models:
             mi_hats = []
             for iter_ in range(MON_ITER):
-                xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
+                xy, xy_tilde = self.pytorch_tensor_dataset(X, y, i=iter_)
                 preds_xy = model(xy)
                 preds_xy_tilde = model(xy_tilde)
                 eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
