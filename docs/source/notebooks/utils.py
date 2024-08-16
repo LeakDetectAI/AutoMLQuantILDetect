@@ -255,7 +255,7 @@ def convert_learner_params(params):
 
 
 def setup_logging(log_path=None, level=logging.INFO):
-    """Function setup as many logging for the experiments"""
+    """Function setup as many logging for the experiments."""
     if log_path is None:
         dirname = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         dirname = os.path.dirname(dirname)

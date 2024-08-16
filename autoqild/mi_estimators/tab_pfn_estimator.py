@@ -70,7 +70,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         n_ensembles=100,
         n_reduced=20,
         reduction_technique="select_from_model_rf",
-        base_path=None,
+        base_path="./",
         random_state=None,
         **kwargs
     ):
