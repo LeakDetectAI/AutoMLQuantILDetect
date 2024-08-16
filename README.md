@@ -1,18 +1,19 @@
-
+ <a href="https://arxiv.org/abs/2401.14283" style="float: right; margin-left: 20px; margin-bottom: 10px;">
+    <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/docs/source/logo.png" alt="Paper" width="200" height="200">
+</a>
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/LeakDetectAI/AutoMLQuantILDetect/blob/master/LICENSE)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/automlquantildetect/badge/?version=latest)](https://automlquantildetect.readthedocs.io/?badge=latest)
-
+[![Paper](https://img.shields.io/badge/arXiv-2401.14283-red)](https://arxiv.org/abs/2401.14283)
 
 ### AutoML Approaches to Quantify and Detect Leakage
-<div style="overflow: hidden;">
-  <a href="https://arxiv.org/abs/2401.14283" style="float: right; margin-left: 20px; margin-bottom: 10px;">
-    <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/docs/source/logo.png" alt="Paper" width="200" height="200">
-  </a>
-  <p style="text-align: justify;">
-    The <strong>AutoMLQuantILDetect</strong> package utilizes AutoML approaches to detect and quantify system information leakage. It is an advanced toolkit that leverages the power of Automated Machine Learning (AutoML) to quantify information leakage accurately. This package estimates mutual information (MI) within systems that release classification datasets. By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects information leakage within classification datasets. With <strong>AutoMLQuantILDetect</strong>, users can confidently and comprehensively address the critical challenges of quantification and detection in information leakage analysis.
-  </p>
-</div>
+The <strong>AutoMLQuantILDetect</strong> package utilizes AutoML approaches to detect and quantify system information leakage. 
+It is an advanced toolkit that leverages the power of Automated Machine Learning (AutoML) to quantify information leakage accurately. 
+This package estimates mutual information (MI) within systems that release classification datasets. 
+By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects 
+information leakage within classification datasets. With <strong>AutoMLQuantILDetect</strong>, users can confidently and 
+comprehensively address the critical challenges of quantification and detection in information leakage analysis.
+
 
 ### 🛠️ Installation
 
