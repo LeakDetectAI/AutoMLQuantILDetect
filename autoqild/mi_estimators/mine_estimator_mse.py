@@ -114,7 +114,8 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         learning_rate=1e-4,
         reg_strength=1e-10,
         encode_classes=True,
-        random_state=42, **kwargs
+        random_state=42,
+        **kwargs,
     ):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(MineMIEstimatorMSE.__name__)

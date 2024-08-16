@@ -232,4 +232,4 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         -----
         The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-        return super().detect(detection_method='estimated_mutual_information')
+        return super().detect(detection_method="estimated_mutual_information")

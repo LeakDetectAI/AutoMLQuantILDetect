@@ -194,7 +194,8 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         )
 
     def detect(self, detection_method="log_loss_mi"):
-        """Executes the detection process to identify potential information leakage using the specified method.
+        """Executes the detection process to identify potential information
+        leakage using the specified method.
 
         Parameters
         ----------

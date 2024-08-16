@@ -160,8 +160,10 @@ class GMMMIEstimator(MIEstimatorBase):
         self.n_models = 5
         self.covariance_type = covariance_type
         self.val_size = val_size
-        if n_reduced>n_features:
-            self.logger.warning(f"Reduced features {n_reduced} are less than actual features {n_features}")
+        if n_reduced > n_features:
+            self.logger.warning(
+                f"Reduced features {n_reduced} are less than actual features {n_features}"
+            )
         self.n_reduced = n_reduced
         self.reduction_technique = reduction_technique
         self.selection_model = None
@@ -260,10 +262,14 @@ class GMMMIEstimator(MIEstimatorBase):
             if y is not None:
                 if self.n_classes != len(np.unique(y)):
                     raise ValueError(f"Dataset passed does not contain {self.n_classes}")
-            self.selection_model = create_dimensionality_reduction_model(reduction_technique=self.reduction_technique, n_reduced=self.n_reduced)
+            self.selection_model = create_dimensionality_reduction_model(
+                reduction_technique=self.reduction_technique, n_reduced=self.n_reduced
+            )
             self.logger.info(f"Creating the model")
             if self.n_features > 50 and self.n_reduced < self.n_features:
-                self.logger.info(f"Transforming and reducing the {self.n_features} features to {self.n_reduced}")
+                self.logger.info(
+                    f"Transforming and reducing the {self.n_features} features to {self.n_reduced}"
+                )
                 self.selection_model.fit(X, y)
                 X = self.selection_model.transform(X)
                 self.__is_fitted__ = True

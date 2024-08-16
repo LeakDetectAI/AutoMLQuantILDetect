@@ -244,7 +244,8 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
         )
 
     def detect(self, detection_method=LOG_LOSS_MI_ESTIMATION):
-        """Executes the detection process to identify potential information leakage using the specified method.
+        """Executes the detection process to identify potential information
+        leakage using the specified method.
 
         Parameters
         ----------

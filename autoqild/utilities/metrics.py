@@ -401,17 +401,16 @@ def get_entropy_y(y_true):
 
 
 def softmax_to_logits(p_pred):
-    """
-        Convert probabilities to scoring using logits.
+    """Convert probabilities to scoring using logits.
 
-         Parameters
-         ----------
-         p_pred: numpy array,shape: (num_samples, num_classes)
-           softmax probabilities
+     Parameters
+     ----------
+     p_pred: numpy array,shape: (num_samples, num_classes)
+       softmax probabilities
 
-        Returns
-        -------
-        - logits: numpy array of logits (shape: [num_samples, num_classes])
+    Returns
+    -------
+    - logits: numpy array of logits (shape: [num_samples, num_classes])
     """
     # Ensure that p_pred is a NumPy array
     p_pred = np.asarray(p_pred)
@@ -435,6 +434,7 @@ def softmax_to_logits(p_pred):
     logits -= logits_mean
 
     return logits
+
 
 def pc_softmax_estimation(y_true, p_pred):
     """Estimates the mutual information using predicted probabilities in the
@@ -500,7 +500,6 @@ def pc_softmax_estimation(y_true, p_pred):
         logger.error("All rows were NaN, so cannot estimate mutual information")
         estimated_mi = 0.0
     return estimated_mi
-
 
 
 def log_loss_estimation(y_true, y_pred):

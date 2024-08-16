@@ -74,7 +74,15 @@ class ClassficationMIEstimator(MIEstimatorBase):
         Estimate Mutual Information using the specified method.
     """
 
-    def __init__(self, n_classes, n_features, base_estimator = RandomForestClassifier, learner_params = {}, random_state=None, **kwargs):
+    def __init__(
+        self,
+        n_classes,
+        n_features,
+        base_estimator=RandomForestClassifier,
+        learner_params={},
+        random_state=None,
+        **kwargs
+    ):
         super().__init__(n_classes, n_features, random_state)
         self.random_state = check_random_state(random_state)
         self.logger = logging.getLogger(ClassficationMIEstimator.__name__)
