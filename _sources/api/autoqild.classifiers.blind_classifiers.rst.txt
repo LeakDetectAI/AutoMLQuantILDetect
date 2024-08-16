@@ -1,0 +1,14 @@
+autoqild.classifiers.blind\_classifiers
+=======================================
+
+.. automodule:: autoqild.classifiers.blind_classifiers
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MajorityVoting
+      PriorClassifier
+      RandomClassifier
+   
