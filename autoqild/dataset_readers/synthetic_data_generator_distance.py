@@ -446,7 +446,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         softmax_emi = np.nanmean(softmax_mis)
         return softmax_emi, pc_softmax_emi
 
-    def get_bayes_mi(self, metric_name):
+    def get_bayes_mi(self, metric_name=MCMC_LOG_LOSS):
         """Get the estimated mutual information based on the specified metric.
 
         Parameters

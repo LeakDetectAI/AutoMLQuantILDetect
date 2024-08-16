@@ -7,6 +7,8 @@ from .sklearn_leakage_detector import SklearnLeakageDetector
 
 __all__ = ["RandomForestLeakageDetector"]
 
+from ..utilities import LOG_LOSS_MI_ESTIMATION
+
 
 class RandomForestLeakageDetector(SklearnLeakageDetector):
     """RandomForestLeakageDetector class for detecting information leakage
@@ -191,13 +193,25 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
             n_model=n_model,
         )
 
-    def detect(self):
-        """Executes the detection process to identify potential information
-        leakage using statistical tests.
+    def detect(self, detection_method="log_loss_mi"):
+        """Executes the detection process to identify potential information leakage using the specified method.
 
-        The method applies various statistical techniques, such as paired t-tests and Fisher’s exact test, to detect
-        significant differences in model performance that may indicate information leakage. The decision is made based
-        on the results of these tests, accounting for multiple hypothesis corrections.
+        Parameters
+        ----------
+        detection_method : str
+        The method to use for detecting information leakage. Options include:
+        - `paired-t-test`: Uses paired t-test to compare the accuracy of models against the majority voting baseline.
+        - `paired-t-test-random`: Uses paired t-test to compare the accuracy of models against a random classifier.
+        - `fishers-exact-mean`: Applies Fisher's Exact Test on the confusion matrix and computes the mean p-value.
+        - `fishers-exact-median`: Applies Fisher's Exact Test on the confusion matrix and computes the median p-value.
+        - `mid_point_mi`: Detects leakage using the midpoint mutual information estimation.
+        - `log_loss_mi`: Detects leakage using log loss mutual information estimation.
+        - `log_loss_mi_isotonic_regression`: Uses log loss mutual information estimation with isotonic regression calibration.
+        - `log_loss_mi_platt_scaling`: Uses log loss mutual information estimation with Platt scaling calibration.
+        - `log_loss_mi_beta_calibration`: Uses log loss mutual information estimation with beta calibration.
+        - `log_loss_mi_temperature_scaling`: Uses log loss mutual information estimation with temperature scaling.
+        - `log_loss_mi_histogram_binning`: Uses log loss mutual information estimation with histogram binning.
+        - `p_c_softmax_mi`: Uses PC-Softmax mutual information estimation for detection.
 
         Returns
         -------
@@ -210,4 +224,4 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         -----
         The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-        return super().detect()
+        return super().detect(detection_method=detection_method)

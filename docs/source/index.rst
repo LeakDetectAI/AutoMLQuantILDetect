@@ -17,7 +17,21 @@ Contents
    start
 
 .. toctree::
+   :maxdepth: 1
+   :caption: TUTORIALS
+
+   notebooks/mi_estimators
+   notebooks/automated_information_leakage_detection
+   notebooks/simple_ild
+
+.. toctree::
    :maxdepth: 2
    :caption: API REFERENCE
 
    api
+
+.. toctree::
+   :maxdepth: 1
+   :caption: BIBLIOGRAPHY
+
+   references

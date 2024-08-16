@@ -249,7 +249,7 @@ def probability_calibration(X_train, y_train, X_test, classifier, calibrator):
 
     if y_train.size != 0:
         calibrator.fit(y_pred_train, y_train)
-        y_pred_cal = calibrator.__transform__(y_pred_test)
+        y_pred_cal = calibrator.transform(y_pred_test)
         if len(y_pred_cal.shape) == 1:
             y_pred_cal = np.hstack(((1 - y_pred_cal)[:, None], y_pred_cal[:, None]))
     else:

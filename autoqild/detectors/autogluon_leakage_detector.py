@@ -243,9 +243,25 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             n_model=n_model,
         )
 
-    def detect(self):
-        """Executes the detection process to identify potential information
-        leakage using the specified method.
+    def detect(self, detection_method=LOG_LOSS_MI_ESTIMATION):
+        """Executes the detection process to identify potential information leakage using the specified method.
+
+        Parameters
+        ----------
+        detection_method : str
+        The method to use for detecting information leakage. Options include:
+        - `paired-t-test`: Uses paired t-test to compare the accuracy of models against the majority voting baseline.
+        - `paired-t-test-random`: Uses paired t-test to compare the accuracy of models against a random classifier.
+        - `fishers-exact-mean`: Applies Fisher's Exact Test on the confusion matrix and computes the mean p-value.
+        - `fishers-exact-median`: Applies Fisher's Exact Test on the confusion matrix and computes the median p-value.
+        - `mid_point_mi`: Detects leakage using the midpoint mutual information estimation.
+        - `log_loss_mi`: Detects leakage using log loss mutual information estimation.
+        - `log_loss_mi_isotonic_regression`: Uses log loss mutual information estimation with isotonic regression calibration.
+        - `log_loss_mi_platt_scaling`: Uses log loss mutual information estimation with Platt scaling calibration.
+        - `log_loss_mi_beta_calibration`: Uses log loss mutual information estimation with beta calibration.
+        - `log_loss_mi_temperature_scaling`: Uses log loss mutual information estimation with temperature scaling.
+        - `log_loss_mi_histogram_binning`: Uses log loss mutual information estimation with histogram binning.
+        - `p_c_softmax_mi`: Uses PC-Softmax mutual information estimation for detection.
 
         Returns
         -------
@@ -253,5 +269,9 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             Indicates whether any models showed significant leakage.
         hypothesis_rejected : int
             The number of models flagged for leakage.
+
+        Notes
+        -----
+        The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-        return super().detect()
+        return super().detect(detection_method=detection_method)

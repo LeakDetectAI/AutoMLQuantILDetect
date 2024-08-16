@@ -842,13 +842,30 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                 self.logger.info(f"Metric {metric_name}: Value: {metric_loss}")
             self.results[model_name][metric_name].append(metric_loss)
 
-    def detect(self):
-        """Detect potential information leakage using the configured detection
-        method.
+    def detect(self, detection_method='log_loss_mi'):
+        """Detect potential information leakage using the configured detection method.
 
         This method applies statistical tests, such as paired t-tests or Fisher's exact tests, to determine if there is
         a significant difference in model performance that indicates information leakage. The results of these tests are
         used to decide whether leakage is present and, if so, how many models exhibit it.
+
+        Parameter
+        ---------
+        detection_method : str
+        The method to use for detecting information leakage. Options include:
+        - `paired-t-test`: Uses paired t-test to compare the accuracy of models against the majority voting baseline.
+        - `paired-t-test-random`: Uses paired t-test to compare the accuracy of models against a random classifier.
+        - `fishers-exact-mean`: Applies Fisher's Exact Test on the confusion matrix and computes the mean p-value.
+        - `fishers-exact-median`: Applies Fisher's Exact Test on the confusion matrix and computes the median p-value.
+        - `estimated_mutual_information`: Estimates mutual information to detect leakage.
+        - `mid_point_mi`: Detects leakage using the midpoint mutual information estimation.
+        - `log_loss_mi`: Detects leakage using log loss mutual information estimation.
+        - `log_loss_mi_isotonic_regression`: Uses log loss mutual information estimation with isotonic regression calibration.
+        - `log_loss_mi_platt_scaling`: Uses log loss mutual information estimation with Platt scaling calibration.
+        - `log_loss_mi_beta_calibration`: Uses log loss mutual information estimation with beta calibration.
+        - `log_loss_mi_temperature_scaling`: Uses log loss mutual information estimation with temperature scaling.
+        - `log_loss_mi_histogram_binning`: Uses log loss mutual information estimation with histogram binning.
+        - `p_c_softmax_mi`: Uses PC-Softmax mutual information estimation for detection.
 
         Returns
         -------
@@ -861,7 +878,8 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         -----
         The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-
+        if detection_method!=self.detection_method:
+            self.detection_method = detection_method
         def holm_bonferroni(p_values):
             reject, pvals_corrected, _, alpha = multipletests(
                 p_values, 0.01, method="holm", is_sorted=False

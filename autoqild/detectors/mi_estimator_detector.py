@@ -207,13 +207,19 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
                     self.results[model_name][ESTIMATED_MUTUAL_INFORMATION].append(metric_loss)
             self.__store_results__()
 
-    def detect(self):
+    def detect(self, detection_method=None):
         """Executes the detection process to identify potential information
         leakage using statistical tests.
 
         The method applies various statistical techniques, such as paired t-tests and Fisher’s exact test, to detect
         significant differences in model performance that may indicate information leakage. The decision is made based
         on the results of these tests, accounting for multiple hypothesis corrections.
+
+        Parameters
+        ----------
+        detection_method : str
+        The method to use for detecting information leakage. Options include:
+            - `estimated_mutual_information`: Estimates mutual information to detect leakage.
 
         Returns
         -------
@@ -226,4 +232,4 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         -----
         The method implements a Holm-Bonferroni correction to control the family-wise error rate for multiple models.
         """
-        return super().detect()
+        return super().detect(detection_method='estimated_mutual_information')

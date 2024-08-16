@@ -206,9 +206,9 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
             Target labels.
 
         method : str, optional, default=`LogLossMI`
-            The method to use for mutual information estimation.
-            Options include:
+            The method to use for mutual information estimation. Options include:
 
+            - 'MidPointMI': Estimate MI using Mid-point method.
             - `LogLossMI`: Estimate MI using Log-Loss method.
             - `LogLossMIIsotonicRegression`: Estimate MI using Log-Loss method with Isotonic Regression.
             - `LogLossMIPlattScaling`: Estimate MI using Log-Loss method with Platt Scaling.

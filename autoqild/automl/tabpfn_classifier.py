@@ -124,6 +124,8 @@ class AutoTabPFNClassifier(AutomlClassifier):
         self.n_classes = n_classes
         self.logger = logging.getLogger(name=AutoTabPFNClassifier.__name__)
         self.random_state = check_random_state(random_state)
+        if n_reduced>n_features:
+            self.logger.warning(f"Reduced features {n_reduced} are less than actual features {n_features}")
         self.n_reduced = n_reduced
         self.reduction_technique = reduction_technique
         self.selection_model = None
