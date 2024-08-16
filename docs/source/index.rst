@@ -22,6 +22,7 @@ Contents
 
    notebooks/comparing_mi_estimators
    notebooks/automated_information_leakage_detection
+   notebooks/utils
 
 .. toctree::
    :maxdepth: 2

@@ -12,8 +12,6 @@ from packaging import version
 from sklearn.utils import check_random_state
 from skopt.space import Real, Categorical, Integer
 
-from autoqild import *
-
 
 def create_search_space(hp_ranges, logger):
     def isint(v):
@@ -43,13 +41,6 @@ def create_search_space(hp_ranges, logger):
             search_space[key] = Categorical(value)
         logger.info(f"key {key} value {value}")
     return search_space
-
-
-def convert_learner_params(params):
-    for key, value in params.items():
-        if value == "None":
-            params[key] = None
-    return params
 
 
 def setup_logging(log_path=None, level=logging.INFO):
