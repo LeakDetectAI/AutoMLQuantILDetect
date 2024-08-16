@@ -1,5 +1,5 @@
-Quickstart Guide
-================
+⚙️ Quickstart Guide
+===================
 
 You can use `AutoMLQuantILDetect` in different ways.
 There already exist quite some classifiers and AutoML tools which can be used to estimate mutual information using the log-loss and the accuracy of the learned model.

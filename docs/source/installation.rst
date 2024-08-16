@@ -1,5 +1,5 @@
-Installation Guide
-==================
+🛠️ Installation Guide
+=====================
 
 .. note::
     `AutoMLQuantILDetect` with package ``autoqild`` is intended to work with **Python 3.9.5 and above**.
