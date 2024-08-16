@@ -399,6 +399,7 @@ def get_entropy_y(y_true):
         entropy_y += -py * np.log2(py)
     return entropy_y
 
+
 def pc_softmax_estimation(y_true, p_pred):
     """Estimates the mutual information using predicted probabilities in the
     softmax and PC-Softmax functions.
