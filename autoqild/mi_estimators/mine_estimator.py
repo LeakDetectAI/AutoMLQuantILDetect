@@ -65,6 +65,9 @@ class MineMIEstimator(MIEstimatorBase):
     random_state : int, optional, default=42
         Random state for reproducibility.
 
+    **kwargs : dict, optional
+        Additional keyword arguments passed to the `MineMIEstimator` constructor.
+
     Attributes
     ----------
     optimizer_cls : object
@@ -113,7 +116,7 @@ class MineMIEstimator(MIEstimatorBase):
         learning_rate=1e-4,
         reg_strength=0,
         encode_classes=True,
-        random_state=42,
+        random_state=42, **kwargs
     ):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(MineMIEstimator.__name__)

@@ -1,6 +1,3 @@
-<a href="https://github.com/LeakDetectAI/AutoMLQuantILDetect/blob/master/LICENSE">
-  <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/apache.png" alt="License" width="100" height="60">
-</a>
 <a href="https://arxiv.org/abs/2401.14283">
   <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/logo.png" alt="Paper" width="100" height="60">
 </a>
@@ -118,8 +115,7 @@ Accuracy: 1.0
 
  
 
-## <a href="https://arxiv.org/abs/2401.14283"> <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/images/cite.png" alt="Paper" width="50" height="25"> </a>  Citing automl-qild 
-If you use this toolkit in your research, please cite our paper available on arXiv:
+ 💬 If you use this toolkit in your research, please cite our paper available on arXiv:
 
 ```
 @article{gupta2024information,

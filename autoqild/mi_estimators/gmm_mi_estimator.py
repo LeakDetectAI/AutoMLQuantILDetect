@@ -380,7 +380,7 @@ class GMMMIEstimator(MIEstimatorBase):
             except IndexError as error:
                 # log_exception_error(self.logger, error)
                 self.round = 0
-            X_new = self.best_model.__transform__(X, rd=self.round)
+            X_new = self.best_model.transform(X, rd=self.round)
             self.cls_model = LogisticRegression()
             self.cls_model.fit(X_new, y)
         else:
@@ -406,7 +406,7 @@ class GMMMIEstimator(MIEstimatorBase):
         """
         X = self.__transform__(X)
         if self.best_model is not None:
-            X = self.best_model.__transform__(X, rd=self.round)
+            X = self.best_model.transform(X, rd=self.round)
         return self.cls_model.predict(X=X)
 
     def score(self, X, y, sample_weight=None, verbose=0):
@@ -472,7 +472,7 @@ class GMMMIEstimator(MIEstimatorBase):
         """
         X = self.__transform__(X)
         if self.best_model is not None:
-            X = self.best_model.__transform__(X, rd=self.round)
+            X = self.best_model.transform(X, rd=self.round)
         y_pred = self.cls_model.predict_proba(X=X)
         return y_pred
 
@@ -495,7 +495,7 @@ class GMMMIEstimator(MIEstimatorBase):
         """
         X = self.__transform__(X)
         if self.best_model is not None:
-            X = self.best_model.__transform__(X, rd=self.round)
+            X = self.best_model.transform(X, rd=self.round)
         return self.cls_model.decision_function(X=X)
 
     def estimate_mi(self, X, y, verbose=0, **kwd):

@@ -31,6 +31,10 @@ class ClassficationMIEstimator(MIEstimatorBase):
         Number of classes in the classification data samples.
     n_features : int
         Number of features or dimensionality of the inputs of the classification data samples.
+    base_estimator : sklearn.ensemble.RandomForestClassifier
+        Base estimator used for classification.
+    learner_params : dict
+        Parameters passed to the base estimator.
     random_state : int or object, optional, default=42
         Random state for reproducibility.
     **kwargs : dict, optional
@@ -70,12 +74,12 @@ class ClassficationMIEstimator(MIEstimatorBase):
         Estimate Mutual Information using the specified method.
     """
 
-    def __init__(self, n_classes, n_features, random_state=None, **kwargs):
+    def __init__(self, n_classes, n_features, base_estimator = RandomForestClassifier, learner_params = {}, random_state=None, **kwargs):
         super().__init__(n_classes, n_features, random_state)
         self.random_state = check_random_state(random_state)
         self.logger = logging.getLogger(ClassficationMIEstimator.__name__)
-        self.base_estimator = RandomForestClassifier
-        self.learner_params = {}
+        self.base_estimator = base_estimator
+        self.learner_params = learner_params
         self.base_learner = self.base_estimator(**self.learner_params)
 
     def fit(self, X, y, **kwd):

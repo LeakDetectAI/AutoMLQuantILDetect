@@ -70,6 +70,9 @@ class MineMIEstimatorMSE(MIEstimatorBase):
     random_state : int, optional, default=42
         Random state for reproducibility.
 
+    **kwargs : dict, optional
+        Additional keyword arguments passed to the `MineMIEstimatorMSE` constructor.
+
     Attributes
     ----------
     optimizer_cls : object
@@ -111,7 +114,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         learning_rate=1e-4,
         reg_strength=1e-10,
         encode_classes=True,
-        random_state=42,
+        random_state=42, **kwargs
     ):
         super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(MineMIEstimatorMSE.__name__)
@@ -183,7 +186,7 @@ class MineMIEstimatorMSE(MIEstimatorBase):
         tensor_xy_tilde = torch.tensor(xy_tilde, dtype=torch.float32).to(self.device)
         return tensor_xy, tensor_xy_tilde
 
-    def fit(self, X, y, epochs=10000, batch_size=128, verbose=0, **kwd):
+    def fit(self, X, y, epochs=100, batch_size=128, verbose=0, **kwd):
         """Fit the MINE model and estimate mutual information.
 
         Parameters

@@ -20,9 +20,8 @@ Contents
    :maxdepth: 1
    :caption: TUTORIALS
 
-   notebooks/mi_estimators
+   notebooks/comparing_mi_estimators
    notebooks/automated_information_leakage_detection
-   notebooks/simple_ild
 
 .. toctree::
    :maxdepth: 2

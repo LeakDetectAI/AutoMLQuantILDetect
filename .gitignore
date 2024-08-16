@@ -4,7 +4,6 @@
 /.ipynb_checkpoints/
 *.pyc
 /pycild.egg-info/
-*.ipynb
 *.log
 *.pkl
 *.h5
