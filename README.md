@@ -34,7 +34,7 @@ conda activate ILD
 ```
 python setup.py install
 ```
-- **OR**
+**OR**
 ```
 pip install -r requirements.txt
 pip install -e ./
