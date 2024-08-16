@@ -4,7 +4,7 @@ The ``autoqild`` Python package
 
    <div style="overflow: hidden;">
      <a href="https://arxiv.org/abs/2401.14283" style="float: right; margin-left: 20px; margin-bottom: 10px;">
-       <img src="_static/logo.png" alt="Paper" width="200" height="200">
+       <img src="logo.png" alt="Paper" width="200" height="200">
      </a>
      <p style="text-align: justify;">
        The <strong>AutoMLQuantILDetect</strong> package utilizes AutoML approaches to detect and quantify system information leakage. It is an advanced toolkit that leverages the power of Automated Machine Learning (AutoML) to quantify information leakage accurately. This package estimates mutual information (MI) within systems that release classification datasets. By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects information leakage within classification datasets. With <strong>AutoMLQuantILDetect</strong>, users can confidently and comprehensively address the critical challenges of quantification and detection in information leakage analysis.
