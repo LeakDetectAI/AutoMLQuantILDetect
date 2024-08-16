@@ -12,8 +12,18 @@ from sklearn.preprocessing import RobustScaler
 
 warnings.filterwarnings("ignore")
 
-__all__ = ["logsumexp", "softmax", "sigmoid", "normalize", "progress_bar", "print_dictionary",
-           "standardize_features", "create_directory_safely", "log_exception_error", "check_and_delete_corrupt_h5_file"]
+__all__ = [
+    "logsumexp",
+    "softmax",
+    "sigmoid",
+    "normalize",
+    "progress_bar",
+    "print_dictionary",
+    "standardize_features",
+    "create_directory_safely",
+    "log_exception_error",
+    "check_and_delete_corrupt_h5_file",
+]
 
 
 def logsumexp(x, axis=1):
@@ -113,7 +123,7 @@ def progress_bar(count, total, status=""):
     sys.stdout.flush()
 
 
-def print_dictionary(dictionary, sep='\n', n_keys=None):
+def print_dictionary(dictionary, sep="\n", n_keys=None):
     """Prints a formatted dictionary.
 
     Parameters
@@ -203,8 +213,10 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
                 if group_names:
                     group_name = group_names[0]
                     group = h5_file[group_name]
-                    logger.info(f"The first group '{group_name}' in the file '{basename}' has been "
-                                f"accessed successfully.")
+                    logger.info(
+                        f"The first group '{group_name}' in the file '{basename}' has been "
+                        f"accessed successfully."
+                    )
                 else:
                     logger.info(f"No groups found in the file '{basename}'.")
             logger.info(f"The file '{basename}' is not corrupt.")
