@@ -140,6 +140,7 @@ def print_dictionary(dictionary, sep="\n", n_keys=None):
     output : str
         Formatted string representation of the dictionary.
     """
+
     output = "  "
     if n_keys is None:
         n_keys = len(dictionary)
