@@ -120,9 +120,7 @@ class MineMIEstimator(MIEstimatorBase):
         encode_classes=True,
         random_state=42,
     ):
-        super().__init__(
-            n_classes=n_classes, n_features=n_features, random_state=random_state
-        )
+        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(MineMIEstimator.__name__)
         self.optimizer_str = optimizer_str
         self.learning_rate = learning_rate
@@ -238,9 +236,7 @@ class MineMIEstimator(MIEstimatorBase):
             )
             stat_net.apply(init)
             stat_net.to(self.device)
-            optimizer = self.optimizer_cls(
-                stat_net.parameters(), **self._optimizer_config
-            )
+            optimizer = self.optimizer_cls(stat_net.parameters(), **self._optimizer_config)
             all_estimates = []
             sum_loss = 0
             for iter_ in tqdm(range(epochs), total=epochs, desc="iteration"):
@@ -248,9 +244,7 @@ class MineMIEstimator(MIEstimatorBase):
                 xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                 preds_xy = stat_net(xy)
                 preds_xy_tilde = stat_net(xy_tilde)
-                train_div = get_mine_loss(
-                    preds_xy, preds_xy_tilde, metric=self.loss_function
-                )
+                train_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
                 loss = train_div.mul_(-1.0)
                 loss.backward()
                 optimizer.step()
@@ -259,9 +253,7 @@ class MineMIEstimator(MIEstimatorBase):
                     with torch.no_grad():
                         mi_hats = []
                         for _ in range(MON_ITER):
-                            xy, xy_tilde = self.__pytorch_tensor_dataset__(
-                                X, y, i=iter_
-                            )
+                            xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                             preds_xy = stat_net(xy)
                             preds_xy_tilde = stat_net(xy_tilde)
                             eval_div = get_mine_loss(
@@ -429,9 +421,7 @@ class MineMIEstimator(MIEstimatorBase):
                 xy, xy_tilde = self.__pytorch_tensor_dataset__(X, y, i=iter_)
                 preds_xy = model(xy)
                 preds_xy_tilde = model(xy_tilde)
-                eval_div = get_mine_loss(
-                    preds_xy, preds_xy_tilde, metric=self.loss_function
-                )
+                eval_div = get_mine_loss(preds_xy, preds_xy_tilde, metric=self.loss_function)
                 mi_hat = eval_div.detach().numpy().flatten()[0]
                 if verbose:
                     print(f"iter: {iter_}, MI hat: {mi_hat}")

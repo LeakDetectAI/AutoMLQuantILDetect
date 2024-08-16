@@ -145,9 +145,7 @@ class AutoGluonClassifier(AutomlClassifier):
         self.time_limit = time_limit
         self.model = None
         self.class_label = "class"
-        self.columns = [f"feature_{i}" for i in range(self.n_features)] + [
-            self.class_label
-        ]
+        self.columns = [f"feature_{i}" for i in range(self.n_features)] + [self.class_label]
         if self.n_classes > 2:
             self.problem_type = "multiclass"
         if self.n_classes == 2:
@@ -177,9 +175,7 @@ class AutoGluonClassifier(AutomlClassifier):
         if self.model is not None:
             self.leaderboard = self.model.leaderboard(extra_info=True)
             time_taken = (
-                self.leaderboard["fit_time"].sum()
-                + self.leaderboard["pred_time_val"].sum()
-                + 20
+                self.leaderboard["fit_time"].sum() + self.leaderboard["pred_time_val"].sum() + 20
             )
             difference = self.time_limit - time_taken
             if 200 <= self.time_limit < 300:
@@ -196,9 +192,7 @@ class AutoGluonClassifier(AutomlClassifier):
             if num_models < 1200:
                 if num_models <= 50:
                     self.model = None
-                    self.logger.info(
-                        f"Retraining the model since they are less than 50"
-                    )
+                    self.logger.info(f"Retraining the model since they are less than 50")
                 if difference >= limit:
                     self.model = None
             else:
@@ -253,9 +247,7 @@ class AutoGluonClassifier(AutomlClassifier):
                 )
             except Exception as error:
                 log_exception_error(self.logger, error)
-                self.logger.error(
-                    "Fit function did not work, checking the saved models"
-                )
+                self.logger.error("Fit function did not work, checking the saved models")
         self.leaderboard = self.model.leaderboard(extra_info=True)
         if self.delete_tmp_folder_after_terminate:
             self.model.delete_models(models_to_keep="best", dry_run=False)
@@ -379,9 +371,7 @@ class AutoGluonClassifier(AutomlClassifier):
         data = np.concatenate((X, y[:, None]), axis=1)
 
         if self.n_features != X.shape[-1]:
-            raise ValueError(
-                f"Dataset passed does not contain {self.n_features} features"
-            )
+            raise ValueError(f"Dataset passed does not contain {self.n_features} features")
 
         df_data = pd.DataFrame(data=data, columns=self.columns)
         return df_data

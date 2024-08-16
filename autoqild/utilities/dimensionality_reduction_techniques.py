@@ -50,12 +50,8 @@ def create_dimensionality_reduction_model(reduction_technique, n_reduced=20):
         "recursive_feature_elimination_rf": RFE(
             RandomForestClassifier(), n_features_to_select=n_reduced
         ),
-        "select_from_model_et": SelectFromModel(
-            ExtraTreesClassifier(), max_features=n_reduced
-        ),
-        "select_from_model_rf": SelectFromModel(
-            RandomForestClassifier(), max_features=n_reduced
-        ),
+        "select_from_model_et": SelectFromModel(ExtraTreesClassifier(), max_features=n_reduced),
+        "select_from_model_rf": SelectFromModel(RandomForestClassifier(), max_features=n_reduced),
         "pca": PCA(n_components=n_reduced),
         "lda": LinearDiscriminantAnalysis(n_components=n_reduced),
         "tsne": TSNE(n_components=n_reduced),

@@ -91,12 +91,8 @@ def generate_samples_per_class(
             n_samples = imb * n_total_instances
             samples_per_class[str(n_c)] = int(np.ceil(n_samples))
             if verbose:
-                logger.info(
-                    f"Class {n_c + 1} calculated {n_samples / n_total_instances}"
-                )
-        samples_per_class[str(n_classes - 1)] = n_total_instances - sum(
-            samples_per_class.values()
-        )
+                logger.info(f"Class {n_c + 1} calculated {n_samples / n_total_instances}")
+        samples_per_class[str(n_classes - 1)] = n_total_instances - sum(samples_per_class.values())
         v = samples_per_class[str(n_classes - 1)] / n_total_instances
         if verbose:
             logger.info(f"Class {n_classes} calculated {np.around(v, 2)}")
@@ -105,19 +101,13 @@ def generate_samples_per_class(
             n_samples = imbalance * n_total_instances
             samples_per_class[str(n_c)] = int(np.ceil(n_samples))
             if verbose:
-                logger.info(
-                    f"Class {n_c + 1} calculated {n_samples / n_total_instances}"
-                )
-        samples_per_class[str(n_classes - 1)] = n_total_instances - sum(
-            samples_per_class.values()
-        )
+                logger.info(f"Class {n_c + 1} calculated {n_samples / n_total_instances}")
+        samples_per_class[str(n_classes - 1)] = n_total_instances - sum(samples_per_class.values())
         v = samples_per_class[str(n_classes - 1)] / n_total_instances
         if verbose:
             logger.info(f"Class {n_classes} calculated {np.around(v, 2)}")
     if verbose:
-        logger.info(
-            f"Imbalanced {np.around(imbalance, 2)} samples_per_class {samples_per_class}"
-        )
+        logger.info(f"Imbalanced {np.around(imbalance, 2)} samples_per_class {samples_per_class}")
     return samples_per_class
 
 

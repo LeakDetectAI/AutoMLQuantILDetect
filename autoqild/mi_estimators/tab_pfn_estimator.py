@@ -75,10 +75,7 @@ class TabPFNMIEstimator(ClassficationMIEstimator):
         **kwargs
     ):
         super().__init__(
-            n_classes=n_classes,
-            n_features=n_features,
-            random_state=random_state,
-            **kwargs
+            n_classes=n_classes, n_features=n_features, random_state=random_state, **kwargs
         )
         self.base_estimator = AutoTabPFNClassifier
         self.learner_params = dict(

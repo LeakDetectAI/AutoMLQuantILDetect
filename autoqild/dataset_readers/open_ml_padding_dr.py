@@ -110,16 +110,12 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         self.attribute_names.remove(LABEL_COL)
         self.dataset_dictionary = {}
         if self.correct_class not in self.data_frame_raw[LABEL_COL].unique():
-            raise ValueError(
-                f"Dataframe is does not contain correct class {self.correct_class}"
-            )
+            raise ValueError(f"Dataframe is does not contain correct class {self.correct_class}")
         self.logger.info(
             f"Class Labels unformulated {list(self.data_frame_raw[LABEL_COL].unique())}"
         )
         description = self.dataset.description
-        vulnerable_classes_str = description.split("\n")[-1].split(
-            "vulnerable_classes "
-        )[-1]
+        vulnerable_classes_str = description.split("\n")[-1].split("vulnerable_classes ")[-1]
         vulnerable_classes_str = vulnerable_classes_str.strip("[]")
         self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(",")]
         self.n_features = len(self.dataset.features) - 1

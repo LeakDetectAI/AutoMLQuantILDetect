@@ -91,9 +91,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         is_pc_softmax=False,
         random_state=42,
     ):
-        super().__init__(
-            n_classes=n_classes, n_features=n_features, random_state=random_state
-        )
+        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.logger = logging.getLogger(PCSoftmaxMIEstimator.__name__)
         self.optimizer_str = optimizer_str
         self.learning_rate = learning_rate
@@ -134,9 +132,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         y_l, counts = np.unique(y, return_counts=True)
         total = len(y)
         dataset_prop = [x / total for x in counts]
-        tensor_x = torch.tensor(X, dtype=torch.float32).to(
-            self.device
-        )  # transform to torch tensor
+        tensor_x = torch.tensor(X, dtype=torch.float32).to(self.device)  # transform to torch tensor
         tensor_y = torch.tensor(y, dtype=torch.int64).to(self.device)
         my_dataset = TensorDataset(tensor_x, tensor_y)  # create your dataset
         tra_dataloader = DataLoader(
@@ -180,9 +176,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         )
         self.class_net.apply(init)
         self.class_net.to(self.device)
-        self.optimizer = self.optimizer_cls(
-            self.class_net.parameters(), **self._optimizer_config
-        )
+        self.optimizer = self.optimizer_cls(self.class_net.parameters(), **self._optimizer_config)
 
         dataset_prop, tra_dataloader = self.__pytorch_tensor_dataset__(X, y)
         self.dataset_properties = dataset_prop
@@ -205,9 +199,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
                 _, predicted = torch.max(preds_, 1)
                 correct += (predicted == tensor_y).sum().item()
                 accuracy = 100 * correct / tensor_y.size(0)
-                print(
-                    f"For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %"
-                )
+                print(f"For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %")
                 self.logger.error(
                     f"For Epoch: {epoch} Running loss: {running_loss} Accuracy: {accuracy} %"
                 )
@@ -231,9 +223,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Predicted class labels.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
-        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(
-            X, y, batch_size=X.shape[0]
-        )
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             a_label = a_label.to(self.device).squeeze()
@@ -267,9 +257,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             acc = 0.0
         s_pred = self.predict_proba(X, verbose=0)
         pyx = ((s_pred * np.log2(s_pred)).sum(axis=1)).mean()
-        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(
-            X, y, batch_size=X.shape[0]
-        )
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         val_loss = 0
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
@@ -298,9 +286,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             Predicted class probabilities.
         """
         y = np.random.choice(self.n_classes, X.shape[0])
-        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(
-            X, y, batch_size=X.shape[0]
-        )
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
@@ -325,9 +311,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
         """
         y = np.random.choice(self.n_classes, X.shape[0])
         test_ = None
-        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(
-            X, y, batch_size=X.shape[0]
-        )
+        dataset_prop, test_dataloader = self.__pytorch_tensor_dataset__(X, y, batch_size=X.shape[0])
         for ite_idx, (a_data, a_label) in enumerate(test_dataloader):
             a_data = a_data.to(self.device)
             test_ = self.class_net.score(a_data, dataset_prop)
@@ -391,9 +375,7 @@ class PCSoftmaxMIEstimator(MIEstimatorBase):
             a_data = a_data.unsqueeze(0).to(self.device)
             test_ = self.class_net(a_data, dataset_prop)
             if self.is_pc_softmax:
-                a_softmax = torch.flatten(
-                    own_softmax(test_, dataset_prop, self.device)
-                )[int_label]
+                a_softmax = torch.flatten(own_softmax(test_, dataset_prop, self.device))[int_label]
             else:
                 a_softmax = torch.flatten(torch.softmax(test_, dim=-1))[int_label]
             if self.is_pc_softmax:

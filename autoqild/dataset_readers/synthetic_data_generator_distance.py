@@ -131,9 +131,7 @@ class SyntheticDatasetGeneratorDistance(metaclass=ABCMeta):
         self.covariances = {}
         self.seeds = {}
         if isinstance(samples_per_class, int):
-            self.samples_per_class = dict.fromkeys(
-                np.arange(n_classes), samples_per_class
-            )
+            self.samples_per_class = dict.fromkeys(np.arange(n_classes), samples_per_class)
         elif isinstance(samples_per_class, dict):
             self.samples_per_class = {}
             for key in samples_per_class.keys():

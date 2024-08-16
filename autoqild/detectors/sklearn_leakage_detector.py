@@ -180,9 +180,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         callback = log_callback(search_keys)
         X_train, y_train = self.reduce_dataset(X_train, y_train)
         try:
-            bayes_search.fit(
-                X_train, y_train, groups=None, callback=callback, **self.fit_params
-            )
+            bayes_search.fit(X_train, y_train, groups=None, callback=callback, **self.fit_params)
         except Exception as error:
             log_exception_error(self.logger, error)
             self.logger.error(" Cannot fit the Bayes SearchCV ")
@@ -222,20 +220,14 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         During fitting, random classifier and majority voting classifier performance is also calculated for comparison.
         """
         if self._is_fitted_:
-            self.logger.info(
-                f"Model already fitted for the padding {self.padding_code}"
-            )
+            self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
             train_size = self.hyperparameter_optimization(X, y)
             for i in range(self.n_hypothesis):
                 loss, learner_params = self.estimators[i]
-                self.logger.info(
-                    f"**********  Model {i + 1} with loss {loss} **********"
-                )
+                self.logger.info(f"**********  Model {i + 1} with loss {loss} **********")
                 self.logger.info(f"Parameters {print_dictionary(learner_params)}")
-                for k, (train_index, test_index) in enumerate(
-                    self.cv_iterator.split(X, y)
-                ):
+                for k, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
                     train_index = train_index[:train_size]
                     X_train, X_test = X[train_index], X[test_index]
                     y_train, y_test = y[train_index], y[test_index]
@@ -248,9 +240,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     self.logger.info(
                         f"************************* Split {k + 1} **************************"
                     )
-                    self.evaluate_scores(
-                        X_test, X_train, y_test, y_train, y_pred, p_pred, model, i
-                    )
+                    self.evaluate_scores(X_test, X_train, y_test, y_train, y_pred, p_pred, model, i)
                     if i == 0:
                         self.__calculate_random_classifier_accuracy__(
                             X_train, y_train, X_test, y_test
@@ -262,9 +252,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
                     if directory_path is not None:
                         try:
                             os.rmdir(directory_path)
-                            self.logger.info(
-                                f"The directory `{directory_path}` has been removed."
-                            )
+                            self.logger.info(f"The directory `{directory_path}` has been removed.")
                         except OSError as e:
                             self.logger.error(f"Error: {directory_path} : {e.strerror}")
             self.__store_results__()
@@ -291,9 +279,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
         """
         if X.shape[0] > 4000 and self.base_detector == AutoTabPFNClassifier:
             reduced_size = 4000
-            self.logger.info(
-                f"Initial instances {X.shape[0]} reduced to {reduced_size}"
-            )
+            self.logger.info(f"Initial instances {X.shape[0]} reduced to {reduced_size}")
             X, _, y, _ = train_test_split(
                 X,
                 y,
@@ -303,9 +289,7 @@ class SklearnLeakageDetector(InformationLeakageDetector):
             )
         return X, y
 
-    def evaluate_scores(
-        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
-    ):
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """Evaluate and store model performance metrics for the detection
         process.
 

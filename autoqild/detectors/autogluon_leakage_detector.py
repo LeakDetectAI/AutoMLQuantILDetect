@@ -149,9 +149,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
             The target values (class labels) corresponding to each row in X.
         """
         if self._is_fitted_:
-            self.logger.info(
-                f"Model already fitted for the padding {self.padding_code}"
-            )
+            self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
             train_size = self.hyperparameter_optimization(X, y)
             n_hypothesis = 0
@@ -162,9 +160,7 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                     self.logger.info(
                         f"************** Model {i + 1}: {model.__class__.__name__} **************"
                     )
-                    for k, (train_index, test_index) in enumerate(
-                        self.cv_iterator.split(X, y)
-                    ):
+                    for k, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
                         self.logger.info(
                             f"************************** Split {k + 1} ***************************"
                         )
@@ -197,17 +193,13 @@ class AutoGluonLeakageDetector(InformationLeakageDetector):
                             n_hypothesis,
                         )
                     n_hypothesis += 1
-                    self.logger.info(
-                        f"Hypothesis Done {n_hypothesis} out of {self.n_hypothesis}"
-                    )
+                    self.logger.info(f"Hypothesis Done {n_hypothesis} out of {self.n_hypothesis}")
                 except Exception as error:
                     log_exception_error(self.logger, error)
                     self.logger.error(f"Problem with fitting the model")
             self.__store_results__()
 
-    def evaluate_scores(
-        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
-    ):
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """Evaluates and stores model performance metrics for the detection
         process.
 

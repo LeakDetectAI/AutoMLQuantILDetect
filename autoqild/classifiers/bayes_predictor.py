@@ -161,9 +161,7 @@ class BayesPredictor(BaseEstimator, ClassifierMixin):
         p_pred = np.zeros((X.shape[0], self.dataset_obj.n_classes))
         for k_class in self.dataset_obj.class_labels:
             if self.dataset_obj.flip_y == 0.0:
-                p_pred[:, k_class] = self.dataset_obj.get_prob_y_given_x(
-                    X=X, class_label=k_class
-                )
+                p_pred[:, k_class] = self.dataset_obj.get_prob_y_given_x(X=X, class_label=k_class)
             else:
                 p_pred[:, k_class] = self.dataset_obj.get_prob_flip_y_given_x(
                     X=X, class_label=k_class

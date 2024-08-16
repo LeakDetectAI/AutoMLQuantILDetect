@@ -9,9 +9,7 @@ from scipy.stats import t, wilcoxon
 __all__ = ["wilcoxon_signed_rank_test", "paired_ttest"]
 
 
-def wilcoxon_signed_rank_test(
-    accuracies, accuracies2, alternative="two-sided", verbose=False
-):
+def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", verbose=False):
     """Performs the Wilcoxon signed-rank test on two sets of accuracies.
 
     Parameters
@@ -33,9 +31,7 @@ def wilcoxon_signed_rank_test(
     logger = logging.getLogger("Wilcoxon-Signed_Rank")
 
     try:
-        _, p_value = wilcoxon(
-            accuracies, accuracies2, correction=True, alternative=alternative
-        )
+        _, p_value = wilcoxon(accuracies, accuracies2, correction=True, alternative=alternative)
     except Exception as e:
         if verbose:
             logger.info("Accuracies are exactly same {}".format(str(e)))
@@ -94,9 +90,7 @@ def paired_ttest(
         if verbose:
             logger.info("With the correction option")
     if verbose:
-        logger.info(
-            "D_bar {} Variance {} Sigma {}".format(d_bar, sigma2, np.sqrt(sigma2))
-        )
+        logger.info("D_bar {} Variance {} Sigma {}".format(d_bar, sigma2, np.sqrt(sigma2)))
 
     # compute the modified variance
     if correction:

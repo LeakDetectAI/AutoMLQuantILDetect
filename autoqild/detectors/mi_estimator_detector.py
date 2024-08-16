@@ -185,21 +185,15 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
         During fitting, random classifier and majority voting classifier performance is also calculated for comparison.
         """
         if self._is_fitted_:
-            self.logger.info(
-                f"Model already fitted for the padding {self.padding_code}"
-            )
+            self.logger.info(f"Model already fitted for the padding {self.padding_code}")
         else:
             train_size = self.hyperparameter_optimization(X, y)
             for i in range(self.n_hypothesis):
                 loss, learner_params = self.estimators[i]
-                self.logger.info(
-                    f"**********  Model {i + 1} with loss {loss} **********"
-                )
+                self.logger.info(f"**********  Model {i + 1} with loss {loss} **********")
                 self.logger.info(f"Parameters {print_dictionary(learner_params)}")
                 model = self.base_detector(**learner_params)
-                for k, (train_index, test_index) in enumerate(
-                    self.cv_iterator.split(X, y)
-                ):
+                for k, (train_index, test_index) in enumerate(self.cv_iterator.split(X, y)):
                     train_index = train_index[:train_size]
                     X_train, X_test = X[train_index], X[test_index]
                     y_train, y_test = y[train_index], y[test_index]
@@ -208,13 +202,9 @@ class MIEstimationLeakageDetector(SklearnLeakageDetector):
                         f"************************* Split {k + 1} **************************"
                     )
                     metric_loss = model.estimate_mi(X, y)
-                    self.logger.info(
-                        f"Metric {ESTIMATED_MUTUAL_INFORMATION}: Value {metric_loss}"
-                    )
+                    self.logger.info(f"Metric {ESTIMATED_MUTUAL_INFORMATION}: Value {metric_loss}")
                     model_name = list(self.results.keys())[i]
-                    self.results[model_name][ESTIMATED_MUTUAL_INFORMATION].append(
-                        metric_loss
-                    )
+                    self.results[model_name][ESTIMATED_MUTUAL_INFORMATION].append(metric_loss)
             self.__store_results__()
 
     def detect(self):

@@ -136,9 +136,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
         self.covariances = {}
         self.seeds = {}
         if isinstance(samples_per_class, int):
-            self.samples_per_class = dict.fromkeys(
-                np.arange(n_classes), samples_per_class
-            )
+            self.samples_per_class = dict.fromkeys(np.arange(n_classes), samples_per_class)
         elif isinstance(samples_per_class, dict):
             self.samples_per_class = {}
             for key in samples_per_class.keys():
@@ -369,9 +367,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                 self.logger.info(f"After Flipping {d}")
                 self.logger.info(f"Flipping Ratio {d_o}")
             else:
-                self.logger.info(
-                    "################# Imbalanced Dataset #################"
-                )
+                self.logger.info("################# Imbalanced Dataset #################")
                 uni, counts = np.unique(y, return_counts=True)
                 d = {i: c for i, c in zip(uni, counts)}
                 self.logger.info(f"Original {d}")
@@ -379,9 +375,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                 choices = []
                 indices = []
                 for i, y_i in enumerate(y):
-                    choice = self.random_state.choice(
-                        2, 1, p=[1 - self.flip_y, self.flip_y]
-                    )
+                    choice = self.random_state.choice(2, 1, p=[1 - self.flip_y, self.flip_y])
                     choices.append(choice)
                     if choice == 1:
                         indices.append(i)
@@ -393,13 +387,9 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
                     ]
                 )
                 y_old = np.copy(y)
-                y[indices] = self.random_state.choice(
-                    self.n_classes, size=len(indices), p=p
-                )
+                y[indices] = self.random_state.choice(self.n_classes, size=len(indices), p=p)
                 # y[indices] = self.random_state.randint(self.n_classes, size=len(indices))
-                self.logger.info(
-                    f"Actual Flip {self.flip_y} Flips {np.mean(y_old != y)}"
-                )
+                self.logger.info(f"Actual Flip {self.flip_y} Flips {np.mean(y_old != y)}")
                 self.logger.info(f"Chosen flips {np.mean(choices)}")
                 uni, counts = np.unique(y, return_counts=True)
                 d = {i: c for i, c in zip(list(uni), counts)}
@@ -493,9 +483,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             if self.flip_y == 0.0:
                 y_pred[:, k_class] = self.get_prob_y_given_x(X=X, class_label=k_class)
             else:
-                y_pred[:, k_class] = self.get_prob_flip_y_given_x(
-                    X=X, class_label=k_class
-                )
+                y_pred[:, k_class] = self.get_prob_flip_y_given_x(X=X, class_label=k_class)
         y_pred[y_pred == 0] = np.finfo(float).eps
         y_pred[y_pred == 1] = 1 - np.finfo(float).eps
         self.logger.info(f"Sum {y_pred.sum(axis=1)}")
@@ -556,9 +544,7 @@ class SyntheticDatasetGenerator(metaclass=ABCMeta):
             if self.flip_y == 0.0:
                 y_pred[:, k_class] = self.get_prob_y_given_x(X=X, class_label=k_class)
             else:
-                y_pred[:, k_class] = self.get_prob_flip_y_given_x(
-                    X=X, class_label=k_class
-                )
+                y_pred[:, k_class] = self.get_prob_flip_y_given_x(X=X, class_label=k_class)
 
         y_pred[y_pred == 0] = np.finfo(float).eps
         y_pred[y_pred == 1] = 1 - np.finfo(float).eps

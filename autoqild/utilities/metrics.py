@@ -244,9 +244,7 @@ def mid_point_mi(y_true, y_pred):
     - This estimate is computed as the average of the Hellman-Raviv upper bound and Fano"s lower bound.
     - The estimate is constrained to be non-negative by taking the maximum with zero.
     """
-    mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(
-        y_true, y_pred
-    )
+    mid_point = helmann_raviv_upper_bound(y_true, y_pred) + fanos_lower_bound(y_true, y_pred)
     mid_point = mid_point / 2.0
     mid_point = np.max([mid_point, 0.0])
     return mid_point

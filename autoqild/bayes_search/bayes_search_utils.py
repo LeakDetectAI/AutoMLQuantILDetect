@@ -124,9 +124,7 @@ def update_params_at_k(bayes_search, search_keys, learner_params, k=0):
                 best_params["criterion"] = "mse"
     learner_params.update(best_params)
     params_str = print_dictionary(learner_params, sep="\t")
-    logger.info(
-        f"Parameters at position k:{k} are {params_str} with objective of: {-loss}\n"
-    )
+    logger.info(f"Parameters at position k:{k} are {params_str} with objective of: {-loss}\n")
     return loss, learner_params
 
 

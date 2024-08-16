@@ -157,9 +157,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         X : array-like of shape (n_samples, n_reduced)
             Transformed feature matrix.
         """
-        self.logger.info(
-            f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
-        )
+        self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
             self.logger.info(f"Classes {classes} No of Classes {n_classes}")
@@ -168,9 +166,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
                 raise ValueError(f"Dataset passed does not contain {self.n_features}")
             if y is not None:
                 if self.n_classes != len(np.unique(y)):
-                    raise ValueError(
-                        f"Dataset passed does not contain {self.n_classes}"
-                    )
+                    raise ValueError(f"Dataset passed does not contain {self.n_classes}")
             self.selection_model = create_dimensionality_reduction_model(
                 reduction_technique=self.reduction_technique, n_reduced=self.n_reduced
             )
@@ -185,9 +181,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         else:
             if self.n_features > 50 and self.n_reduced < self.n_features:
                 X = self.selection_model.transform(X)
-        self.logger.info(
-            f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
-        )
+        self.logger.info(f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         return X
 
     def fit(self, X, y, **kwd):
@@ -288,9 +282,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         n_samples = X.shape[0]
         X = self.__transform__(X)
         if batch_size is None:
-            y_pred = self.model.predict_proba(
-                X, normalize_with_test=True, return_logits=False
-            )
+            y_pred = self.model.predict_proba(X, normalize_with_test=True, return_logits=False)
         else:
             n_batches = np.ceil(n_samples / batch_size).astype(int)
             predictions = []

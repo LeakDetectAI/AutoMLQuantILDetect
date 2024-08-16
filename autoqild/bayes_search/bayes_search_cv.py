@@ -241,9 +241,7 @@ class BayesSearchCV(BayesSearchCVSK):
                 # when n_iter < n_points points left for evaluation
                 n_points_adjusted = min(n_iter, n_points)
                 iter_idx += n_points
-                self.logger.info(
-                    f"The {iter_idx + n_finished}th parameter values are being tested"
-                )
+                self.logger.info(f"The {iter_idx + n_finished}th parameter values are being tested")
                 try:
                     optim_result = self._step(
                         search_space,

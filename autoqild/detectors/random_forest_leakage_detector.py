@@ -146,9 +146,7 @@ class RandomForestLeakageDetector(SklearnLeakageDetector):
         """
         super().fit(X, y)
 
-    def evaluate_scores(
-        self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model
-    ):
+    def evaluate_scores(self, X_test, X_train, y_test, y_train, y_pred, p_pred, model, n_model):
         """Evaluate and store model performance metrics for the detection
         process.
 

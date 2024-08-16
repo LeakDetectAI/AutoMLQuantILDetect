@@ -153,9 +153,7 @@ class GMMMIEstimator(MIEstimatorBase):
         random_state=42,
         **kwargs,
     ):
-        super().__init__(
-            n_classes=n_classes, n_features=n_features, random_state=random_state
-        )
+        super().__init__(n_classes=n_classes, n_features=n_features, random_state=random_state)
         self.y_cat = y_cat
         self.num_comps = list(np.arange(2, 20, 2))
         self.reg_covar = reg_covar
@@ -230,9 +228,7 @@ class GMMMIEstimator(MIEstimatorBase):
             aic_fit = gmm.aic(Z)
             likelihood = gmm.score(Z)
             n_components = gmm.n_components
-        self.logger.info(
-            f"AIC: {aic_fit}, BIC: {bic_fit}, Likelihood score {likelihood}"
-        )
+        self.logger.info(f"AIC: {aic_fit}, BIC: {bic_fit}, Likelihood score {likelihood}")
         return aic_fit, bic_fit, likelihood, n_components
 
     def __transform__(self, X, y=None):
@@ -253,9 +249,7 @@ class GMMMIEstimator(MIEstimatorBase):
         X : array-like of shape (n_samples, n_reduced)
             Transformed feature matrix.
         """
-        self.logger.info(
-            f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
-        )
+        self.logger.info(f"Before transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         if y is not None:
             classes, n_classes = np.unique(y, return_counts=True)
             self.logger.info(f"Classes {classes} No of Classes {n_classes}")
@@ -264,9 +258,7 @@ class GMMMIEstimator(MIEstimatorBase):
                 raise ValueError(f"Dataset passed does not contain {self.n_features}")
             if y is not None:
                 if self.n_classes != len(np.unique(y)):
-                    raise ValueError(
-                        f"Dataset passed does not contain {self.n_classes}"
-                    )
+                    raise ValueError(f"Dataset passed does not contain {self.n_classes}")
             self.selection_model = create_dimensionality_reduction_model(
                 reduction_technique=self.reduction_technique, n_reduced=self.n_reduced
             )
@@ -281,9 +273,7 @@ class GMMMIEstimator(MIEstimatorBase):
         else:
             if self.n_features > 50 and self.n_reduced < self.n_features:
                 X = self.selection_model.transform(X)
-        self.logger.info(
-            f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}"
-        )
+        self.logger.info(f"After transform n_instances {X.shape[0]} n_features {X.shape[-1]}")
         return X
 
     def fit(self, X, y, verbose=0, **kwd):
@@ -333,9 +323,7 @@ class GMMMIEstimator(MIEstimatorBase):
                 )
                 mi = np.max([mi_mean, 0.0]) * np.log2(np.e)
                 if not (np.isnan(mi) or np.isinf(mi)):
-                    aic, bic, likelihood, n_components = self.__get_goodnessof_fit__(
-                        gmm, X, y
-                    )
+                    aic, bic, likelihood, n_components = self.__get_goodnessof_fit__(gmm, X, y)
                     # self.logger.info(f"MI {np.around(mi, 4)}  BIC {np.around(bic, 4)} Likelihood "
                     #                 f"{np.around(likelihood, 4)} n_components {n_components}")
                     if self.best_likelihood < likelihood:
@@ -384,9 +372,7 @@ class GMMMIEstimator(MIEstimatorBase):
         **kwd : dict, optional
             Additional keyword arguments.
         """
-        self.logger.debug(
-            f"Best Model is not None out of {self.n_models} seed {self.best_seed}"
-        )
+        self.logger.debug(f"Best Model is not None out of {self.n_models} seed {self.best_seed}")
         X = self.__transform__(X, y)
         if self.best_model is not None:
             idx = np.where(self.best_model.get_info()["delta"].values < 0)
@@ -463,9 +449,7 @@ class GMMMIEstimator(MIEstimatorBase):
                 f"Likelihood {np.around(likelihood, 4)} n_components {n_components}"
             )
             score = likelihood
-            self.logger.debug(
-                f"Best Model is not None out of {self.n_models} score {score}"
-            )
+            self.logger.debug(f"Best Model is not None out of {self.n_models} score {score}")
         except Exception as error:
             self.logger.debug("Best Model is None")
             log_exception_error(self.logger, error)

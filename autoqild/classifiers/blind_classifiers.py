@@ -112,7 +112,5 @@ class PriorClassifier(DummyClassifier):
             Predicted class labels.
         """
         n = X.shape[0]
-        y_pred = self.random_state.choice(
-            self.classes_, p=self.class_probabilities, size=n
-        )
+        y_pred = self.random_state.choice(self.classes_, p=self.class_probabilities, size=n)
         return y_pred

@@ -166,12 +166,8 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         scores = self.score_layer(x)
         output = self.output_node(scores)
         model = Model(inputs=self.input, outputs=output, name="mlp_baseline")
-        scoring_model = Model(
-            inputs=self.input, outputs=scores, name="mlp_baseline_scorer"
-        )
-        model.compile(
-            loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics
-        )
+        scoring_model = Model(inputs=self.input, outputs=scores, name="mlp_baseline_scorer")
+        model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
         scoring_model.compile(
             loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics
         )
@@ -195,15 +191,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         return y
 
     def fit(
-        self,
-        X,
-        y,
-        epochs=50,
-        batch_size=32,
-        callbacks=None,
-        validation_split=0.1,
-        verbose=1,
-        **kwd
+        self, X, y, epochs=50, batch_size=32, callbacks=None, validation_split=0.1, verbose=1, **kwd
     ):
         """Fit the MLP model to the training data.
 
@@ -238,9 +226,7 @@ class MultiLayerPerceptron(BaseEstimator, ClassifierMixin):
         self : MultiLayerPerceptron
             Fitted estimator.
         """
-        class_weights = class_weight.compute_class_weight(
-            "balanced", classes=np.unique(y), y=y
-        )
+        class_weights = class_weight.compute_class_weight("balanced", classes=np.unique(y), y=y)
         class_weights = dict(enumerate(class_weights))
         self._construct_layers(
             kernel_regularizer=self.kernel_regularizer,

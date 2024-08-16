@@ -90,9 +90,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         for training the classifier on the dataset provided in `X` and `y`.
         """
 
-        raise NotImplementedError(
-            "The 'fit' method must be implemented by the subclass."
-        )
+        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     @abstractmethod
     def score(self, X, y, sample_weight=None, verbose=0):
@@ -123,9 +121,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError(
-            "The 'fit' method must be implemented by the subclass."
-        )
+        raise NotImplementedError("The 'fit' method must be implemented by the subclass.")
 
     @abstractmethod
     def predict(self, X, verbose=0):
@@ -149,9 +145,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError(
-            "The 'predict' method must be implemented by the subclass."
-        )
+        raise NotImplementedError("The 'predict' method must be implemented by the subclass.")
 
     @abstractmethod
     def predict_proba(self, X, verbose=0):
@@ -175,9 +169,7 @@ class AutomlClassifier(BaseEstimator, ClassifierMixin):
         NotImplementedError
             If the method is not implemented by the subclass.
         """
-        raise NotImplementedError(
-            "The 'predict_proba' method must be implemented by the subclass."
-        )
+        raise NotImplementedError("The 'predict_proba' method must be implemented by the subclass.")
 
     @abstractmethod
     def decision_function(self, X, verbose=0):
