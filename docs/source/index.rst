@@ -6,7 +6,7 @@ This package estimates mutual information (MI) within systems that release class
 By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects information leakage within classification datasets.
 Users can confidently and comprehensively address the critical challenges of quantification and detection in information leakage analysis.
 
-.. image:: _static/logo.png
+.. image:: logo.png
   :width: 300
   :alt: Logo
 
