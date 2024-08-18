@@ -1,0 +1,12 @@
+autoqild.mi\_estimators.mi\_base\_class
+=======================================
+
+.. automodule:: autoqild.mi_estimators.mi_base_class
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MIEstimatorBase
+   
