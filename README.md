@@ -24,12 +24,14 @@ comprehensively address the critical challenges of quantification and detection 
 The latest release version of AutoMLQuantILDetect can be installed from GitHub using the following command:
 
 ```
+export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 pip install git+https://github.com/LeakDetectAI/AutoMLQuantILDetect.git
 ```
 
 Alternatively, you can clone the repository and install AutoMLQuantILDetect using:
 
 ```
+export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 git clone https://github.com/LeakDetectAI/AutoMLQuantILDetect.git
 cd AutoMLQuantILDetect
 conda create --name ILD python=3.10
