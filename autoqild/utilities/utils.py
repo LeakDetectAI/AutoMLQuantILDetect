@@ -4,11 +4,10 @@ exceptions, managing HDF5 files, and creating directories safely."""
 import os
 import sys
 import traceback
-import warnings
-
 import h5py
 import numpy as np
 from sklearn.preprocessing import RobustScaler
+import warnings
 
 warnings.filterwarnings("ignore")
 
@@ -124,7 +123,7 @@ def progress_bar(count, total, status=""):
 
 
 def print_dictionary(dictionary, sep="\n", n_keys=None):
-    """Prints a formatted dictionary.
+    """Format the dictionary to print it in logs.
 
     Parameters
     ----------
@@ -140,7 +139,6 @@ def print_dictionary(dictionary, sep="\n", n_keys=None):
     output : str
         Formatted string representation of the dictionary.
     """
-
     output = "  "
     if n_keys is None:
         n_keys = len(dictionary)
@@ -261,6 +259,13 @@ class Standardize:
     ----------
     scalar : object, optional
         The scaling class to use (default is "RobustScaler").
+
+    Attributes
+    ----------
+    n_features : list or None
+        The list of feature names if `X` is a dictionary.
+    scalars : dict
+        A dictionary of scalers for each feature if `X` is a dictionary.
     """
 
     def __init__(self, scalar=RobustScaler):
@@ -306,7 +311,7 @@ class Standardize:
         """
         if isinstance(X, dict):
             for n in self.n_features:
-                X[n] = self.scalars[n].__transform__(X[n])
+                X[n] = self.scalars[n].transform(X[n])
         if isinstance(X, (np.ndarray, np.generic)):
             X = self.scalar.transform(X)
         return X
