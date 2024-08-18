@@ -35,3 +35,10 @@ Installation Steps
     .. code-block:: sh
 
             python setup.py install
+
+3. **On-Step Installation**:
+
+    .. code-block:: sh
+
+            export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+            pip install git+https://github.com/LeakDetectAI/AutoMLQuantILDetect.git
