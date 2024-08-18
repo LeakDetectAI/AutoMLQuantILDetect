@@ -1,0 +1,13 @@
+autoqild.automl.model\_configurations
+=====================================
+
+.. automodule:: autoqild.automl.model_configurations
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      hyperparameters
+      reduced_hyperparameters
+   

@@ -1,0 +1,12 @@
+autoqild.dataset\_readers.open\_ml\_padding\_dr
+===============================================
+
+.. automodule:: autoqild.dataset_readers.open_ml_padding_dr
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      OpenMLPaddingDatasetReader
+   
