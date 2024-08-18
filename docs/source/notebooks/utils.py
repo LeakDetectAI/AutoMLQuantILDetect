@@ -82,6 +82,8 @@ def setup_logging(log_path=None, level=logging.INFO):
     logging.getLogger("pytorch").setLevel(logging.ERROR)
     logging.getLogger("torch").setLevel(logging.ERROR)
     logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
+    os.environ['TF_TRT_LOGGER'] = 'ERROR'
+    tf.get_logger().setLevel('ERROR')
 
 
 def setup_random_seed(random_state=1234):

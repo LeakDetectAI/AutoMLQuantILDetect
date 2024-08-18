@@ -263,7 +263,7 @@ class AutoTabPFNClassifier(AutomlClassifier):
         acc = balanced_accuracy_score(y, y_pred)
         return acc
 
-    def predict_proba(self, X, batch_size=32, verbose=0):
+    def predict_proba(self, X, batch_size=128, verbose=0):
         """Predict class probabilities for the input samples.
 
         Parameters

@@ -309,7 +309,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
                                 metric_name in model_group
                             )
                             self.logger.info(
-                                f"Results exists for metric {metric_name}: {metric_name in model_group}"
+                                f"Results exist for metric {metric_name}: {metric_name in model_group}"
                             )
                             vals = np.array(
                                 model_group[metric_name]
@@ -325,7 +325,7 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         conditions_vals = list(conditions.values())
         self.logger.info(
             f"Results for padding {self.padding_name} {not np.all(conditions_vals)} "
-            f"Coniditions: {print_dictionary(conditions)}"
+            f"Conditions: {print_dictionary(conditions)}"
         )
         if os.path.exists(self.results_file) and not np.all(conditions_vals):
             if os.path.exists(self.results_file):
@@ -893,6 +893,8 @@ class InformationLeakageDetector(metaclass=ABCMeta):
         n_training_folds = self.cv_iterations - 1
         n_test_folds = 1
         model_results = self.__read_results_file__(self.detection_method)
+        metric_name = leakage_detection_methods[detection_method]
+        self.logger.info(f"Model Values: {model_results} for metric {metric_name}")
         model_p_values = {}
         for model_name, metric_vals in model_results.items():
             p_value = 1.0

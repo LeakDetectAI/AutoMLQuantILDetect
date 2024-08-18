@@ -95,6 +95,8 @@ Sets up logging for experiments, allowing control over log file location and ver
         logging.getLogger("pytorch").setLevel(logging.ERROR)
         logging.getLogger("torch").setLevel(logging.ERROR)
         logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
+        os.environ['TF_TRT_LOGGER'] = 'ERROR'
+        tf.get_logger().setLevel('ERROR')
 
 
 setup_random_seed
