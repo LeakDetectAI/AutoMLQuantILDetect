@@ -1,0 +1,12 @@
+autoqild.classifiers.multi\_layer\_perceptron
+=============================================
+
+.. automodule:: autoqild.classifiers.multi_layer_perceptron
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MultiLayerPerceptron
+   
