@@ -1,0 +1,17 @@
+﻿autoqild.dataset\_readers
+=========================
+
+.. automodule:: autoqild.dataset_readers
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   open_ml_padding_dr
+   open_ml_timming_dr
+   synthetic_data_generator
+   synthetic_data_generator_distance
+   utils

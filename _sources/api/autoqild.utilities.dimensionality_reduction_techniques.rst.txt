@@ -1,0 +1,12 @@
+autoqild.utilities.dimensionality\_reduction\_techniques
+========================================================
+
+.. automodule:: autoqild.utilities.dimensionality_reduction_techniques
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      create_dimensionality_reduction_model
+   
