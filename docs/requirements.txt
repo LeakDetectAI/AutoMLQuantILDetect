@@ -49,3 +49,5 @@ sphinx-autobuild
 recommonmark
 sphinx-tabs
 furo
+pandoc>=2.4
+pypandoc>=1.13
