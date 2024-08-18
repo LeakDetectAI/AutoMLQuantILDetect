@@ -1,6 +1,6 @@
 <div align="left">
   <a href="https://arxiv.org/abs/2401.14283">
-    <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/docs/source/logo.png" alt="Paper" width="200" height="200">
+    <img src="https://github.com/LeakDetectAI/automl-qild/blob/main/docs/source/logo.png" alt="Paper" width="300" height="300">
   </a>
 </div>
 
