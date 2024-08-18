@@ -1,0 +1,12 @@
+autoqild.mi\_estimators.pc\_softmax\_estimator
+==============================================
+
+.. automodule:: autoqild.mi_estimators.pc_softmax_estimator
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PCSoftmaxMIEstimator
+   
