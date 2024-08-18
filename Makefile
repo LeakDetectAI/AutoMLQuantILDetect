@@ -28,7 +28,7 @@ help:
 # Installation and Setup
 install:
 	@export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
-	@apt-get install pandoc
+	@sudo apt-get install pandoc
 	$(PIP) install -e "./"
 
 # Documentation
