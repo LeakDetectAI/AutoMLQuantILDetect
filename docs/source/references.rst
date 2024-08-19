@@ -26,5 +26,6 @@ List of references for the implemented learning algorithms, AutoML tools and bas
 -------------------------
 🚀 Baseline MI Estimators
 -------------------------
+- `Gaussain Mixture Models <https://ieeexplore.ieee.org/document/6889561>`_: Polo et al. (2022)
 - `Mutual Information Neural Estimation (MINE) <https://proceedings.mlr.press/v80/belghazi18a/belghazi18a.pdf>`_: Belghazi et al. (2018)
 - `PC-softmax <https://arxiv.org/abs/1911.10688>`_: Qin et al. (2020)
