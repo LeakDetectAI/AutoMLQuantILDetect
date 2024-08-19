@@ -1,0 +1,12 @@
+autoqild.detectors.tabpfn\_leakage\_detector
+============================================
+
+.. automodule:: autoqild.detectors.tabpfn_leakage_detector
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TabPFNLeakageDetector
+   
