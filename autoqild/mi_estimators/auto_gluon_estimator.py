@@ -2,11 +2,11 @@
 (AutoML) to estimate MI with optimized hyperparameters."""
 
 from autoqild.automl import AutoGluonClassifier
-from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
+from autoqild.mi_estimators.mi_estimator_classification import ClassificationMIEstimator
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
 
 
-class AutoMIGluonEstimator(ClassficationMIEstimator):
+class AutoMIGluonEstimator(ClassificationMIEstimator):
     """AutoMIGluonEstimator integrates the AutoGluon framework into the Mutual
     Information (MI) estimation process for classification tasks. This class
     extends the `ClassficationMIEstimator` by using AutoGluon as the base

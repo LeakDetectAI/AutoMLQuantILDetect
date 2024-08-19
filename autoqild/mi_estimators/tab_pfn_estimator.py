@@ -2,11 +2,11 @@
 datasets with efficient MI estimation."""
 
 from autoqild.automl import AutoTabPFNClassifier
-from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
+from autoqild.mi_estimators.mi_estimator_classification import ClassificationMIEstimator
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION
 
 
-class TabPFNMIEstimator(ClassficationMIEstimator):
+class TabPFNMIEstimator(ClassificationMIEstimator):
     """TabPFNMIEstimator integrates the TabPFN framework into the Mutual
     Information (MI) estimation process for classification tasks.
 

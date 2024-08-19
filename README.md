@@ -60,7 +60,7 @@ You can find similar example code snippets in
 ```python
 from sklearn.metrics import accuracy_score
 from autoqild.dataset_readers.synthetic_data_generator import SyntheticDatasetGenerator
-from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
+from autoqild.mi_estimators.mi_estimator_classification import ClassificationMIEstimator
 from autoqild.utilities._constants import LOG_LOSS_MI_ESTIMATION, MID_POINT_MI_ESTIMATION
 
 # Step 1: Generate a Synthetic Dataset
@@ -83,7 +83,7 @@ X, y = dataset_generator.generate_dataset()
 print(f"Generated dataset X shape: {X.shape}, y shape: {y.shape}")
 
 # Step 2: Estimate Mutual Information using ClassficationMIEstimator
-mi_estimator = ClassficationMIEstimator(n_classes=n_classes, n_features=n_features, random_state=random_state)
+mi_estimator = ClassificationMIEstimator(n_classes=n_classes, n_features=n_features, random_state=random_state)
 
 # Fit the estimator on the synthetic dataset
 mi_estimator.fit(X, y)

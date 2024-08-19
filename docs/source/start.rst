@@ -16,7 +16,7 @@ You can find similar example code snippets in
 
     from sklearn.metrics import accuracy_score
     from autoqild.dataset_readers.synthetic_data_generator import SyntheticDatasetGenerator
-    from autoqild.mi_estimators.mi_estimator_classification import ClassficationMIEstimator
+    from autoqild.mi_estimators.mi_estimator_classification import ClassificationMIEstimator
     from autoqild.utilities.constants import LOG_LOSS_MI_ESTIMATION, MID_POINT_MI_ESTIMATION
 
     # Step 1: Generate a Synthetic Dataset

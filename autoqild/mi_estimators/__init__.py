@@ -7,7 +7,7 @@ class labels using different modeling techniques.
 
 from .auto_gluon_estimator import AutoMIGluonEstimator
 from .gmm_mi_estimator import GMMMIEstimator
-from .mi_estimator_classification import ClassficationMIEstimator
+from .mi_estimator_classification import ClassificationMIEstimator
 from .mine_estimator import MineMIEstimator
 from .mine_estimator_mse import MineMIEstimatorMSE
 from .pc_softmax_estimator import PCSoftmaxMIEstimator

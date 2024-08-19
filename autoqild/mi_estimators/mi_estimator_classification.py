@@ -18,7 +18,7 @@ from autoqild.mi_estimators.mi_base_class import MIEstimatorBase
 from autoqild.utilities import *
 
 
-class ClassficationMIEstimator(MIEstimatorBase):
+class ClassificationMIEstimator(MIEstimatorBase):
     """Class to estimate Mutual Information (MI) using a classification model.
 
     This class leverages a classification model, such as `RandomForestClassifier`, to estimate the Mutual Information
@@ -85,7 +85,7 @@ class ClassficationMIEstimator(MIEstimatorBase):
     ):
         super().__init__(n_classes, n_features, random_state)
         self.random_state = check_random_state(random_state)
-        self.logger = logging.getLogger(ClassficationMIEstimator.__name__)
+        self.logger = logging.getLogger(ClassificationMIEstimator.__name__)
         self.base_estimator = base_estimator
         self.learner_params = learner_params
         self.base_learner = self.base_estimator(**self.learner_params)
