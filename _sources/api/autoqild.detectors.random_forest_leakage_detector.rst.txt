@@ -1,0 +1,12 @@
+autoqild.detectors.random\_forest\_leakage\_detector
+====================================================
+
+.. automodule:: autoqild.detectors.random_forest_leakage_detector
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomForestLeakageDetector
+   

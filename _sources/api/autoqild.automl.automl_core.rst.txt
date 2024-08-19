@@ -1,0 +1,12 @@
+autoqild.automl.automl\_core
+============================
+
+.. automodule:: autoqild.automl.automl_core
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AutomlClassifier
+   
