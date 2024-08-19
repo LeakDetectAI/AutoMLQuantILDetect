@@ -1,0 +1,16 @@
+autoqild.mi\_estimators.pytorch\_utils
+======================================
+
+.. automodule:: autoqild.mi_estimators.pytorch_utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_mine_loss
+      get_optimizer_and_parameters
+      init
+      log_mean_exp
+      own_softmax
+   

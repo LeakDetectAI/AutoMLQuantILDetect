@@ -1,0 +1,16 @@
+﻿autoqild.utilities
+==================
+
+.. automodule:: autoqild.utilities
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   dimensionality_reduction_techniques
+   metrics
+   statistical_tests
+   utils
