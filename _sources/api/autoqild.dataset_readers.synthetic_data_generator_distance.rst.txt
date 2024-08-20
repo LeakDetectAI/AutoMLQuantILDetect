@@ -1,0 +1,12 @@
+autoqild.dataset\_readers.synthetic\_data\_generator\_distance
+==============================================================
+
+.. automodule:: autoqild.dataset_readers.synthetic_data_generator_distance
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SyntheticDatasetGeneratorDistance
+   
