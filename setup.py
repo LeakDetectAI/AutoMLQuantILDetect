@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 DISTNAME = "autoqild"
 DESCRIPTION = "Information Leakage Detection Techniques"
 MAINTAINER = "Pritha Gupta"
-MAINTAINER_EMAIL = "prithag@mail.uni-paderborn.de"
+MAINTAINER_EMAIL = "prithagupta15@gmail.com"
 VERSION = "1.0"
 LICENSE = "Apache"
 DOWNLOAD_URL = "https://github.com/prithagupta/automl_quant_il_detect/"
