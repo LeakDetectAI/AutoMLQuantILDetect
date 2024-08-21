@@ -12,7 +12,7 @@
 
 ### AutoML Approaches to Quantify and Detect Leakage
 The <strong>AutoMLQuantILDetect</strong> package utilizes AutoML approaches to accurately detect and quantify system information leakage.
-We also provide different approaches to estimate mutual information (MI) within systems that release classification datasets to quantify system information leakage.
+We also provide different approaches to estimate <strong>mutual information (MI)</strong> within systems that release classification datasets to quantify system information leakage.
 By leveraging state-of-the-art statistical tests, it precisely quantifies mutual information (MI) and effectively detects 
 information leakage within classification datasets. With <strong>AutoMLQuantILDetect</strong>, users can confidently and 
 comprehensively address the critical challenges of quantification and detection in information leakage analysis.
