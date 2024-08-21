@@ -1,0 +1,19 @@
+﻿autoqild.detectors
+==================
+
+.. automodule:: autoqild.detectors
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   autogluon_leakage_detector
+   ild_base_class
+   mi_estimator_detector
+   mlp_leakage_detector
+   random_forest_leakage_detector
+   sklearn_leakage_detector
+   tabpfn_leakage_detector
