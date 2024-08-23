@@ -6,7 +6,7 @@ import sys
 import traceback
 import h5py
 import numpy as np
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -228,26 +228,76 @@ def check_and_delete_corrupt_h5_file(file_path, logger):
         logger.info(f"File does not exist '{basename}'")
 
 
-def standardize_features(x_train, x_test, scaler=RobustScaler):
-    """Standardize the features in the training and test sets using
-    RobustScaler as a default.
+def standardize_features(x_train, x_test, scaler=RobustScaler, scaler_params={}):
+    """
+    Standardize the features in the training and test sets using the specified scaler.
+
+    The function offers flexibility to choose between `StandardScaler`, `RobustScaler`, and `MinMaxScaler`.
+    It allows customization of the chosen scaler’s parameters using a dictionary and raises a ValueError
+    if an unsupported scaler is passed.
 
     Parameters
     ----------
-    x_train : array-like
+    x_train : array-like of shape (n_samples, n_features)
         Training set features.
-    x_test : array-like
+    x_test : array-like of shape (n_samples, n_features)
         Test set features.
+    scaler : {StandardScaler, RobustScaler, MinMaxScaler}, optional, default=RobustScaler
+        The scaling class to be used for standardization. Choose from:
+        - StandardScaler: Standardize features by removing the mean and scaling to unit variance.
+        - RobustScaler: Scale features using statistics that are robust to outliers.
+        - MinMaxScaler: Scale features to a given range (usually between 0 and 1).
+    scaler_params : dict, optional, default={}
+        Parameters to be passed to the selected scaler. Example: {'with_mean': False} for `StandardScaler`.
 
     Returns
     -------
-    x_train : array-like
+    x_train : array-like of shape (n_samples, n_features)
         Standardized training set features.
-    x_test : array-like
+    x_test : array-like of shape (n_samples, n_features)
         Standardized test set features.
-    """
-    standardize = scaler()
-    x_train = standardize.fit_transform(x_train)
-    x_test = standardize.transform(x_test)
-    return x_train, x_test
 
+    Raises
+    ------
+    ValueError
+        If the specified scaler is not one of `StandardScaler`, `RobustScaler`, or `MinMaxScaler`.
+
+    Example
+    -------
+    >>> from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
+    >>> import numpy as np
+    >>> x_train = np.array([[1, 2], [2, 3], [3, 4]])
+    >>> x_test = np.array([[4, 5], [5, 6]])
+
+    # Example with StandardScaler and a custom parameter
+    >>> scaler_params = {'with_mean': False}
+    >>> x_train_scaled, x_test_scaled = standardize_features(
+    ...     x_train, x_test, scaler=StandardScaler, scaler_params=scaler_params
+    ... )
+
+    # Example with RobustScaler (default)
+    >>> x_train_scaled, x_test_scaled = standardize_features(x_train, x_test, scaler=RobustScaler)
+
+    # Example with MinMaxScaler
+    >>> x_train_scaled, x_test_scaled = standardize_features(x_train, x_test, scaler=MinMaxScaler)
+
+    # Example with an invalid scaler (this will raise a ValueError)
+    >>> try:
+    ...     x_train_scaled, x_test_scaled = standardize_features(x_train, x_test, scaler="InvalidScaler")
+    ... except ValueError as e:
+    ...     print(e)
+    'Invalid scaler specified. Choose from StandardScaler, RobustScaler, or MinMaxScaler.'
+    """
+    if scaler not in [StandardScaler, RobustScaler, MinMaxScaler]:
+        raise ValueError(
+            "Invalid scaler specified. Choose from StandardScaler, RobustScaler, or MinMaxScaler."
+        )
+
+    # Initialize the chosen scaler with the specified parameters
+    scaler_instance = scaler(**scaler_params)
+
+    # Fit the scaler on the training data and transform both training and test data
+    x_train = scaler_instance.fit_transform(x_train)
+    x_test = scaler_instance.transform(x_test)
+
+    return x_train, x_test
