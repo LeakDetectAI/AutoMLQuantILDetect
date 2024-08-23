@@ -1,0 +1,12 @@
+autoqild.classifiers.bayes\_predictor
+=====================================
+
+.. automodule:: autoqild.classifiers.bayes_predictor
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BayesPredictor
+   
