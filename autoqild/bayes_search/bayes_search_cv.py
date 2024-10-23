@@ -98,18 +98,7 @@ class BayesSearchCV(BayesSearchCVSK):
         configurations based on the Bayesian optimization strategy.
     """
 
-    def __init__(
-        self,
-        estimator,
-        search_spaces,
-        optimizer_kwargs=None,
-        n_iter=50,
-        scoring=None,
-        fit_params=None,
-        n_jobs=1,
-        n_points=1,
-        iid=True,
-        refit=True,
+    def __init__(self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, n_points=1, iid=True, refit=True,
         cv=None,
         verbose=0,
         pre_dispatch="2*n_jobs",

@@ -7,7 +7,7 @@ import openml
 
 from .open_ml_timming_dr import OpenMLTimingDatasetReader
 from .utils import *
-
+import pandas as pd
 
 class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
     """Reader for OpenML datasets related to leakages with respect to the error
@@ -118,6 +118,8 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         vulnerable_classes_str = description.split("\n")[-1].split("vulnerable_classes ")[-1]
         vulnerable_classes_str = vulnerable_classes_str.strip("[]")
         self.vulnerable_classes = [s.strip() for s in vulnerable_classes_str.split(",")]
+        if self.vulnerable_classes == ['']:
+            self.vulnerable_classes = []
         self.n_features = len(self.dataset.features) - 1
         self.server = self.dataset.name.split("padding-attack-dataset-")[-1]
 
@@ -143,7 +145,7 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         y : array-like of shape (n_samples,)
             Target vector.
         """
-        super().get_data(class_label=class_label)
+        return super().get_data(class_label=class_label)
 
     def get_sampled_imbalanced_data(self, X, y):
         """Creates an imbalanced dataset by sampling from the data.
@@ -164,4 +166,4 @@ class OpenMLPaddingDatasetReader(OpenMLTimingDatasetReader):
         y : array-like of shape (n_samples,)
             Target vector after applying sampling to create imbalance.
         """
-        super().get_sampled_imbalanced_data(X=X, y=y)
+        return super().get_sampled_imbalanced_data(X=X, y=y)

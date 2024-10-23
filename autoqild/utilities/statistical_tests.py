@@ -39,15 +39,7 @@ def wilcoxon_signed_rank_test(accuracies, accuracies2, alternative="two-sided", 
     return p_value
 
 
-def paired_ttest(
-    x1,
-    x2,
-    n_training_folds,
-    n_test_folds,
-    correction=True,
-    alternative="two-sided",
-    verbose=False,
-):
+def paired_ttest(x1, x2, n_training_folds, n_test_folds, correction=True, alternative="two-sided", verbose=False,):
     """Performs a paired t-test on two sets of values with and without
     correction.
 
@@ -110,22 +102,9 @@ def paired_ttest(
     elif alternative == "two-sided":
         p_value = 2 * t.sf(np.abs(t_static), df)
     if verbose:
-        logger.info(
-            "Final Variance {} Sigma {} t_static {} p {}".format(
-                sigma2, np.sqrt(sigma2), t_static, p_value
-            )
-        )
-        logger.info(
-            "np.isnan(p) {}, np.isinf {},  d_bar == 0 {}, sigma2_mod == 0 {}, np.isinf(t_static) {}, "
-            "np.isnan(t_static) {}".format(
-                np.isnan(p_value),
-                np.isinf(p_value),
-                d_bar == 0,
-                sigma2 == 0,
-                np.isinf(t_static),
-                np.isnan(t_static),
-            )
-        )
+        logger.info(f"Final Variance {sigma2} Sigma {np.sqrt(sigma2)} t_static {t_static} p {p_value}")
+        logger.info(f"np.isnan(p) {np.isnan(p_value)}, np.isinf {np.isinf(p_value)},  d_bar == 0 {d_bar == 0}, sigma2_mod == 0 {sigma2 == 0}, np.isinf(t_static) {np.isinf(t_static)}, "
+                    f"np.isnan(t_static) {np.isnan(t_static)}")
     if (
         np.isnan(p_value)
         or np.isinf(p_value)

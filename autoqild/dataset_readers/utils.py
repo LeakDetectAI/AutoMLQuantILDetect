@@ -5,14 +5,7 @@ import logging
 
 import numpy as np
 
-__all__ = [
-    "GEN_TYPES",
-    "FACTOR",
-    "LABEL_COL",
-    "generate_samples_per_class",
-    "clean_class_label",
-    "pdf",
-]
+__all__ = ["GEN_TYPES", "FACTOR", "LABEL_COL", "generate_samples_per_class", "clean_class_label", "pdf"]
 
 GEN_TYPES = ["single", "multiple"]
 """
@@ -29,9 +22,7 @@ LABEL_COL = "label"
 """Default label column name used in datasets."""
 
 
-def generate_samples_per_class(
-    n_classes, samples=1000, imbalance=0.05, gen_type="single", logger=None, verbose=1
-):
+def generate_samples_per_class(n_classes, samples=1000, imbalance=0.05, gen_type="single", logger=None, verbose=1):
     """Generate the number of samples per class with a specified imbalance.
 
     This function calculates the number of samples for each class based on the provided imbalance ratio and the generation type.
