@@ -1,0 +1,16 @@
+﻿autoqild.automl
+===============
+
+.. automodule:: autoqild.automl
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   autogluon_classifier
+   automl_core
+   model_configurations
+   tabpfn_classifier

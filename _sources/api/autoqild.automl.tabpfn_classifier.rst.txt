@@ -1,0 +1,12 @@
+autoqild.automl.tabpfn\_classifier
+==================================
+
+.. automodule:: autoqild.automl.tabpfn_classifier
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AutoTabPFNClassifier
+   
