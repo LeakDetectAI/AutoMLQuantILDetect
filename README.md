@@ -124,13 +124,16 @@ Accuracy: 1.0
 ### 💬 Cite Us
 If you use this toolkit in your research, please cite our paper available on arXiv:
 ```
-@article{gupta2024information,
-  title={Information Leakage Detection through Approximate Bayes-optimal Prediction},
-  author={Pritha Gupta, Marcel Wever, and Eyke Hüllermeier},
-  year={2024},
-  eprint={2401.14283},
-  archivePrefix={arXiv},
-  primaryClass={stat.ML}
+@article{GUPTA2025122419,
+title = {Information leakage detection through approximate Bayes-optimal prediction},
+journal = {Information Sciences},
+volume = {719},
+pages = {122419},
+year = {2025},
+issn = {0020-0255},
+doi = {https://doi.org/10.1016/j.ins.2025.122419},
+url = {https://www.sciencedirect.com/science/article/pii/S0020025525005511},
+author = {Pritha Gupta and Marcel Wever and Eyke Hüllermeier}
 }
 @PhdThesis{Gupta2025,
   author={Gupta, Pritha},
