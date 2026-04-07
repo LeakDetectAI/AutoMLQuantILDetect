@@ -153,6 +153,6 @@ author = {Pritha Gupta and Marcel Wever and Eyke Hüllermeier}
 ```
 
 ## 📧 Contact Information
-For any questions or feedback, please contact Pritha Gupta at prithagupta15@gmail.com.
+For any questions or feedback, please contact Pritha Gupta at prithagupta.nsit@icloud.com.
 
 
