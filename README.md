@@ -121,8 +121,12 @@ Accuracy: 1.0
 ```
 
  
+### Citing autoqild
+If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
+
 ### 💬 Cite Us
-If you use this toolkit in your research, please cite our paper available on arXiv:
+If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
+
 ```
 @article{GUPTA2025122419,
 title = {Information leakage detection through approximate Bayes-optimal prediction},
