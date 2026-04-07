@@ -18,3 +18,4 @@ docs/reference/
 docs/_build/
 docs/source/api/
 
+.DS_Store
