@@ -214,34 +214,38 @@ results in a **scalable, automated framework** for detecting side-channel vulner
  
 ## 💬 Cite Us
 
-If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
+If you use this toolkit in your research, please cite our work:
 
-```
-@article{GUPTA2025122419,
-title = {Information leakage detection through approximate Bayes-optimal prediction},
-journal = {Information Sciences},
-volume = {719},
-pages = {122419},
-year = {2025},
-issn = {0020-0255},
-doi = {https://doi.org/10.1016/j.ins.2025.122419},
-url = {https://www.sciencedirect.com/science/article/pii/S0020025525005511},
-author = {Pritha Gupta and Marcel Wever and Eyke Hüllermeier}
-}
-@PhdThesis{Gupta2025,
-  author={Gupta, Pritha},
-  title={Advanced Machine Learning Methods for Information Leakage Detection in Cryptographic Systems},
-  series={Institut f{\"u}r Informatik},
-  year={2025},
-  month={2025},
-  day={05-29T18:28:39},
-  publisher={Ver{\"o}ffentlichungen der Universit{\"a}t},
-  address={Paderborn},
-  pages={1 Online-Ressource (3, xi, 272 Seiten) Diagramme},
-  note={Tag der Verteidigung: 09.05.2025},
-  note={Universit{\"a}t Paderborn, Dissertation, 2025},
-  url={https://nbn-resolving.org/urn:nbn:de:hbz:466:2-54956},
-  language={eng}
+- 📄 **Journal Paper (Information Sciences, 2025)**  
+- 📘 **PhD Dissertation (2025)** for a more in-depth understanding  
+
+### BibTeX
+
+```bibtex
+  @article{GUPTA2025122419,
+    title   = {Information leakage detection through approximate Bayes-optimal prediction},
+    journal = {Information Sciences},
+    volume  = {719},
+    pages   = {122419},
+    year    = {2025},
+    issn    = {0020-0255},
+    doi     = {https://doi.org/10.1016/j.ins.2025.122419},
+    url     = {https://www.sciencedirect.com/science/article/pii/S0020025525005511},
+    author  = {Pritha Gupta and Marcel Wever and Eyke Hüllermeier}
+  }
+  
+  @PhdThesis{Gupta2025,
+    author    = {Gupta, Pritha},
+    title     = {Advanced Machine Learning Methods for Information Leakage Detection in Cryptographic Systems},
+    series    = {Institut f{\"u}r Informatik},
+    year      = {2025},
+    publisher = {Ver{\"o}ffentlichungen der Universit{\"a}t},
+    address   = {Paderborn},
+    pages     = {1 Online-Ressource (3, xi, 272 Seiten) Diagramme},
+    note      = {Tag der Verteidigung: 09.05.2025},
+    note      = {Universit{\"a}t Paderborn, Dissertation, 2025},
+    url       = {https://nbn-resolving.org/urn:nbn:de:hbz:466:2-54956},
+    language  = {eng}
 }
 ```
 
