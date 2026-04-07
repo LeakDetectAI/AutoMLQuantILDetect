@@ -212,10 +212,8 @@ Combining:
 results in a **scalable, automated framework** for detecting side-channel vulnerabilities in cryptographic systems.
 
  
-## Citing autoqild
-If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
+## 💬 Cite Us
 
-### 💬 Cite Us
 If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
 
 ```
