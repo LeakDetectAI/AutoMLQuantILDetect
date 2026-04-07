@@ -120,6 +120,97 @@ Accuracy: 1.0
 
 ```
 
+## AutoML-based Leakage Detection and Evaluation
+
+![Leakage Detection Process](images/ld_process.png)
+
+This repository implements an **automated information leakage detection (ILD) pipeline** using AutoML approaches combined with statistical hypothesis testing.
+
+### Approach Overview
+
+Given cryptographic system data (e.g., timing traces or error codes), the pipeline:
+
+1. **Estimates leakage (LAS)** using multiple approaches:
+   - Mutual Information (MI)-based methods (baseline and proposed)
+   - Classification-based metrics (accuracy, confusion matrix)
+
+2. **Applies statistical tests**:
+   - One-sample t-test (on MI estimates)
+   - Fisher’s Exact Test (on confusion matrices)
+   - Paired t-test (on accuracy)
+
+3. **Aggregates evidence**:
+   - Computes p-values across top-performing AutoML models
+   - Applies **Holm-Bonferroni correction** for robust decision-making
+
+4. **Final decision**:
+   - System is classified as **Vulnerable** or **Non-Vulnerable** based on rejected hypotheses
+
+This provides a **fully automated, statistically grounded framework** for detecting side-channel leakage without manual feature engineering. 
+
+ 
+## Results and Interpretation
+
+### Timing-based Side Channels
+
+![Timing-based Detection Results](images/results_timing.png)
+
+We evaluate detection accuracy using the **best AutoML pipeline**, incorporating recent advances such as TabPFN within AutoGluon.
+
+The experiments are conducted on OpenSSL TLS servers vulnerable to Bleichenbacher-style attacks, where leakage arises from **subtle timing differences** between valid and invalid cryptographic operations.
+
+#### Key Findings
+
+- **LAS-based AutoML approaches consistently outperform baseline MI estimators**
+- Strong performance on **balanced datasets**
+- Robust under **class imbalance**, unlike baseline methods
+- Baselines degrade when:
+  - Timing differences are small  
+  - Data is skewed  
+
+#### Interpretation
+
+AutoML-based LAS methods approximate the **Bayes-optimal predictor**, enabling reliable detection of weak timing leakages in noisy, real-world conditions.
+
+---
+
+### Error-code Based Side Channels
+
+![Error-code Detection Results](images/results_error_codes.png)
+
+We evaluate detection on OpenSSL systems:
+- 5 Vulnerable  
+- 3 Non-Vulnerable  
+
+#### Key Findings
+
+- **Mid-point MI estimation fails under class imbalance**
+- **Log-loss and calibrated log-loss remain stable and effective**
+- AutoML-based LAS approaches achieve **consistently high accuracy**
+
+#### Baseline Comparison
+
+- **GMM / MINE** → moderate performance, sensitive to imbalance  
+- **PC-Softmax** → better with imbalance, but still weaker than AutoML  
+
+#### Interpretation
+
+Classical MI estimators struggle in realistic conditions, while AutoML-based LAS methods provide:
+- Stability across dataset distributions  
+- Better generalization  
+- Reliable vulnerability detection  
+
+---
+
+### Overall Insight
+
+Combining:
+- **AutoML (model selection)**  
+- **LAS (leakage quantification)**  
+- **Statistical testing (robust decisions)**  
+
+results in a **scalable, automated framework** for detecting side-channel vulnerabilities in cryptographic systems.
+
  
 ### Citing autoqild
 If you use this toolkit in your research, please cite our paper published in the Information Science Journal. For a more in-depth understanding, you may also refer to the detailed dissertation developed around this work.
